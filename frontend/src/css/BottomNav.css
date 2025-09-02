@@ -9,7 +9,7 @@
   justify-content: space-around;
   align-items: center;
   padding: 20px 0;
-  border-radius: 16px; /* Rounded corners like in the image */
+  border-radius: 24px; /* Rounded corners like in the image */
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 1000; /* High z-index to ensure it stays fixed at bottom */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
@@ -23,14 +23,6 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.bottom-nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.bottom-nav-item.active {
-  background: rgba(255, 255, 255, 0.2);
 }
 
 .nav-icon {

@@ -315,6 +315,7 @@ tr > th, tr > td {
 
 /* Hide mobile-specific elements on desktop by default */
 .mobile-product-overview,
+.mobile-invoice-overview,
 .mobile-products,
 .mobile-products-header,
 .mobile-products-table,
@@ -325,7 +326,7 @@ tr > th, tr > td {
   display: none;
 }
 
-@media (max-width: 414px) {
+@media (max-width: 768px) {
   .dashboard {
     display: block;
     padding: 0;
@@ -367,6 +368,7 @@ tr > th, tr > td {
   
   /* Show mobile components */
   .mobile-product-overview,
+  .mobile-invoice-overview,
   .mobile-products,
   .mobile-products-header,
   .mobile-products-table,
@@ -384,36 +386,193 @@ tr > th, tr > td {
   .mobile-product-overview {
     background: white;
     border-radius: 16px;
-    padding: 16px;
+    padding: 20px;
+    margin: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Mobile Invoice Overview Card */
+  .mobile-invoice-overview {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
-  .mobile-product-overview h2 {
-    font-size: 18px;
+  .mobile-product-overview h2,
+  .mobile-invoice-overview h2 {
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     color: #374151;
-  }
-  
-  .mobile-product-overview-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 16px;
-  }
-  
-  .mobile-product-card {
-    background: #F9FAFB;
-    border-radius: 12px;
-    padding: 16px;
     text-align: left;
   }
   
-  .mobile-product-card p:first-child {
-    font-size: 14px;
+  .mobile-product-overview-grid,
+  .mobile-invoice-overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .mobile-product-card,
+  .mobile-invoice-card {
+    border-radius: 12px;
+    padding: 12px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 80px;
+  }
+  
+  .mobile-product-card p:first-child,
+  .mobile-invoice-card p:first-child {
+    font-size: 13px;
     color: #6B7280;
     font-weight: 500;
-    margin-bottom: 8px;
+    margin: 0 0 6px 0;
+    line-height: 1.2;
+  }
+  
+  .mobile-product-card-main-value,
+  .mobile-invoice-card-main-value {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 8px 0;
+  }
+  
+  .mobile-product-card-main-value.horizontal,
+  .mobile-invoice-card-main-value.horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    margin: 6px 0;
+    min-height: 24px;
+  }
+  
+  .mobile-product-card-main-value.horizontal .large-number,
+  .mobile-invoice-card-main-value.horizontal .large-number {
+    flex: 0 0 auto;
+  }
+  
+  .mobile-product-card-main-value.horizontal .revenue-amount,
+  .mobile-product-card-main-value.horizontal .cost-amount,
+  .mobile-product-card-main-value.horizontal .secondary-number,
+  .mobile-invoice-card-main-value.horizontal .success-amount,
+  .mobile-invoice-card-main-value.horizontal .warning-amount {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+  
+  .mobile-product-card-main-value .large-number,
+  .mobile-invoice-card-main-value .large-number {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .mobile-product-card-main-value.horizontal .large-number,
+  .mobile-product-card-main-value.horizontal .revenue-amount,
+  .mobile-product-card-main-value.horizontal .cost-amount,
+  .mobile-product-card-main-value.horizontal .secondary-number,
+  .mobile-invoice-card-main-value.horizontal .large-number,
+  .mobile-invoice-card-main-value.horizontal .success-amount,
+  .mobile-invoice-card-main-value.horizontal .warning-amount {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .mobile-product-card-meta.horizontal-labels,
+  .mobile-invoice-card-meta.horizontal-labels {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 4px;
+  }
+  
+  .mobile-product-card-meta.horizontal-labels span:first-child,
+  .mobile-invoice-card-meta.horizontal-labels span:first-child {
+    flex: 0 0 auto;
+  }
+  
+  .mobile-product-card-meta.horizontal-labels span:last-child,
+  .mobile-invoice-card-meta.horizontal-labels span:last-child {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+  
+  .mobile-product-card-meta.horizontal-labels span,
+  .mobile-invoice-card-meta.horizontal-labels span {
+    font-size: 11px;
+    color: #9CA3AF;
+    font-weight: 400;
+    margin: 0;
+  }
+  
+  .mobile-product-card-main-value .revenue-amount,
+  .mobile-product-card-main-value .cost-amount,
+  .mobile-product-card-main-value .secondary-number {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .mobile-product-card-main-value.horizontal .revenue-amount,
+  .mobile-product-card-main-value.horizontal .cost-amount,
+  .mobile-product-card-main-value.horizontal .secondary-number {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  /* Invoice-specific styling */
+  .mobile-invoice-card-main-value .success-amount {
+    font-size: 12px;
+    font-weight: 500;
+    color: #059669;
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .mobile-invoice-card-main-value .warning-amount {
+    font-size: 12px;
+    font-weight: 500;
+    color: #DC2626;
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .mobile-invoice-card-main-value.horizontal .success-amount {
+    font-size: 12px;
+    font-weight: 600;
+    color: #059669;
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .mobile-invoice-card-main-value.horizontal .warning-amount {
+    font-size: 12px;
+    font-weight: 600;
+    color: #DC2626;
+    margin: 0;
+    line-height: 1.1;
   }
   
   .mobile-product-card-values {
@@ -436,15 +595,19 @@ tr > th, tr > td {
     margin-bottom: 4px;
   }
   
-  .mobile-product-card-meta {
+  .mobile-product-card-meta,
+  .mobile-invoice-card-meta {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    margin-top: auto;
   }
   
-  .mobile-product-card-meta span {
+  .mobile-product-card-meta span,
+  .mobile-invoice-card-meta span {
     font-size: 12px;
     color: #9CA3AF;
+    font-weight: 400;
   }
   
   /* Mobile Products Section */

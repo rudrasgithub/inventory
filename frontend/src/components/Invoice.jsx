@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react"
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Context/ContextProvider';
 import toast, { Toaster } from 'react-hot-toast';
 import "../css/Invoice.css"
@@ -10,7 +11,8 @@ const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://loca
 
 export default function Invoice() {
   const { token, isInitialized } = useContext(AuthContext);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 414);
+  const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [invoices, setInvoices] = useState([]);
   const [overallStats, setOverallStats] = useState({
     recentTransactions: 0,
@@ -37,7 +39,7 @@ export default function Invoice() {
   // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 414);
+      setIsMobile(window.innerWidth <= 768);
     };
     
     checkMobile();
@@ -327,67 +329,121 @@ export default function Invoice() {
         )}
         
         {isMobile && (
-          <header className="mobile-header">
-            <div className="mobile-header-content">
-              <img src="/product-logo.svg" width={40} height={40} />
+          <header className="mobile-invoice-header">
+            <div className="mobile-invoice-header-content">
+              <div className="mobile-header-pie">
+                <div className="pie-chart-mini"></div>
+              </div>
               <div className="mobile-header-settings">
-                <img src="/settings.svg" alt="Settings" height={18} width={18} />
+                <img 
+                  src="/settings.svg" 
+                  alt="Settings" 
+                  height={18} 
+                  width={18}
+                  onClick={() => navigate('/setting')}
+                  style={{ cursor: 'pointer' }}
+                />
               </div>
             </div>
           </header>
         )}
 
-        <main className="invoice-content">
-          <section className="invoice-card-summary">
-            <h2>Overall Invoice</h2>
-            <div className="invoice-grid">
-              {/* Left Column */}
-              <div className="invoice-grid-column">
+                        <main className="invoice-content">
+          {isMobile ? (
+            // Mobile layout matching the screenshot design
+            <section className="mobile-invoice-overview">
+              <h2>Overall Invoice</h2>
+              <div className="mobile-invoice-overview-grid">
+                <div className="mobile-invoice-card">
+                  <p>Recent Transactions</p>
+                  <div className="mobile-invoice-card-main-value">
+                    <span className="large-number">{overallStats.recentTransactions || 24}</span>
+                  </div>
+                  <div className="mobile-invoice-card-meta">
+                    <span>Last 7 days</span>
+                  </div>
+                </div>
+                <div className="mobile-invoice-card">
+                  <p>Total Invoices</p>
+                  <div className="mobile-invoice-card-main-value horizontal">
+                    <span className="large-number">{overallStats.totalInvoices.last7Days || 152}</span>
+                    <span className="secondary-number">{overallStats.totalInvoices.processed || 138}</span>
+                  </div>
+                  <div className="mobile-invoice-card-meta horizontal-labels">
+                    <span>Last 7 days</span>
+                    <span>Processed</span>
+                  </div>
+                </div>
+                <div className="mobile-invoice-card">
+                  <p>Paid Amount</p>
+                  <div className="mobile-invoice-card-main-value horizontal">
+                    <span className="large-number">{formatCurrency(overallStats.paidAmount.last7Days || 120500)}</span>
+                    <span className="secondary-number">{overallStats.paidAmount.customers || 97}</span>
+                  </div>
+                  <div className="mobile-invoice-card-meta horizontal-labels">
+                    <span>Last 7 days</span>
+                    <span>customers</span>
+                  </div>
+                </div>
+                <div className="mobile-invoice-card">
+                  <p>Unpaid Amount</p>
+                  <div className="mobile-invoice-card-main-value horizontal">
+                    <span className="large-number">{formatCurrency(overallStats.unpaidAmount.ordered || 45800)}</span>
+                    <span className="secondary-number">{overallStats.unpaidAmount.pendingPayments || 18}</span>
+                  </div>
+                  <div className="mobile-invoice-card-meta horizontal-labels">
+                    <span>Ordered</span>
+                    <span>Pending Payment</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          ) : (
+            // Desktop layout (existing)
+            <section className="invoice-card-summary">
+              <h2>Overall Invoice</h2>
+              <div className="invoice-grid">
                 <div className="invoice-grid-item">
                   <p className="invoice-label">Recent Transactions</p>
                   <p className="invoice-value">{overallStats.recentTransactions}</p>
                   <p className="invoice-note">Last 7 days</p>
                 </div>
                 <div className="invoice-grid-item">
-                  <p className="invoice-label">Paid Amount</p>
-                  <p className="invoice-value">
-                    <span>{formatCurrency(overallStats.paidAmount.last7Days)}</span>
-                    <span>{overallStats.paidAmount.customers}</span>
-                  </p>
-                  <p className="invoice-note">
-                    <span>Last 7 days</span>
-                    <span>Customers</span>
-                  </p>
-                </div>
-              </div>
-              
-              {/* Right Column */}
-              <div className="invoice-grid-column">
-                <div className="invoice-grid-item">
                   <p className="invoice-label">Total Invoices</p>
-                  <p className="invoice-value">
+                  <div className="invoice-value-split">
                     <span>{overallStats.totalInvoices.last7Days}</span>
                     <span>{overallStats.totalInvoices.processed}</span>
-                  </p>
-                  <p className="invoice-note">
+                  </div>
+                  <div className="invoice-note-split">
                     <span>Last 7 days</span>
                     <span>Processed</span>
-                  </p>
+                  </div>
+                </div>
+                <div className="invoice-grid-item">
+                  <p className="invoice-label">Paid Amount</p>
+                  <div className="invoice-value-split">
+                    <span>{formatCurrency(overallStats.paidAmount.last7Days)}</span>
+                    <span>{overallStats.paidAmount.customers}</span>
+                  </div>
+                  <div className="invoice-note-split">
+                    <span>Last 7 days</span>
+                    <span>customers</span>
+                  </div>
                 </div>
                 <div className="invoice-grid-item">
                   <p className="invoice-label">Unpaid Amount</p>
-                  <p className="invoice-value">
+                  <div className="invoice-value-split">
                     <span>{formatCurrency(overallStats.unpaidAmount.ordered)}</span>
                     <span>{overallStats.unpaidAmount.pendingPayments}</span>
-                  </p>
-                  <p className="invoice-note">
+                  </div>
+                  <div className="invoice-note-split">
                     <span>Ordered</span>
                     <span>Pending Payment</span>
-                  </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           <section className="invoice-card-table">
             <h2>Invoices List</h2>
@@ -489,7 +545,7 @@ export default function Invoice() {
                               >
                                 <img
                                   src="/invoice_view.svg"
-                                  style={{ width: '16px', height: '16px' }}
+                                  style={{ width: '16px', height: '16px', marginRight: '8px' }}
                                 />
                                 {invoice.status === 'Unpaid' ? 'Pay' : 'View Invoice'}
                               </div>

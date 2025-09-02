@@ -4,10 +4,12 @@ import Sidebar from './Sidebar'
 import BottomNav from "./BottomNav"
 import "../css/Setting.css"
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Setting = () => {
     const [activeTab, setActiveTab] = useState('EditProfile');
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 414);
+    const navigate = useNavigate();
 
     // Check if mobile screen
     useEffect(() => {
@@ -21,21 +23,22 @@ const Setting = () => {
       return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    const handleMobileClose = () => {
+        navigate('/');
+    };
+
     return (
         <div className="setting-dashboard">
             {!isMobile && <Sidebar />}
             
             <div className="main-setting">
-                {/* Mobile header */}
+                {/* Mobile close button - no header */}
                 {isMobile && (
-                  <header className="mobile-header">
-                    <div className="mobile-header-content">
-                      <img src="/product-logo.svg" alt="product logo" height={47} width={47} />
-                      <div className="mobile-header-settings">
-                        <img src="/settings.svg" alt="Settings" height={18} width={18} />
-                      </div>
-                    </div>
-                  </header>
+                  <div className="mobile-close-container">
+                    <button className="mobile-close-btn" onClick={handleMobileClose}>
+                      <img src='/close.svg' width={20} height={20} />
+                    </button>
+                  </div>
                 )}
                 
                 {/* Desktop header */}

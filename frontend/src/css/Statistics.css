@@ -86,10 +86,18 @@
 .card-statistics.pink { background: #f2a0ff; }
 
 .charts-section {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex !important;
   gap: 16px;
   margin: 0 24px 24px;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Force visibility on all screen sizes except mobile */
+.statistics-main .content-statistics .charts-section.draggable-row[data-row-type="secondRow"] {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 .chart-card {
   background: white;
@@ -245,7 +253,7 @@
 }
 
 /* Mobile Responsive Styles */
-@media (max-width: 414px) {
+@media (max-width: 768px) {
   .statistics-dashboard {
     display: block;
     padding: 0;
@@ -319,9 +327,7 @@
     display: none !important;
   }
   
-  .charts-section {
-    display: none !important;
-  }
+  /* Charts section is handled by mobile layout, hide desktop version */
   
   /* Card colors - update purple class */
   .card-statistics.purple {
@@ -332,6 +338,21 @@
   .card-statistics.purple p,
   .card-statistics.purple span {
     color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Desktop specific styles to ensure visibility */
+@media (min-width: 415px) {
+  .statistics-main .charts-section {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  .statistics-main .cards-statistics {
+    display: grid !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 }
 
@@ -361,7 +382,7 @@
 }
 
 /* Disable drag on mobile */
-@media (max-width: 414px) {
+@media (max-width: 768px) {
   .draggable-card {
     cursor: default !important;
   }
@@ -372,5 +393,27 @@
   
   .draggable-card:active {
     cursor: default !important;
+  }
+}
+
+/* FINAL OVERRIDE - This must be visible on desktop */
+.charts-section,
+.statistics-main .charts-section,
+.content-statistics .charts-section,
+.draggable-row[data-row-type="secondRow"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure this only applies to desktop */
+@media (min-width: 415px) {
+  .charts-section,
+  .statistics-main .charts-section,
+  .content-statistics .charts-section,
+  .draggable-row[data-row-type="secondRow"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }

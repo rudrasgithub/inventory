@@ -71,13 +71,47 @@
   filter: brightness(0) invert(1);
 }
 
+/* Mobile Close Button Styles */
+.mobile-close-container {
+  display: none; /* Hidden by default for desktop */
+  justify-content: flex-end;
+  padding: 16px 24px 16px;
+  background: white;
+  position: relative;
+}
+
+.mobile-close-btn {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  line-height: 1;
+}
+
+.mobile-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 414px) {
   .setting-dashboard {
     display: block;
     padding: 0;
     margin: 0;
-    width: 100%;
+    width: 100vw;
+    min-height: 100vh;
+    background: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
   }
   
   .sidebar { 
@@ -85,7 +119,15 @@
   }
   
   .mobile-header {
-    display: block !important;
+    display: none !important;
+  }
+  
+  .mobile-close-container {
+    display: flex !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
   }
   
   .header-setting {
@@ -96,6 +138,49 @@
     padding: 0; 
     width: 100% !important; 
     margin: 0;
-    padding-bottom: 90px;
+    min-height: 100vh;
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .content-setting {
+    background-color: white;
+    color: white;
+    border: none;
+    margin: 0;
+    border-radius: 0;
+    flex: 1;
+    min-height: calc(100vh - 60px);
+    padding-top: 40px; /* Space for close button */
+  }
+  
+  .tabs-setting {
+    padding: 12px 24px 0;
+    border-bottom: 2px solid rgba(159, 159, 159, 0.2);
+  }
+  
+  /* Mobile specific overrides for form components */
+  .profile-container {
+    height: auto !important;
+    min-height: calc(100vh - 120px);
+  }
+  
+  .profile-form {
+    margin: 20px 24px !important;
+    max-width: none !important;
+  }
+  
+  .form-actions {
+    position: relative !important;
+    right: auto !important;
+    top: auto !important;
+    margin: 20px 24px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .main {
+    height: auto !important;
   }
 }

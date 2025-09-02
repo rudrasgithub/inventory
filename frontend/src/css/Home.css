@@ -426,7 +426,7 @@
 }
 
 /* Desktop: Show two-column layout by default */
-@media (min-width: 415px) {
+@media (min-width: 769px) {
   .mobile-grid-container {
     display: none;
   }
@@ -436,7 +436,7 @@
   }
 }
 
-@media (max-width: 414px){
+@media (max-width: 768px){
   .grid-layout-home { 
     grid-template-columns: 1fr; 
   }

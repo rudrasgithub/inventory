@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Context/ContextProvider';
 import "../css/Home.css";
 import Sidebar from "../components/Sidebar";
@@ -10,7 +11,8 @@ const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://loca
 
 export default function Home() {
   const { token, isInitialized } = useContext(AuthContext);
-  const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [summaryData, setSummaryData] = useState({
     // Inventory Summary
     quantityInHand: 0, // Total available product items (sum of current quantities)
@@ -44,7 +46,7 @@ export default function Home() {
   // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 414);
+      setIsMobile(window.innerWidth <= 768);
     };
 
     checkMobile();
@@ -312,26 +314,60 @@ export default function Home() {
   const saveGridLayout = async (layout) => {
     if (!token) return;
     
-    // Save to localStorage as fallback since backend endpoint doesn't exist
     try {
-      localStorage.setItem('gridLayout', JSON.stringify(layout));
-      console.log('Grid layout saved to localStorage');
+      // Save to database
+      await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ homeLayout: layout })
+      });
+      console.log('Home grid layout saved to database');
     } catch (error) {
-      console.log('Could not save grid layout to localStorage');
+      console.error('Error saving home layout to database:', error);
+      // Fallback to localStorage
+      try {
+        localStorage.setItem('gridLayout', JSON.stringify(layout));
+        console.log('Grid layout saved to localStorage as fallback');
+      } catch (localError) {
+        console.log('Could not save grid layout to localStorage');
+      }
     }
   };
 
   const loadGridLayout = async () => {
     if (!token) return;
     
-    // Load from localStorage as fallback since backend endpoint doesn't exist
+    try {
+      // Load from database first
+      const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.homeLayout) {
+          const layout = data.homeLayout;
+          if (layout.leftColumn) setLeftColumnOrder(layout.leftColumn);
+          if (layout.rightColumn) setRightColumnOrder(layout.rightColumn);
+          console.log('Home grid layout loaded from database');
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading home layout from database:', error);
+    }
+
+    // Fallback to localStorage if database fails
     try {
       const savedLayout = localStorage.getItem('gridLayout');
       if (savedLayout) {
         const layout = JSON.parse(savedLayout);
         if (layout.leftColumn) setLeftColumnOrder(layout.leftColumn);
         if (layout.rightColumn) setRightColumnOrder(layout.rightColumn);
-        console.log('Grid layout loaded from localStorage');
+        console.log('Grid layout loaded from localStorage as fallback');
       }
     } catch (error) {
       console.log('Could not load grid layout from localStorage, using default layout');
@@ -641,7 +677,14 @@ export default function Home() {
             <div className="mobile-header-content">
               <img src="/product-logo.svg" alt="product logo" height={47} width={47} />
               <div className="mobile-header-settings">
-                <img src="/settings.svg" alt="Settings" height={18} width={18} />
+                <img 
+                  src="/settings.svg" 
+                  alt="Settings" 
+                  height={18} 
+                  width={18}
+                  onClick={() => navigate('/setting')}
+                  style={{ cursor: 'pointer' }}
+                />
               </div>
             </div>
           </header>

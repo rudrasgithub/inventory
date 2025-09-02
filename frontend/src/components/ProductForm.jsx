@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { AuthContext } from '../Context/ContextProvider';
 import "../css/ProductForm.css";
@@ -37,6 +37,7 @@ function Field({ label, name, value, onChange, placeholder, type = "text", optio
 
 export default function ProductForm({ setRenderComponent, refreshProducts }) {
   const { token } = useContext(AuthContext);
+  const [isMobile, setIsMobile] = useState(false);
   const [form, setForm] = useState({
     name: "",
     productId: "",
@@ -53,6 +54,21 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
   const [isSubmitting, setIsSubmitting] = useState(false); // Prevent multiple submissions
 
   const backendUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
+
+  // Check if mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth <= 768);
+      }
+    };
+
+    checkMobile();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
 
   function onChange(e) {
     const { name, value } = e.target;
@@ -141,7 +157,20 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
 
   return (
     <form className="product-form" onSubmit={onSubmit}>
-      <h3 className="pf-title">New Product</h3>
+      {isMobile && (
+        <div className="mobile-form-header">
+          <h3 className="mobile-form-title">New Product</h3>
+          <button 
+            type="button" 
+            className="mobile-close-btn" 
+            onClick={() => setRenderComponent(null)}
+          >
+            <img src="/template_close.svg" alt="Close" width={20} height={20} />
+          </button>
+        </div>
+      )}
+      
+      {!isMobile && <h3 className="pf-title">New Product</h3>}
 
       <div className="pf-row upload-row">
         <div className="upload-box" aria-hidden>
