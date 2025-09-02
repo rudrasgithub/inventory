@@ -4,6 +4,123 @@
   background-color: #101828;
 }
 
+/* Mobile styles - only show left form panel, hide right panel completely */
+@media (max-width: 414px) {
+  .authform-auth-container {
+    background-color: #e5e5e5; /* Light gray background like reference */
+    padding: 0;
+    display: block; /* Stack layout on mobile */
+  }
+  
+  /* Hide any right panel/welcome section completely on mobile */
+  .auth-welcome-section,
+  .auth-image-section,
+  .welcome-panel,
+  .authform-auth-illustration-panel {
+    display: none !important;
+  }
+  
+  .authform-auth-form-panel {
+    background-color: #e5e5e5; /* Match container background */
+    max-width: none;
+    width: 100% !important; /* Full width since no right panel */
+    padding: 40px 24px;
+    border-radius: 0; /* Remove rounded corners on mobile */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: none; /* Remove flex behavior */
+  }
+  
+  .authform-form-wrapper {
+    width: 100%;
+    max-width: none;
+    background: white;
+    padding: 32px 24px;
+    border-radius: 16px; /* Rounded form container */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Important for proper sizing */
+  }
+  
+  .authform-form-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .authform-form-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 24px; /* Reduced margin */
+    font-size: 14px;
+  }
+  
+  .authform-form-body {
+    margin: 0; /* Remove default margin */
+  }
+  
+  .authform-form-group {
+    margin-bottom: 16px; /* Consistent spacing */
+  }
+  
+  .authform-form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  .authform-form-input {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    font-size: 16px; /* Prevent zoom on mobile */
+    box-sizing: border-box;
+    background: white;
+  }
+  
+  .authform-forgot-password-wrapper {
+    text-align: center;
+    margin: 16px 0;
+  }
+  
+  .authform-forgot-password {
+    color: #007AFF; /* iOS blue */
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .authform-submit-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 16px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  
+  .authform-form-footer {
+    text-align: center;
+    margin-top: 24px;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .authform-form-footer a {
+    color: #007AFF;
+    text-decoration: none;
+    font-weight: 600;
+  }
+}
+
 .authform-auth-form-panel {
   flex: 1;
   background-color: rgba(255, 255, 255, 0.86);

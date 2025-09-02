@@ -438,6 +438,51 @@
     padding: 12px 0;
   }
   
+  /* Sales Overview Mobile Layout - 2x2 Grid */
+  .home-metrics-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+    gap: 16px !important;
+    padding: 16px 0;
+  }
+  
+  .home-metric {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 12px !important;
+    background: transparent;
+    border-radius: 8px;
+  }
+  
+  .home-metric img {
+    width: 32px !important;
+    height: 32px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .home-metric-map {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px;
+  }
+  
+  .home-metric-value {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: #333 !important;
+    margin: 0 !important;
+  }
+  
+  .home-metric-label {
+    font-size: 14px !important;
+    color: #666 !important;
+    margin: 0 !important;
+  }
+  
   /* Chart container mobile adjustments */
   .chart-container {
     height: 250px !important; /* Fixed height for mobile */

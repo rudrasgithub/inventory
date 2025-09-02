@@ -18,6 +18,26 @@
   background-color: white !important;
 }
 
+/* Mobile responsive styles for InputField */
+@media (max-width: 414px) {
+  .input-field {
+    width: 100% !important; /* Full width on mobile */
+    box-sizing: border-box;
+    padding: 16px;
+    padding-right: 45px;
+    font-size: 16px; /* Prevent zoom */
+    border-radius: 12px;
+  }
+  
+  .input-field-wrapper {
+    width: 100%;
+  }
+  
+  .input-field-group {
+    width: 100%;
+  }
+}
+
 .toggle-password-btn {
   position: absolute;
   right: 0.75rem;

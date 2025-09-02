@@ -68,6 +68,12 @@ export default function Home() {
 
   // Advanced mouse-based drag and drop logic - Based on working HTML reference
   useEffect(() => {
+    // Disable drag and drop on mobile screens
+    if (isMobile) {
+      console.log('Home.jsx: Drag and drop disabled on mobile');
+      return;
+    }
+    
     console.log('Home.jsx: useEffect for drag-drop is running');
     console.log('Home.jsx: leftColumnOrder:', leftColumnOrder);
     console.log('Home.jsx: rightColumnOrder:', rightColumnOrder);
@@ -282,7 +288,7 @@ export default function Home() {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [leftColumnOrder, rightColumnOrder]);
+  }, [leftColumnOrder, rightColumnOrder, isMobile]); // Added isMobile dependency
 
   const getDragAfterElement = (container, y) => {
     const draggableElements = [...container.querySelectorAll('.draggable-grid:not(.is-dragging)')];
