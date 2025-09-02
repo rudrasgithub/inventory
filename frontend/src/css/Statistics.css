@@ -334,3 +334,43 @@
     color: rgba(255, 255, 255, 0.9);
   }
 }
+
+/* Horizontal Drag and Drop Styles */
+.draggable-row {
+  position: relative;
+}
+
+.draggable-card {
+  transition: transform 0.2s ease-in-out;
+  user-select: none;
+  position: relative;
+}
+
+.draggable-card:hover {
+  cursor: grab;
+}
+
+.draggable-card:active {
+  cursor: grabbing;
+}
+
+.draggable-card.is-dragging {
+  z-index: 10;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  transition: none !important;
+}
+
+/* Disable drag on mobile */
+@media (max-width: 414px) {
+  .draggable-card {
+    cursor: default !important;
+  }
+  
+  .draggable-card:hover {
+    cursor: default !important;
+  }
+  
+  .draggable-card:active {
+    cursor: default !important;
+  }
+}

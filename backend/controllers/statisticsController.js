@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Product from '../models/Product.js';
 import Purchase from '../models/Purchase.js';
+import User from '../models/User.js';
 
 // Get comprehensive statistics
 export const getStatistics = async (req, res) => {
@@ -272,5 +273,60 @@ export const getStatistics = async (req, res) => {
   } catch (error) {
     console.error('Error fetching statistics:', error);
     res.status(500).json({ message: 'Server error while fetching statistics' });
+  }
+};
+
+// Get user layout configuration
+export const getUserLayout = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('gridLayout');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return statistics layout (using gridLayout for now, can be extended)
+    const statisticsLayout = {
+      firstRow: user.gridLayout?.leftColumn || [0, 1, 2],
+      secondRow: user.gridLayout?.rightColumn || []
+    };
+
+    res.json({ statisticsLayout });
+  } catch (error) {
+    console.error('Error fetching user layout:', error);
+    res.status(500).json({ message: 'Server error while fetching layout' });
+  }
+};
+
+// Update user layout configuration
+export const updateUserLayout = async (req, res) => {
+  try {
+    const { statisticsLayout } = req.body;
+
+    if (!statisticsLayout) {
+      return res.status(400).json({ message: 'Statistics layout is required' });
+    }
+
+    const user = await User.findById(req.user._id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update the grid layout (we'll use leftColumn for firstRow and rightColumn for secondRow)
+    user.gridLayout = {
+      leftColumn: statisticsLayout.firstRow || [0, 1, 2],
+      rightColumn: statisticsLayout.secondRow || []
+    };
+
+    await user.save();
+
+    res.json({ 
+      message: 'Layout updated successfully',
+      statisticsLayout 
+    });
+  } catch (error) {
+    console.error('Error updating user layout:', error);
+    res.status(500).json({ message: 'Server error while updating layout' });
   }
 };

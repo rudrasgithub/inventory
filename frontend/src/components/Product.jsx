@@ -437,14 +437,12 @@ export default function Product() {
                     </div>
                   </div>
 
-                  {/* Floating Add Product Button */}
                   <button className="mobile-add-product-fab" onClick={openAddProductModal}>
                     Add Product
                   </button>
                 </section>
               </>
             ) : (
-              // Desktop layout - original design
               <>
                 <section className="product-overview">
                   <h2>Overall Inventory</h2>

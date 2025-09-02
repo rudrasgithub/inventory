@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },
     default: {
       leftColumn: [0, 1, 2],
-      rightColumn: [0, 1, 2]
+      rightColumn: [3, 4]
     }
   }
 }, { timestamps: true });
