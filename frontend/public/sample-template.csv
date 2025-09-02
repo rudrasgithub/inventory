@@ -1,0 +1,4 @@
+Product Name,Product ID,Category,Price,Quantity,Unit,Expiry Date,Threshold Value
+Sample Product 1,SP001,Electronics,25.99,100,pieces,31-12-2025,10
+Sample Product 2,SP002,Clothing,15.50,50,items,15-01-2026,5
+Sample Product 3,SP003,Food,8.99,200,units,30-10-2024,20

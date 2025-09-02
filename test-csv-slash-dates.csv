@@ -1,0 +1,4 @@
+Product Name,Product ID,Category,Price,Quantity,Unit,Expiry Date,Threshold Value
+Test Product Dash 1,TSD001,Electronics,29.99,75,pieces,25-12-2025,8
+Test Product Dash 2,TSD002,Home,19.50,30,items,15-06-2026,5
+Test Product Dash 3,TSD003,Food,12.99,150,units,10-03-2025,12

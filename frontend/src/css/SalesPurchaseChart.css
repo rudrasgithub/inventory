@@ -1,0 +1,39 @@
+.chart-header-graph {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+
+.chart-card-graph {
+  border-radius: 8px;
+}
+
+.chart-card-graph h3{
+    font-weight: 500;
+    padding-bottom: 5px;
+}
+.filter-dropdown {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 10px 10px 10px 40px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.filter-dropdown option {
+    background-color: #fff;
+    color: #333;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+}

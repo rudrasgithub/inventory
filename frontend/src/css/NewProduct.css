@@ -1,0 +1,31 @@
+:root{
+  --page-bg: #424457;
+  --content-max-width: 1100px;
+}
+
+.np-page {
+  display: flex;
+  max-height: 100vh;
+  background: var(--page-bg);
+  color: #222;
+}
+
+.np-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 20px;
+}
+
+.np-body {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.np-body > * {
+  width: 100%;
+  max-width: var(--content-max-width);
+}

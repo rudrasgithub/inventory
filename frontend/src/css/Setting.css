@@ -1,0 +1,52 @@
+.setting-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #424457;
+}
+
+.header-setting {
+  border-bottom: 2px solid #9F9F9F;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding: 10px 24px;
+  font-size: 15px;
+}
+
+.main-setting {
+  flex: 1;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs-setting button {
+  padding-bottom: 10px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #9f9f9f;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.tabs-setting button.active {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+.tabs-setting {
+  display: flex;
+  border-bottom: 2px solid rgba(159, 159, 159, 0.2);
+  padding: 12px 32px 0;
+  gap: 20px;
+}
+
+.content-setting {
+  min-height: 450px;
+  background-color: white;
+  border: 2px solid gray;
+  margin: 10px 15px;
+  border-radius: 3px;
+}

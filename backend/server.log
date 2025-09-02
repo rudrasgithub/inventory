@@ -1,0 +1,370 @@
+nohup: ignoring input
+[dotenv@17.2.1] injecting env (6) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
+[dotenv@17.2.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+✅ Connected to MongoDB successfully
+Daily expired products check scheduled
+Server running on port 5000
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 0
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 0,
+  totalProducts: 0,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 0
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 0,
+  totalProducts: 0,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+Request Body: { email: 't3@gmail.com', password: '12345678' }
+Request Body: { email: 't@gmail.com', password: '12345678' }
+[addProduct] req.body: {
+  name: 'Test Product',
+  category: 'Electronics',
+  price: 100,
+  quantity: 50,
+  supplier: 'Test Supplier'
+}
+[addProduct] req.file: undefined
+[addProduct] req.body: {
+  name: 'Test Product',
+  productId: 'TEST001',
+  category: 'Electronics',
+  price: 100,
+  quantity: 50,
+  unit: 'pieces',
+  expiry: '2025-12-31',
+  threshold: 10
+}
+[addProduct] req.file: undefined
+[addProduct] incrementing totalProducts from 2369 by 50
+[addProduct] totalProducts now: 2419
+Auth middleware error: jwt malformed
+Auth middleware error: jwt malformed
+Request Body: {
+  email: 't@gmail.com',
+  password: '12345678',
+  name: '',
+  confirmPassword: ''
+}
+Auth middleware error: jwt malformed
+Auth middleware error: jwt malformed
+Auth middleware error: jwt malformed
+Auth middleware error: jwt malformed
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 50
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 50,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 50
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 50,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+Request Body: {
+  email: 't@gmail.com',
+  password: '12345678',
+  name: '',
+  confirmPassword: ''
+}
+Request Body: {
+  email: 't@gmail.com',
+  password: '12345678',
+  name: '',
+  confirmPassword: ''
+}
+Auth middleware error: jwt malformed
+Request Body: {
+  email: 't@gmail.com',
+  password: '12345678',
+  name: '',
+  confirmPassword: ''
+}
+Request Body: {
+  email: 't@gmail.com',
+  password: '12345678',
+  name: '',
+  confirmPassword: ''
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 50
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 50,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 50
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 50,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 50
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 50,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 50
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 50,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 50
+[getSummary] ordered: 0 revenue: 0
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 50,
+  revenue: 0,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 0
+}
+[buyProduct] called with: { productId: '68b4119837ceb00f0cffba4c', quantity: 1 }
+[buyProduct] updating product quantity from 50 by - 1
+[buyProduct] created purchase record: {
+  productId: new ObjectId('68b4119837ceb00f0cffba4c'),
+  quantity: 1,
+  priceAtPurchase: 100,
+  totalAmount: 100,
+  userId: new ObjectId('68b3f8e7feea1974fd127ed8'),
+  _id: new ObjectId('68b412b137ceb00f0cffbad2'),
+  createdAt: 2025-08-31T09:15:29.496Z,
+  updatedAt: 2025-08-31T09:15:29.496Z,
+  __v: 0
+}
+[buyProduct] created invoice: {
+  invoiceId: 'INV-5582',
+  referenceNumber: '-',
+  amount: 100,
+  status: 'Unpaid',
+  dueDate: 2025-09-10T09:15:29.535Z,
+  products: [
+    {
+      productId: new ObjectId('68b4119837ceb00f0cffba4c'),
+      productName: 'Test Product',
+      quantity: 1,
+      price: 100,
+      _id: new ObjectId('68b412b137ceb00f0cffbad5')
+    }
+  ],
+  views: 0,
+  userId: new ObjectId('68b3f8e7feea1974fd127ed8'),
+  _id: new ObjectId('68b412b137ceb00f0cffbad4'),
+  createdAt: 2025-08-31T09:15:29.549Z,
+  updatedAt: 2025-08-31T09:15:29.549Z,
+  __v: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 49
+[getSummary] ordered: 1 revenue: 100
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 49,
+  revenue: 100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 1
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 49
+[getSummary] ordered: 1 revenue: 100
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 49,
+  revenue: 100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 1
+}
+[buyProduct] called with: { productId: '68b4119837ceb00f0cffba4c', quantity: 10 }
+[buyProduct] updating product quantity from 49 by - 10
+[buyProduct] created purchase record: {
+  productId: new ObjectId('68b4119837ceb00f0cffba4c'),
+  quantity: 10,
+  priceAtPurchase: 100,
+  totalAmount: 1000,
+  userId: new ObjectId('68b3f8e7feea1974fd127ed8'),
+  _id: new ObjectId('68b412ea37ceb00f0cffbb28'),
+  createdAt: 2025-08-31T09:16:26.934Z,
+  updatedAt: 2025-08-31T09:16:26.934Z,
+  __v: 0
+}
+[buyProduct] created invoice: {
+  invoiceId: 'INV-6639',
+  referenceNumber: '-',
+  amount: 1000,
+  status: 'Unpaid',
+  dueDate: 2025-09-10T09:16:26.973Z,
+  products: [
+    {
+      productId: new ObjectId('68b4119837ceb00f0cffba4c'),
+      productName: 'Test Product',
+      quantity: 10,
+      price: 100,
+      _id: new ObjectId('68b412ea37ceb00f0cffbb2b')
+    }
+  ],
+  views: 0,
+  userId: new ObjectId('68b3f8e7feea1974fd127ed8'),
+  _id: new ObjectId('68b412ea37ceb00f0cffbb2a'),
+  createdAt: 2025-08-31T09:16:26.977Z,
+  updatedAt: 2025-08-31T09:16:26.977Z,
+  __v: 0
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 39
+[getSummary] ordered: 11 revenue: 1100
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 39,
+  revenue: 1100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 11
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 39
+[getSummary] ordered: 11 revenue: 1100
+[getSummary] returning: {
+  categories: 1,
+  totalProducts: 39,
+  revenue: 1100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 11
+}
+[addBulkProducts] req.body: {
+  products: [
+    {
+      name: 'Sample Product 1',
+      productId: '9',
+      category: 'Electronics',
+      price: '25.99',
+      quantity: '100',
+      unit: 'pieces',
+      expiry: '2026-02-24',
+      threshold: '10'
+    },
+    {
+      name: 'Sample Product 2',
+      productId: '10',
+      category: 'Clothing',
+      price: '15.5',
+      quantity: '50',
+      unit: 'items',
+      expiry: '2026-02-24',
+      threshold: '5'
+    },
+    {
+      name: 'Sample Product 3',
+      productId: '11',
+      category: 'Food',
+      price: '8.99',
+      quantity: '200',
+      unit: 'units',
+      expiry: '2026-02-24',
+      threshold: '20'
+    }
+  ]
+}
+[addBulkProducts] incrementing totalProducts from 2419 by 350
+[addBulkProducts] totalProducts now: 2769
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 389
+[getSummary] ordered: 11 revenue: 1100
+[getSummary] returning: {
+  categories: 3,
+  totalProducts: 389,
+  revenue: 1100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 11
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 389
+[getSummary] ordered: 11 revenue: 1100
+[getSummary] returning: {
+  categories: 3,
+  totalProducts: 389,
+  revenue: 1100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 11
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 389
+[getSummary] ordered: 11 revenue: 1100
+[getSummary] returning: {
+  categories: 3,
+  totalProducts: 389,
+  revenue: 1100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 11
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 389
+[getSummary] ordered: 11 revenue: 1100
+[getSummary] returning: {
+  categories: 3,
+  totalProducts: 389,
+  revenue: 1100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 11
+}
+[getSummary] called for user: new ObjectId('68b3f8e7feea1974fd127ed8')
+[getSummary] totalProducts for user: 389
+[getSummary] ordered: 11 revenue: 1100
+[getSummary] returning: {
+  categories: 3,
+  totalProducts: 389,
+  revenue: 1100,
+  notInStock: 0,
+  lowStock: 0,
+  ordered: 11
+}

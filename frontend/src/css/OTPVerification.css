@@ -1,0 +1,101 @@
+.otp-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #101828;
+}
+
+.otp-form-panel {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.86);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  max-width: 601px;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+.otp-form-content {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+.otp-form-header h1 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #242531;
+}
+
+.otp-instructions p {
+  font-size: 1rem;
+  color: #8897ad;
+  line-height: 1.5;
+}
+
+.otp-form-body {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  gap: 1.5rem;
+}
+
+.otp-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.otp-input-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #242531;
+}
+
+.otp-input-group input::placeholder {
+  color: #8897ad;
+}
+
+.otp-confirm-button {
+  width: 388px;
+  padding: 0.75rem;
+  background-color: #242531;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.otp-confirm-button:hover {
+  background-color: #313957;
+}
+
+.otp-illustration-panel {
+  flex: 1;
+  background-color: #242531;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.otp-illustration-container {
+  position: relative;
+}
+
+.otp-illustration-container img {
+  width: 650px;
+  height: auto;
+  object-fit: contain;
+}

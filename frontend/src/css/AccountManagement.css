@@ -1,0 +1,20 @@
+.account-management {
+   display: flex;
+   height: 450px;
+}
+
+.logout-btn-account-management {
+    padding: 14px 74px;
+    background-color: #DA3E33;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+}
+
+.account-management-container {
+    position: absolute;
+    right: 50px;
+    top: 500px;
+}

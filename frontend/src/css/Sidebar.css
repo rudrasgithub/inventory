@@ -1,0 +1,103 @@
+/* src/components/Sidebar.css */
+:root {
+  --sidebar-bg: #242531;
+  --sidebar-accent: linear-gradient(135deg, #60cdac, #448df2);
+  --nav-hover: #48505e;
+  --text-light: #ffffff;
+  --muted: #b6b9cf;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: var(--sidebar-bg);
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-top {
+  padding: 10px;
+}
+.logo-sidebar {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+}
+
+.sidebar-top {
+  border-bottom: 2px solid #424457;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 10px 7px;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  padding: 5px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%; /* Ensure full width */
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px 12px;
+  text-decoration: none;
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.nav-item .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: inherit;
+}
+
+.nav-item:hover {
+  background: var(--nav-hover);
+  color: var(--text-light);
+}
+
+.nav-item.active {
+  background: #424457;
+  color: var(--text-light);
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #60cdac;
+  color: #0b1720;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.profile-name {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.sidebar-btm {
+  border-top: 2px solid #424457;
+}

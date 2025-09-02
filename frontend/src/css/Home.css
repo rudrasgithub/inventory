@@ -1,0 +1,608 @@
+:root{
+  --bg:#424457;
+  --sidebar:#242531;
+  --muted:#667085;
+  --panel:#ffffff;
+  --card-border: #e8e9ee;
+  --accent-blue: #0bb2f4;
+  --accent-teal: #0bf4c8;
+  --accent-yellow: #fad85d;
+  --accent-purple: #f2a0ff;
+  --text-dark: #242531;
+  --muted-2: #858d9d;
+}
+
+.dashboard-home {
+  min-height: 100vh;
+  display: flex;
+  background: #f8fafc; /* Light gray background instead of dark */
+  color: #1f2937; /* Dark text instead of white */
+}
+
+.main-home {
+  flex: 1;
+  background: #424457; /* Light background to match dashboard */
+}
+.header-main {
+  padding: 10px 24px;
+  border-bottom: 1px solid #e5e7eb; /* Light gray border instead of white */
+  margin-bottom: 5px;
+  color: #ffffff; /* White background for header */
+}
+
+.header-main h1 {
+  font-size: 29px;
+  font-weight: 600;
+}
+.page-title{
+  color:#fff;
+  font-size:20px;
+  margin:0;
+  font-weight:600;
+}
+
+.search-wrap{
+  position:relative;
+  width:320px;
+}
+
+.grid-layout-home {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  padding: 10px 20px;
+}
+
+.legend-dot.blue {
+  background: var(--accent-blue);
+}
+
+.lengend-dot.teal {
+  background: var(--accent-teal);
+}
+
+.home-product-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.home-card {
+  background: var(--panel);
+  color: var(--text-dark);
+  border-radius:10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow:hidden;
+  border: 1px solid var(--card-border);
+}
+
+.home-card-white{ background: var(--panel); }
+
+.home-card-large{
+  grid-column: span 2;
+}
+
+.home-card-header{
+  padding:14px 16px;
+  border-bottom: 1px solid #f1f2f5;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.bar-graph-container {
+  padding: 2px 20px 15px;
+}
+.home-card-title{
+  font-size:11px;
+  font-weight: 600;
+  padding: 2px 0px 3px 10px;
+}
+
+.home-card-body{
+  padding: 5px 16px;
+}
+
+.home-metrics-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:14px;
+}
+
+.home-metric{
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  gap:12px;
+}
+
+.home-metric-icon{
+  width:48px;
+  height:48px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.home-metric-icon.small{ width:42px; height:42px; }
+
+.home-icon-inner{
+  width:18px;
+  height:18px;
+  background:#fff;
+  border-radius:4px;
+  opacity:0.85;
+}
+
+.home-metric-text {
+  display:flex;
+  flex-direction:column;
+  gap: 3px;
+}
+
+.home-metric-map {
+  display:flex;
+  gap: 20px;
+  align-items: center;
+}
+.home-metric-value{
+  font-size:12px;
+  font-weight:500;
+}
+
+.home-metric-label{
+  font-size:11px;
+}
+
+.summary-labels {
+  display:flex;
+  gap:70px;
+  padding-left: 50px;
+  padding-bottom: 3px;
+}
+
+.home-metric-label-2{
+  font-size:11px;
+}
+
+.home-metric-icon.blue{ background: var(--accent-blue); }
+.home-metric-icon.yellow{ background: var(--accent-yellow); }
+.home-metric-icon.teal{ background: var(--accent-teal); }
+.home-metric-icon.purple{ background: var(--accent-purple); }
+
+.home-inventory-list { 
+  display:flex; 
+  gap:140px;
+  margin-left: 70px;
+  padding-bottom: 2px; 
+}
+
+.home-chart-card .home-chart-header{ align-items:center; }
+.home-chart-header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+
+.home-badge{
+  border-radius:6px;
+  padding:6px 10px;
+  border:1px solid #d0d3d9;
+  background: transparent;
+  color:#667085;
+  font-size:13px;
+}
+
+.home-chart-area{
+  height:260px;
+  display:flex;
+  align-items:end;
+  gap:10px;
+  padding:6px 2px 12px;
+  box-sizing:border-box;
+}
+
+.home-chart-column{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+
+.home-bars{
+  display:flex;
+  align-items:flex-end;
+  gap:4px;
+  height:100%;
+  width:100%;
+  justify-content:center;
+}
+
+.home-bar{
+  width:14px;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+}
+
+.home-bar.purchase{ background: var(--accent-blue); }
+.home-bar.sales{ background: var(--accent-teal); }
+
+.home-chart-label{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.home-legend {
+  display:flex;
+  gap:18px;
+  margin-top:12px;
+  align-items:center;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.home-legend-item{ display:flex; align-items:center; gap:8px; }
+
+.home-legend-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+}
+
+.home-legend-dot.blue{ background: var(--accent-blue); }
+.home-legend-dot.teal{ background: var(--accent-teal); }
+
+.home-top-products{ display:flex; flex-direction:column; gap:12px; }
+
+.home-top-product-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.product-thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  margin-right: 12px;
+  border: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.product-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  border: 1px solid #e0e0e0;
+  font-size: 12px;
+  color: #666;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.product-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.product-sold {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.top-product-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  min-height: 60px;
+}
+
+.top-product-row:last-child {
+  border-bottom: none;
+}
+
+.product-name {
+  color: var(--text-dark);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.product-stars {
+  display: flex;
+  gap: 1px;
+}
+
+.product-stars .star {
+  font-size: 12px;
+  color: #ddd;
+}
+
+.product-stars .star.filled {
+  color: var(--accent-yellow);
+}
+
+.home-product-name{ color:var(--text-dark); font-size:14px; }
+
+.home-product-stars .home-star{
+  font-size:14px;
+  color:#424457;
+  margin-left:2px;
+}
+
+.home-product-stars .home-star.filled{ color: var(--accent-yellow); }
+
+/* Mobile Grid Container - Hidden by default, shown on mobile */
+.mobile-grid-container {
+  display: none;
+}
+
+/* Desktop: Show two-column layout by default */
+@media (min-width: 415px) {
+  .mobile-grid-container {
+    display: none;
+  }
+  
+  .grid-column {
+    display: flex;
+  }
+}
+
+@media (max-width: 414px){
+  .grid-layout-home { 
+    grid-template-columns: 1fr; 
+  }
+  .home-card-large{ 
+    grid-column: auto; 
+  }
+  
+  /* COMPLETELY HIDE sidebar on mobile */
+  .sidebar { 
+    display: none !important; 
+  }
+  
+  .search-wrap { 
+    width: 220px; 
+  }
+  
+  /* HIDE desktop grid layout completely on mobile */
+  .grid-column {
+    display: none !important;
+  }
+  
+  /* SHOW mobile single column layout */
+  .mobile-grid-container {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px; /* Consistent gap between grids */
+    padding: 16px 12px; /* Top padding for content, side padding for margins */
+    padding-bottom: 90px; /* Space for bottom navigation with proper gap */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Mobile grid items - full width and proper spacing */
+  .mobile-grid-container .grid-item {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  
+  /* Mobile draggable layout adjustments */
+  .draggable-layout {
+    padding: 0;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Mobile main content adjustments */
+  .main-home {
+    padding: 0; /* Remove padding since we have padding in mobile-grid-container */
+    width: 100% !important; /* Full width without sidebar */
+    margin: 0;
+  }
+  
+  /* Mobile dashboard adjustments - no sidebar space */
+  .dashboard-home {
+    display: block; /* Change from flex to block on mobile */
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+  
+  /* Hide header on mobile */
+  .header-main {
+    display: none !important;
+  }
+  
+  /* Mobile specific grid content adjustments */
+  .card-content, .purchase-content, .sales-content {
+    padding: 12px 0;
+  }
+  
+  /* Chart container mobile adjustments */
+  .chart-container {
+    height: 250px !important; /* Fixed height for mobile */
+    width: 100%;
+  }
+  
+  /* Mobile metrics adjustments */
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr; /* 2 columns on mobile */
+    gap: 12px;
+  }
+  
+  .metric {
+    padding: 12px;
+    text-align: center;
+  }
+  
+  /* Mobile top products adjustments */
+  .top-products-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+/* Extra small mobile screens (320px) */
+@media (max-width: 320px){
+  /* Extra small mobile adjustments */
+  .mobile-grid-container {
+    padding: 12px 8px;
+    padding-bottom: 90px;
+    gap: 10px;
+  }
+  
+  .mobile-grid-container .grid-item {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  
+  .home-card-title {
+    font-size: 16px;
+  }
+  
+  .home-metric-value {
+    font-size: 18px;
+  }
+  
+  .home-metric-label {
+    font-size: 12px;
+  }
+  
+  .metrics-grid {
+    gap: 8px;
+  }
+  
+  .metric {
+    padding: 8px;
+  }
+  
+  .chart-container {
+    height: 220px !important;
+  }
+}
+
+.draggable-layout {
+  display: flex;
+  gap: 5px; /* Reduced gap between columns */
+  max-width: 100%; /* Use full width instead of limiting */
+  margin: 0;
+  padding: 20px;
+}
+
+.grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Added vertical gap between grid items within column */
+  position: relative;
+  max-height: 100vh;
+  padding: 0; /* Remove padding to eliminate dark background effect */
+  background: transparent; /* Remove dark background */
+  border-radius: 0; /* Remove rounded corners */
+  box-shadow: none; /* Remove shadow */
+}
+
+.left-column {
+  flex: 7; /* 7 parts of 10 total for 7:3 ratio */
+  width: 70%;
+}
+
+.right-column {
+  flex: 3; /* 3 parts of 10 total for 7:3 ratio */
+  width: 30%;
+}
+
+/* Grid Item Styles - matches working DragDropGrid.jsx structure */
+.grid-item {
+  position: relative;
+  padding: 0; /* Remove padding to let home-card manage its own spacing */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+  transition: transform 0.2s ease-in-out; /* Smooth slide animation */
+  cursor: grab;
+  user-select: none; /* Prevents text selection while dragging */
+  border: none; /* Remove borders */
+  background: transparent; /* Let the nested home-card control background completely */
+}
+
+.grid-item:active {
+  cursor: grabbing;
+}
+
+/* Mobile grid items - no drag functionality */
+.grid-item.mobile {
+  cursor: default;
+}
+
+/* Ensure home-card fits properly inside grid-item */
+.grid-item .home-card {
+  margin: 0; /* Remove any margins */
+  border-radius: 0.5rem; /* Match the grid-item border radius */
+}
+
+/* The item being actively dragged */
+.grid-item.is-dragging {
+  position: relative !important; /* Keep it in the flow but allow z-index */
+  z-index: 10 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+  /* Disable transition while dragging for instant feedback */
+  transition: none !important;
+}
+
+/* Legacy draggable-grid styles - keep for backward compatibility but deprecated */
+.draggable-grid {
+  position: relative;
+  margin-bottom: 1rem;
+  padding: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease-in-out;
+  cursor: grab;
+  user-select: none;
+  border: 2px solid transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-clip: padding-box;
+  background: transparent;
+}
+
+.draggable-grid:active {
+  cursor: grabbing;
+}
+
+.draggable-grid .home-card {
+  margin: 0;
+  border-radius: 0.5rem;
+}
+
+.draggable-grid.is-dragging {
+  position: relative !important;
+  z-index: 10 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+  transition: none !important;
+}
+
+/* Update existing grid layout for compatibility */
+.grid-layout-home.draggable-layout {
+  display: flex !important;
+  grid-template-columns: none !important;
+}

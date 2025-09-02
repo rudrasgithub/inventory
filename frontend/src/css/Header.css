@@ -1,0 +1,50 @@
+/* src/components/Header.css */
+:root{
+  --header-bg: #424457;
+  --input-bg: #48505e;
+  --muted: #9f9f9f;
+}
+
+.app-header {
+  background: var(--header-bg);
+  color: white;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.header-title {
+  margin:0;
+  font-size:18px;
+  font-weight:600;
+}
+
+.search-wrap {
+  display:inline-flex;
+  align-items:center;
+  position:relative;
+}
+
+.search-icon {
+  position:absolute;
+  left:10px;
+  width:16px;
+  height:16px;
+  color: var(--muted);
+}
+
+.search-input {
+  padding:8px 12px 8px 34px;
+  border-radius:8px;
+  border: none;
+  background: var(--input-bg);
+  color: #fff;
+  width: 300px;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { outline: 2px solid rgba(68,141,242,0.18); }

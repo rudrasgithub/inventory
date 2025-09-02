@@ -1,0 +1,248 @@
+.dashboard-invoice {
+  display: flex;
+  min-height: 100vh;
+  background: #424457;
+  width: 100%;
+}
+
+.invoice-header {
+  border-bottom: white 2px solid;
+  padding: 10px 24px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 15px;
+}
+
+.search-box-invoice {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.13);
+  border-radius: 24px;
+  padding: 5px 15px;
+  display: flex; 
+  align-items: center; 
+  gap: 10px;
+}
+
+.search-icon-invoice {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  color: white !important;
+}
+
+.search-box-input-invoice {
+  width: 240px;
+  padding: 5px 0px;
+  outline: none;
+  border-radius: 15px;
+  border: none;
+  color: white !important;
+  background: transparent;
+}
+
+tbody tr {
+  background: transparent;
+}
+
+tbody tr:hover {
+  background: #E1E3F3;
+}
+
+.search-box-input-invoice::placeholder {
+  color: white;
+}
+
+.main-invoice {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  height: 48px;
+  background: #5e6470;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  color: white;
+}
+.search-box {
+  position: relative;
+}
+.search-box input {
+  padding: 6px 10px 6px 28px;
+  background: #48505e;
+  border: 1px solid #383e49;
+  color: white;
+}
+.search-icon {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.invoice-content {
+  flex: 1;
+  padding: 0px 12px;
+}
+.invoice-card-summary {
+  background: white;
+  border-radius: 5px;
+  margin-bottom: 12px;
+  padding: 10px;
+}
+
+.invoice-card-summary h2 {
+  font-weight: 400;
+  font-size: 20px;
+}
+.invoice-card-table {
+  background: #ffffff;
+  border-radius: 5px;
+}
+
+.invoice-card-table h2 {
+  padding: 8px 20px 5px 20px;
+  font-weight: 500;
+}
+
+.invoice-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 5px 10px 0px 10px;
+}
+
+.invoice-grid-item {
+  border-right: 2px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0px 10px;
+}
+
+.invoice-grid-item:last-child {
+  border-right: none; 
+}
+
+.invoice-label {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.invoice-note {
+  font-size: 12px;
+  color: #9f9f9f;
+}
+.invoice-note span {
+  margin-right: 45px;
+}
+
+.invoice-value span {
+  margin-right: 80px;
+}
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.invoice-table th {
+  background: #b7b9cf;
+  text-align: center;
+  padding: 8px 12px;
+  font-weight: 500;
+  color: #242531;
+}
+.invoice-table td {
+  padding: 7px 12px;
+  color: #242531;
+}
+
+.paid {
+  color: green;
+}
+.unpaid {
+  color: red;
+}
+
+.btn-confirm-delete {
+  background: #242531;
+  color: white;
+  border: none;
+  padding: 7px 40px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.action-btn {
+  margin-right: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+  background: #ddd;
+  border-radius: 4px;
+}
+.action-btn.delete {
+  background: black;
+}
+
+.pagination-invoice {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  align-items: center;
+}
+
+.pagination span {
+  color: #9f9f9f;
+  font-size: 14px;
+}
+
+.invoice-btn-outline {
+  background: transparent;
+  border: 1px solid #d0d3d9;
+  color: #424457;
+  padding: 7px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-confirm-cancel {
+  background: transparent;
+  color: #424457;
+  outline: none;
+  border: none;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+
+.modal-overlay-invoice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content-invoice {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 50px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Blur effect for main invoice content */
+.blurred {
+  filter: blur(5px);
+}

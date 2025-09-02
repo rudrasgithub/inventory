@@ -1,0 +1,4 @@
+Product Name,Product ID,Category,Price,Quantity,Unit,Expiry Date,Threshold Value
+Test CSV Date 1,TCD001,Electronics,99.99,15,pieces,25-12-2025,3
+Test CSV Date 2,TCD002,Clothing,45.50,30,items,15-06-2026,8
+Test CSV Date 3,TCD003,Food,12.75,80,units,10-03-2025,12

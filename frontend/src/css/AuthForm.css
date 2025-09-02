@@ -1,0 +1,163 @@
+.authform-auth-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #101828;
+}
+
+.authform-auth-form-panel {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.86);
+  max-width: 601px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0px 24px 24px;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+.authform-form-wrapper {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.authform-form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 20px;
+}
+
+.authform-form-subtitle {
+  color: #667085;
+  margin-bottom: 25px;
+}
+
+.authform-form-body {
+  margin-top: 1rem;
+}
+
+.authform-form-group {
+  margin-bottom: 1rem;
+}
+
+.authform-form-label {
+  display: block;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.authform-form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d4d7e3;
+  border-radius: 0.25rem;
+  color: #101828;
+  background-color: #F7FBFF;
+}
+
+.authform-input-wrapper {
+  position: relative;
+}
+
+.authform-toggle-password {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #8897ad;
+  cursor: pointer;
+}
+
+.authform-toggle-password:hover {
+  color: #667085;
+}
+
+.authform-forgot-password {
+  display: block;
+  color: #0088FF;
+  text-decoration: none;
+  margin-bottom: 5px;
+}
+
+.authform-forgot-password:hover {
+  text-decoration: underline;
+}
+
+.authform-forgot-password-wrapper {
+  display: flex;
+  width: 388px;
+  justify-content: flex-end;
+}
+
+.authform-submit-btn {
+  width: 388px;
+  padding: 0.75rem;
+  background-color: #242531;
+  color: white;
+  font-weight: 500;
+  border: none;
+  font-size: 20px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.authform-submit-btn:hover {
+  background-color: #1a2e35;
+}
+
+.authform-form-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.authform-form-footer span {
+  color: #667085;
+}
+
+.authform-switch-auth {
+  background: none;
+  border: none;
+  color: #0088FF;
+  font-weight: 500;
+  font-size: 15px;
+  margin-left: 3px;
+  cursor: pointer;
+}
+
+.authform-switch-auth:hover {
+  text-decoration: underline;
+}
+
+.authform-auth-illustration-panel {
+  flex: 1;
+  background-color: #242531;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.authform-illustration-wrapper {
+  display: flex;
+  gap: 200px;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.authform-illustration-title {
+  font-size: 45px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: white;
+}
+
+.authform-illustration-image {
+  width: 70%;
+  height: auto;
+}

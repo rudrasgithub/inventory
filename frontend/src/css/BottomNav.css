@@ -1,0 +1,51 @@
+/* Bottom Navigation for Mobile */
+.bottom-nav {
+  position: fixed;
+  bottom: 16px; /* 16px gap from bottom as shown in image */
+  left: 16px;
+  right: 16px;
+  background: #424457;
+  display: none; /* Hidden by default, shown on mobile */
+  justify-content: space-around;
+  align-items: center;
+  padding: 12px 0;
+  border-radius: 16px; /* Rounded corners like in the image */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1); /* Make icons white */
+}
+
+.nav-item.active .nav-icon {
+  filter: brightness(0) invert(1);
+}
+
+/* Show bottom nav only on mobile screens (320px - 414px) */
+@media (max-width: 414px) {
+  .bottom-nav {
+    display: flex;
+  }
+}
