@@ -5,6 +5,8 @@ import "../css/Invoice.css"
 import Sidebar from "./Sidebar"
 import InvoiceTemplate from "./InvoiceTemplate"
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
+
 export default function Invoice() {
   const { token, isInitialized } = useContext(AuthContext);
   const [invoices, setInvoices] = useState([]);
@@ -38,7 +40,7 @@ export default function Invoice() {
     }
     
     try {
-      const response = await fetch(`http://localhost:5000/api/invoices?page=${page}`, {
+      const response = await fetch(`${API_BASE_URL}/api/invoices?page=${page}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -67,7 +69,7 @@ export default function Invoice() {
     }
     
     try {
-      const response = await fetch('http://localhost:5000/api/invoices/stats', {
+      const response = await fetch(`${API_BASE_URL}/api/invoices/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -120,7 +122,7 @@ export default function Invoice() {
   // Handle Pay button click
   const handlePayInvoice = async (invoiceId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/invoices/${invoiceId}/pay`, {
+      const response = await fetch(`${API_BASE_URL}/api/invoices/${invoiceId}/pay`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -146,7 +148,7 @@ export default function Invoice() {
   const handleViewInvoice = async (invoice) => {
     try {
       // Track the view click for statistics
-      await fetch(`http://localhost:5000/api/invoices/${invoice._id}/track-view`, {
+      await fetch(`${API_BASE_URL}/api/invoices/${invoice._id}/track-view`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -154,7 +156,7 @@ export default function Invoice() {
       });
       
       // Increment view count
-      await fetch(`http://localhost:5000/api/invoices/${invoice._id}/view`, {
+      await fetch(`${API_BASE_URL}/api/invoices/${invoice._id}/view`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -175,7 +177,7 @@ export default function Invoice() {
   // Handle delete
   const handleDeleteInvoice = async (invoiceId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/invoices/${invoiceId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/invoices/${invoiceId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

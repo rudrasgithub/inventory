@@ -3,6 +3,8 @@ import { AuthContext } from '../Context/ContextProvider';
 import toast from 'react-hot-toast';
 import '../css/EditProfile.css';
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
+
 function FormField({ label, type = "text", name, value, onChange, placeholder }) {
   return (
     <div className="form-group-profile">
@@ -130,7 +132,7 @@ export default function EditProfile() {
 
     console.log('Sending to backend:', { ...updateData, password: updateData.password ? '[REDACTED]' : undefined }); // Debug log without exposing password
 
-    const response = await fetch('http://localhost:5000/api/profile', {
+    const response = await fetch(`${API_BASE_URL}/api/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -6,6 +6,8 @@ import BottomNav from "../components/BottomNav";
 import SalesPurchaseChart from "../components/SalesPurchaseChart";
 import CustomLegend from "../components/CustomLegend";
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
+
 export default function Home() {
   const { token, isInitialized } = useContext(AuthContext);
   const [isMobile, setIsMobile] = useState(false);
@@ -311,7 +313,7 @@ export default function Home() {
     if (!token) return;
     
     try {
-      await fetch('http://localhost:5000/api/user/grid-layout', {
+      await fetch(`${API_BASE_URL}/api/user/grid-layout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -328,7 +330,7 @@ export default function Home() {
     if (!token) return;
     
     try {
-      const response = await fetch('http://localhost:5000/api/user/grid-layout', {
+      const response = await fetch(`${API_BASE_URL}/api/user/grid-layout`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -352,7 +354,7 @@ export default function Home() {
 
     try {
       // Fetch products summary for inventory and categories
-      const productsResponse = await fetch('http://localhost:5000/api/products/summary', {
+      const productsResponse = await fetch(`${API_BASE_URL}/api/products/summary`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -371,7 +373,7 @@ export default function Home() {
       }
 
       // Fetch invoice stats for sales overview
-      const invoiceResponse = await fetch('http://localhost:5000/api/invoices/stats', {
+      const invoiceResponse = await fetch(`${API_BASE_URL}/api/invoices/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -389,7 +391,7 @@ export default function Home() {
       }
 
       // Fetch statistics for top products and chart data
-      const statisticsResponse = await fetch('http://localhost:5000/api/statistics', {
+      const statisticsResponse = await fetch(`${API_BASE_URL}/api/statistics`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
