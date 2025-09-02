@@ -319,6 +319,8 @@ tbody tr:hover {
 /* Blur effect for main invoice content */
 .blurred {
   filter: blur(5px);
+  -webkit-filter: blur(5px);
+  transition: filter 0.3s ease;
 }
 
 /* Mobile Responsive Styles */
@@ -548,7 +550,7 @@ tbody tr:hover {
   .mobile-view-btn:hover {
     background: #BFDBFE !important;
   }
-  
+
   .mobile-delete-btn:hover {
     background: #FECACA !important;
   }
@@ -627,4 +629,89 @@ tbody tr:hover {
   text-align: center;
   color: #6B7280;
   font-style: italic;
+}
+
+/* Mobile Delete Dialog Styles */
+.mobile-delete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.mobile-delete-dialog {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  width: 280px;
+  max-width: 90vw;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.mobile-delete-message {
+  color: #1F2937;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.mobile-delete-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.mobile-cancel-btn,
+.mobile-confirm-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  min-width: 80px;
+  transition: all 0.2s ease;
+}
+
+.mobile-cancel-btn {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+.mobile-cancel-btn:hover {
+  background: #E5E7EB;
+  color: #4B5563;
+}
+
+.mobile-confirm-btn {
+  background: #1F2937;
+  color: white;
+}
+
+.mobile-confirm-btn:hover {
+  background: #111827;
 }

@@ -305,7 +305,7 @@ export default function Invoice() {
       />
       {!isMobile && <Sidebar />}
 
-      <div className={`main-invoice ${isModalOpen ? "blurred" : ""}`}>
+      <div className={`main-invoice ${isModalOpen || (isMobile && isDeleteDialogOpen) ? "blurred" : ""}`}>
         {/* Desktop header */}
         {!isMobile && (
           <header className="invoice-header">
@@ -423,7 +423,7 @@ export default function Invoice() {
                               </button>
                               <button
                                 className="mobile-delete-btn"
-                                onClick={() => openDeleteDialog(invoice._id)}
+                                onClick={() => handleDeleteClick(invoice._id)}
                                 title="Delete Invoice"
                               >
                                 <img src="/Delete.svg" alt="Delete" width={20} height={20} />
@@ -552,7 +552,26 @@ export default function Invoice() {
           </section>
         </main>
       </div>
+      
       <InvoiceTemplate isOpen={isModalOpen} onClose={closeModal} invoice={selectedInvoice} />
+      
+      {/* Mobile Delete Dialog - Rendered at root level */}
+      {isMobile && isDeleteDialogOpen && (
+        <div className="mobile-delete-overlay" onClick={closeDeleteDialog}>
+          <div className="mobile-delete-dialog" onClick={(e) => e.stopPropagation()}>
+            <p className="mobile-delete-message">This invoice will be deleted.</p>
+            <div className="mobile-delete-actions">
+              <button className="mobile-cancel-btn" onClick={closeDeleteDialog}>
+                Cancel
+              </button>
+              <button className="mobile-confirm-btn" onClick={confirmDelete}>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Mobile Bottom Navigation - only show on mobile */}
       {isMobile && <BottomNav />}
     </div>

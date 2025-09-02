@@ -31,6 +31,8 @@ export default function Product() {
   });
   const [isBuyModalOpen, setBuyModalOpen] = useState(false);
   const [productToBuy, setProductToBuy] = useState(null);
+  const [isProductInfoModalOpen, setIsProductInfoModalOpen] = useState(false);
+  const [selectedProductInfo, setSelectedProductInfo] = useState(null);
 
   const backendUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
@@ -290,11 +292,22 @@ export default function Product() {
     }
   };
 
+  const handleInfoClick = (e, product) => {
+    e.stopPropagation(); // Prevent row click
+    setSelectedProductInfo(product);
+    setIsProductInfoModalOpen(true);
+  };
+
+  const closeProductInfoModal = () => {
+    setIsProductInfoModalOpen(false);
+    setSelectedProductInfo(null);
+  };
+
   return (
     <div className="dashboard">
       {!isMobile && <Sidebar />}
 
-      <div className={`main-product ${(isAddProductModalOpen || renderComponent === "MultipleProduct") ? "blur" : ""}`}>
+      <div className={`main-product ${(isAddProductModalOpen || renderComponent === "MultipleProduct" || (isMobile && isProductInfoModalOpen)) ? "blur" : ""}`}>
         {/* Desktop header */}
         {!isMobile && (
           <header className="product-header">
@@ -411,7 +424,12 @@ export default function Product() {
                                   product.status === "Out of stock" || product.quantity === 0 ? 'Out of stock' :
                                     product.quantity > product.threshold ? 'In-stock' : 'Low stock'}
                               </span>
-                              <img src="/Info.svg" />
+                              <img 
+                                src="/Info.svg" 
+                                className="mobile-info-icon"
+                                onClick={(e) => handleInfoClick(e, product)}
+                                alt="Product Info"
+                              />
                             </div>
                           </div>
                         ))
@@ -573,6 +591,48 @@ export default function Product() {
           onBuy={handleBuy}
         />
       )}
+      
+      {/* Mobile Product Info Modal */}
+      {isMobile && isProductInfoModalOpen && selectedProductInfo && (
+        <div className="mobile-product-info-overlay" onClick={closeProductInfoModal}>
+          <div className="mobile-product-info-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-product-info-header">
+              <h3>Products Details</h3>
+              <button className="mobile-product-info-close" onClick={closeProductInfoModal}>
+                <img src="/template_close.svg" alt="Close" />
+              </button>
+            </div>
+            <div className="mobile-product-info-content">
+              <div className="mobile-product-info-name">{selectedProductInfo.name}</div>
+              <div className="mobile-product-info-details">
+                <div className="mobile-product-info-item">
+                  <span className="mobile-product-info-label">Price</span>
+                  <span className="mobile-product-info-value">₹{selectedProductInfo.price}</span>
+                </div>
+                <div className="mobile-product-info-item">
+                  <span className="mobile-product-info-label">Quantity</span>
+                  <span className="mobile-product-info-value">{selectedProductInfo.quantity} {selectedProductInfo.unit || 'Packets'}</span>
+                </div>
+                <div className="mobile-product-info-item">
+                  <span className="mobile-product-info-label">Threshold Value</span>
+                  <span className="mobile-product-info-value">{selectedProductInfo.threshold} {selectedProductInfo.unit || 'Packets'}</span>
+                </div>
+                <div className="mobile-product-info-item">
+                  <span className="mobile-product-info-label">Expiry Date</span>
+                  <span className="mobile-product-info-value">
+                    {new Date(selectedProductInfo.expiry).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "2-digit",
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <Toaster
         position="top-right"
         toastOptions={{

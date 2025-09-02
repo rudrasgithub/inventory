@@ -647,3 +647,133 @@ tr > th, tr > td {
     font-style: italic;
   }
 }
+
+/* Mobile Info Icon Styles */
+.mobile-info-icon {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+}
+
+.mobile-info-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Mobile Product Info Modal Styles */
+.mobile-product-info-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.mobile-product-info-modal {
+  background: white;
+  border-radius: 16px;
+  width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.mobile-product-info-header {
+  background: #F8F9FA;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E9ECEF;
+}
+
+.mobile-product-info-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+}
+
+.mobile-product-info-close {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-product-info-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.mobile-product-info-close img {
+  width: 16px;
+  height: 16px;
+}
+
+.mobile-product-info-content {
+  padding: 20px;
+}
+
+.mobile-product-info-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.mobile-product-info-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-product-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.mobile-product-info-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-product-info-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B7280;
+}
+
+.mobile-product-info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1F2937;
+}
