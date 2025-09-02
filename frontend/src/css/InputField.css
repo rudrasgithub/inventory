@@ -4,6 +4,7 @@
 
 .input-field-wrapper {
   position: relative;
+  width: 388px;
 }
 
 .input-field {
@@ -16,15 +17,16 @@
   color: #101828;
   height: 48px;
   background-color: white !important;
+  box-sizing: border-box;
 }
 
 /* Mobile responsive styles for InputField */
-@media (max-width: 414px) {
+@media (max-width: 768px) {
   .input-field {
     width: 100% !important; /* Full width on mobile */
     box-sizing: border-box;
     padding: 16px;
-    padding-right: 45px;
+    padding-right: 50px !important; /* Reserve space for eye icon */
     font-size: 16px; /* Prevent zoom */
     border-radius: 12px;
   }
@@ -36,11 +38,17 @@
   .input-field-group {
     width: 100%;
   }
+  
+  .toggle-password-btn {
+    right: 12px !important; /* Ensure icon stays on the right */
+    top: 50%;
+    transform: translateY(-70%);
+  }
 }
 
 .toggle-password-btn {
   position: absolute;
-  right: 0.75rem;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: none;

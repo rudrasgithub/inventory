@@ -4,8 +4,6 @@ import InputField from "./InputField";
 import toast from "react-hot-toast";
 
 export default function ResetPassword() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -13,21 +11,21 @@ export default function ResetPassword() {
   const handleReset = async () => {
     setLoading(true);
     try {
-      const tempToken = localStorage.getItem("tempToken"); // Retrieve tempToken from local storage
+      const tempToken = localStorage.getItem("tempToken");
 
       const response = await fetch(`${import.meta.env.VITE_REACT_APP_API_BASE_URL}/api/auth/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ newPassword: password, confirmPassword, tempToken }), // Include tempToken
+        body: JSON.stringify({ newPassword: password, confirmPassword, tempToken }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         toast.success(data.message);
-        window.location.href = "/login"; // Redirect to login page
+        window.location.href = "/login";
       } else {
         toast.error(data.message || "Failed to reset password.");
       }
@@ -42,67 +40,46 @@ export default function ResetPassword() {
   return (
     <div className="reset-password-container">
       <div className="reset-password-form-panel">
-        <div className="form-content">
-          <div className="form-header">
-            <h1>Company name</h1>
-            <p>Create a new password for your account</p>
-          </div>
+        <div className="reset-password-form-wrapper">
+          <h1 className="reset-password-form-title">Create New Password</h1>
+          <p className="reset-password-form-subtitle">
+            Today is a new day. It's your day.
+            <br />
+            You shape it. Sign in to start managing your projects.
+          </p>
 
-          <form className="form-body-reset-password">
-            <div className="form-group-reset-password" style={{ position: "relative" }}>
-              <label htmlFor="password">Enter New Password</label>
+          <form className="reset-password-form-body">
+            <div className="reset-password-form-group">
               <InputField
                 id="password"
-                type={showPassword ? "text" : "password"}
+                label="Enter New Password"
+                type="password"
+                isPassword={true}
                 placeholder="at least 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ paddingRight: "40px" }}
-              />
-              <img
-                src={showPassword ? "/Eye.svg" : "/EyeOff.svg"}
-                alt={showPassword ? "Hide Password" : "Show Password"}
-                style={{
-                  position: "absolute",
-                  right: "-20px",
-                  top: "67%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                }}
-                onClick={() => setShowPassword(!showPassword)}
               />
             </div>
 
-            <div className="form-group-reset-password" style={{ position: "relative" }}>
-              <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="reset-password-form-group">
               <InputField
                 id="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
+                label="Confirm Password"
+                type="password"
+                isPassword={true}
                 placeholder="at least 8 characters"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <img
-                src={showConfirmPassword ? "/Eye.svg" : "/EyeOff.svg"}
-                alt={showConfirmPassword ? "Hide Password" : "Show Password"}
-                style={{
-                  position: "absolute",
-                  right: "-20px",
-                  top: "67%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                }}
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               />
             </div>
 
             <button
               type="button"
-              className="reset-password-btn"
+              className="reset-password-submit-btn"
               disabled={loading || !password || password !== confirmPassword || password.length < 8 || confirmPassword.length < 8}
               style={{
-                backgroundColor: !loading ? "#242531" : "#8897ad",
-                cursor: (!loading && password.length >= 8 && confirmPassword.length >= 8) ? "pointer" : "not-allowed",
+                backgroundColor: !loading && password.length >= 8 && confirmPassword.length >= 8 && password === confirmPassword ? "#242531" : "#8897ad",
+                cursor: (!loading && password.length >= 8 && confirmPassword.length >= 8 && password === confirmPassword) ? "pointer" : "not-allowed",
               }}
               onClick={handleReset}
             >
@@ -113,9 +90,18 @@ export default function ResetPassword() {
       </div>
 
       <div className="reset-password-illustration-panel">
-        <div className="illustration-container">
-          <img src="/Group.png" />
+        <div className="reset-password-illustration-wrapper">
+          <h2 className="reset-password-illustration-title">
+            Welcome to
+            <br /> Inventory
+          </h2>
+          <img src="/welcome.svg" />
         </div>
+        <img
+          src="/Illustration.png"
+          alt="Business analytics illustration"
+          className="reset-password-illustration-image"
+        />
       </div>
     </div>
   );

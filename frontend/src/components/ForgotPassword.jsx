@@ -46,7 +46,7 @@ export default function ForgotPassword() {
       <div className="form-panel">
         <div className="form-content">
           <div className="form-header">
-            <h1>Company name</h1>
+            <h1>Inventory</h1>
             <p>Please enter your registered email ID to receive an OTP</p>
           </div>
 

@@ -4,6 +4,38 @@
   background-color: #101828;
 }
 
+/* Mobile styles - remove border radius and make full width */
+@media (max-width: 414px) {
+  .authform-auth-container {
+    background-color: #e5e5e5;
+    padding: 0;
+    display: block;
+  }
+  
+  /* Hide any right panel/welcome section completely on mobile */
+  .auth-welcome-section,
+  .auth-image-section,
+  .welcome-panel,
+  .authform-auth-illustration-panel {
+    display: none !important;
+  }
+  
+  .authform-auth-form-panel {
+    background-color: #e5e5e5;
+    max-width: none;
+    width: 100% !important; /* Full width since no right panel */
+    padding: 40px 24px;
+    border-radius: 0 !important; /* Remove border radius */
+    border-top-right-radius: 0 !important; /* Remove right border radius */
+    border-bottom-right-radius: 0 !important; /* Remove right border radius */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: none; /* Remove flex behavior */
+  }
+}
+
 /* Mobile styles - only show left form panel, hide right panel completely */
 @media (max-width: 414px) {
   .authform-auth-container {
@@ -47,13 +79,13 @@
   
   .authform-form-title {
     font-size: 24px;
-    text-align: center;
+    text-align: left;
     margin-bottom: 8px;
     color: #333;
   }
   
   .authform-form-subtitle {
-    text-align: center;
+    text-align: left;
     color: #666;
     margin-bottom: 24px; /* Reduced margin */
     font-size: 14px;
@@ -78,19 +110,27 @@
   .authform-form-input {
     width: 100%;
     padding: 16px;
+    padding-right: 50px !important;
     border-radius: 12px;
     border: 1px solid #e0e0e0;
     font-size: 16px; /* Prevent zoom on mobile */
     box-sizing: border-box;
     background: white;
   }
+
+  /* Fix eye icon positioning on mobile for inline styled icons */
+  .authform-form-group img[src*="Eye"] {
+    right: 12px !important;
+    top: 65% !important;
+    transform: translateY(-50%) !important;
+  }
   
   .authform-forgot-password-wrapper {
-    text-align: center;
+    text-align: left;
     margin: 16px 0;
     width: 100% !important; /* Full width on mobile */
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
   }
   
   .authform-forgot-password {
@@ -124,7 +164,7 @@
   }
   
   .authform-form-footer {
-    text-align: center;
+    text-align: left;
     margin-top: 24px;
     color: #666;
     font-size: 14px;

@@ -38,7 +38,7 @@ const InputField = ({
             onClick={handleTogglePassword}
             className="toggle-password-btn"
           >
-            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            {showPassword ? <img src="/EyeOff.svg" size={16} /> : <img src="/Eye.svg" size={16} />}
           </button>
         )}
       </div>
