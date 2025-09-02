@@ -7,7 +7,7 @@
 /* Mobile styles - only show left form panel, hide right panel completely */
 @media (max-width: 414px) {
   .authform-auth-container {
-    background-color: #e5e5e5; /* Light gray background like reference */
+    background-color: #f3f4f6;
     padding: 0;
     display: block; /* Stack layout on mobile */
   }
@@ -21,26 +21,28 @@
   }
   
   .authform-auth-form-panel {
-    background-color: #e5e5e5; /* Match container background */
+    background-color: #f3f4f6;
     max-width: none;
     width: 100% !important; /* Full width since no right panel */
-    padding: 40px 24px;
-    border-radius: 0; /* Remove rounded corners on mobile */
+    padding: 40px 0px;
+    border-radius: 0 !important; /* Remove all rounded corners on mobile */
+    border-top-right-radius: 0 !important; /* Remove right border radius */
+    border-bottom-right-radius: 0 !important; /* Remove right border radius */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     flex: none; /* Remove flex behavior */
+    padding-top: 60px;
   }
   
   .authform-form-wrapper {
     width: 100%;
     max-width: none;
-    background: white;
-    padding: 32px 24px;
-    border-radius: 16px; /* Rounded form container */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 0 24px; /* Only horizontal padding, no background or border-radius */
+    border-radius: 0; /* Remove rounded form container */
     box-sizing: border-box; /* Important for proper sizing */
+    background: transparent; /* No white background */
   }
   
   .authform-form-title {
@@ -86,6 +88,9 @@
   .authform-forgot-password-wrapper {
     text-align: center;
     margin: 16px 0;
+    width: 100% !important; /* Full width on mobile */
+    display: flex;
+    justify-content: center;
   }
   
   .authform-forgot-password {
@@ -95,7 +100,8 @@
   }
   
   .authform-submit-btn {
-    width: 100%;
+    width: 100% !important; /* Full width on mobile instead of 388px */
+    max-width: 100% !important;
     padding: 16px;
     border-radius: 12px;
     font-size: 16px;
@@ -105,6 +111,16 @@
     color: white;
     cursor: pointer;
     box-sizing: border-box;
+    background-color: #242531;
+  }
+  
+  /* Override desktop fixed width styles for mobile */
+  .authform-forgot-password-wrapper {
+    width: 100% !important; /* Override 388px fixed width */
+    text-align: center;
+    margin: 16px 0;
+    display: flex;
+    justify-content: center;
   }
   
   .authform-form-footer {
