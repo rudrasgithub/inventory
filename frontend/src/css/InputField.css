@@ -1,5 +1,8 @@
 .input-field-label {
   display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #101828;
 }
 
 .input-field-wrapper {
@@ -22,6 +25,13 @@
 
 /* Mobile responsive styles for InputField */
 @media (max-width: 768px) {
+  .input-field-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+  }
+
   .input-field {
     width: 100% !important; /* Full width on mobile */
     box-sizing: border-box;

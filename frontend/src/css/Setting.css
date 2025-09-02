@@ -50,3 +50,52 @@
   margin: 10px 15px;
   border-radius: 3px;
 }
+
+/* Mobile Header Styles for Settings */
+.mobile-header {
+  display: none;
+  background: #424457;
+  color: white;
+  padding: 16px 16px 10px;
+  height: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-header-settings img {
+  filter: brightness(0) invert(1);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 414px) {
+  .setting-dashboard {
+    display: block;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+  
+  .sidebar { 
+    display: none !important; 
+  }
+  
+  .mobile-header {
+    display: block !important;
+  }
+  
+  .header-setting {
+    display: none !important;
+  }
+  
+  .main-setting {
+    padding: 0; 
+    width: 100% !important; 
+    margin: 0;
+    padding-bottom: 90px;
+  }
+}

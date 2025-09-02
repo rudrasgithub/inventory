@@ -3,12 +3,14 @@ import { AuthContext } from '../Context/ContextProvider';
 import toast, { Toaster } from 'react-hot-toast';
 import "../css/Invoice.css"
 import Sidebar from "./Sidebar"
+import BottomNav from "./BottomNav"
 import InvoiceTemplate from "./InvoiceTemplate"
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
 
 export default function Invoice() {
   const { token, isInitialized } = useContext(AuthContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 414);
   const [invoices, setInvoices] = useState([]);
   const [overallStats, setOverallStats] = useState({
     recentTransactions: 0,
@@ -31,6 +33,18 @@ export default function Invoice() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deleteDialogInvoiceId, setDeleteDialogInvoiceId] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Check if mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 414);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Fetch invoices
   const fetchInvoices = async (page = 1) => {
@@ -284,23 +298,38 @@ export default function Invoice() {
           },
         }}
       />
-      <Sidebar />
+      {!isMobile && <Sidebar />}
 
       <div className={`main-invoice ${isModalOpen ? "blurred" : ""}`}>
-        <header className="invoice-header">
-          <h1>Invoice</h1>
-          <div className="search-box-invoice">
-            <img src="/search-icon.svg" className="search-icon-invoice" />
-            <input 
-              className="search-box-input-invoice" 
-              type="text" 
-              placeholder="Search invoices..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              title="Search across all fields: ID, reference, amount, status, date"
-            />
-          </div>
-        </header>
+        {/* Desktop header */}
+        {!isMobile && (
+          <header className="invoice-header">
+            <h1>Invoice</h1>
+            <div className="search-box-invoice">
+              <img src="/search-icon.svg" className="search-icon-invoice" />
+              <input 
+                className="search-box-input-invoice" 
+                type="text" 
+                placeholder="Search invoices..." 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                title="Search across all fields: ID, reference, amount, status, date"
+              />
+            </div>
+          </header>
+        )}
+        
+        {/* Mobile header */}
+        {isMobile && (
+          <header className="mobile-header">
+            <div className="mobile-header-content">
+              <img src="/product-logo.svg" width={40} height={40} />
+              <div className="mobile-header-settings">
+                <img src="/settings.svg" alt="Settings" height={18} width={18} />
+              </div>
+            </div>
+          </header>
+        )}
 
         <main className="invoice-content">
           <section className="invoice-card-summary">
@@ -355,17 +384,52 @@ export default function Invoice() {
               </div>
             ) : (
               <>
-                <table className="invoice-table">
-                  <thead>
-                    <tr>
-                      <th>Invoice ID</th>
-                      <th>Reference Number</th>
-                      <th>Amount (₹)</th>
-                      <th>Status</th>
-                      <th>Due Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                {isMobile ? (
+                  // Mobile layout: Table-like format matching the reference design
+                  <div className="mobile-invoice-table">
+                    <div className="mobile-table-header">
+                      <div className="mobile-header-cell">Invoice ID</div>
+                    </div>
+                    <div className="mobile-table-body">
+                      {filteredInvoices.map((invoice) => (
+                        <div key={invoice._id} className="mobile-table-row">
+                          <div className="mobile-invoice-id-cell">
+                            {invoice.invoiceId}
+                          </div>
+                          <div className="mobile-invoice-actions">
+                            <button
+                              className="mobile-view-btn"
+                              onClick={() => openModal(invoice)}
+                              title="View Invoice"
+                            >
+                              <img src="/Eye.svg" alt="View" width={20} height={20} />
+                            </button>
+                            <button
+                              className="mobile-delete-btn"
+                              onClick={() => openDeleteDialog(invoice._id)}
+                              title="Delete Invoice"
+                            >
+                              <img src="/Delete.svg" alt="Delete" width={20} height={20} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  // Desktop layout: Full table
+                  <>
+                    <table className="invoice-table">
+                      <thead>
+                        <tr>
+                          <th>Invoice ID</th>
+                          <th>Reference Number</th>
+                          <th>Amount (₹)</th>
+                          <th>Status</th>
+                          <th>Due Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
                     {filteredInvoices.map((invoice, index) => (
                       <tr key={invoice._id} className={index % 2 === 1 ? "alt-row" : ""}>
                         <td>{invoice.invoiceId}</td>
@@ -431,42 +495,48 @@ export default function Invoice() {
                         </td>
                       </tr>
                     ))}
-                  </tbody>
-                </table>
-
-                <div className="pagination-invoice">
-                  <button 
-                    className="invoice-btn-outline" 
-                    disabled={!pagination.hasPrev}
-                    onClick={() => handlePageChange(pagination.page - 1)}
-                    style={{ 
-                      cursor: pagination.hasPrev ? 'pointer' : 'not-allowed',
-                      backgroundColor: pagination.hasPrev ? 'transparent' : '#f5f5f5',
-                      opacity: pagination.hasPrev ? 1 : 0.6
-                    }}
-                  >
-                    Previous
-                  </button>
-                  <span>Page {pagination.page} of {pagination.totalPages}</span>
-                  <button 
-                    className="invoice-btn-outline"
-                    disabled={!pagination.hasNext}
-                    onClick={() => handlePageChange(pagination.page + 1)}
-                    style={{ 
-                      cursor: pagination.hasNext ? 'pointer' : 'not-allowed',
-                      backgroundColor: pagination.hasNext ? 'transparent' : '#f5f5f5',
-                      opacity: pagination.hasNext ? 1 : 0.6
-                    }}
-                  >
-                    Next
-                  </button>
-                </div>
+                      </tbody>
+                    </table>
+                  </>
+                )}
               </>
             )}
+
+            {!isMobile && (
+              <div className="pagination-invoice">
+                      <button 
+                        className="invoice-btn-outline" 
+                        disabled={!pagination.hasPrev}
+                        onClick={() => handlePageChange(pagination.page - 1)}
+                        style={{ 
+                          cursor: pagination.hasPrev ? 'pointer' : 'not-allowed',
+                          backgroundColor: pagination.hasPrev ? 'transparent' : '#f5f5f5',
+                          opacity: pagination.hasPrev ? 1 : 0.6
+                        }}
+                      >
+                        Previous
+                      </button>
+                      <span>Page {pagination.page} of {pagination.totalPages}</span>
+                      <button 
+                        className="invoice-btn-outline"
+                        disabled={!pagination.hasNext}
+                        onClick={() => handlePageChange(pagination.page + 1)}
+                        style={{ 
+                          cursor: pagination.hasNext ? 'pointer' : 'not-allowed',
+                          backgroundColor: pagination.hasNext ? 'transparent' : '#f5f5f5',
+                          opacity: pagination.hasNext ? 1 : 0.6
+                        }}
+                      >
+                        Next
+                      </button>
+                    </div>
+                )}
           </section>
         </main>
       </div>
       <InvoiceTemplate isOpen={isModalOpen} onClose={closeModal} invoice={selectedInvoice} />
+      {/* Mobile Bottom Navigation - only show on mobile */}
+      {isMobile && <BottomNav />}
     </div>
   )
 }

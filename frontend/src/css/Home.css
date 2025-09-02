@@ -93,6 +93,7 @@
 .bar-graph-container {
   padding: 2px 20px 15px;
 }
+
 .home-card-title{
   font-size:11px;
   font-weight: 600;
@@ -106,14 +107,12 @@
 .home-metrics-grid{
   display:grid;
   grid-template-columns: repeat(4, 1fr);
-  gap:14px;
 }
 
 .home-metric{
   display:flex;
   flex-direction: column;
   align-items:center;
-  gap:12px;
 }
 
 .home-metric-icon{
@@ -345,6 +344,80 @@
 
 .home-product-stars .home-star.filled{ color: var(--accent-yellow); }
 
+/* Mobile Header Styles */
+.mobile-header {
+  display: none;
+  background: #424457;
+  color: white;
+  padding: 16px 16px 10px;
+  height: 30px; /* Set height to 30px for mobile screens */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-header-pie {
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.pie-chart-mini {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    #0bf4c8 0deg 180deg,
+    #0bb2f4 180deg 360deg
+  );
+  position: relative;
+}
+
+.pie-chart-mini::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: #424457;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.mobile-header-info {
+  flex: 1;
+  margin-left: 16px;
+}
+
+.mobile-header-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  margin-bottom: 2px;
+}
+
+.mobile-header-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.mobile-header-settings {
+  padding: 8px;
+}
+
+.settings-icon {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+  cursor: pointer;
+}
+
 /* Mobile Grid Container - Hidden by default, shown on mobile */
 .mobile-grid-container {
   display: none;
@@ -378,6 +451,11 @@
     width: 220px; 
   }
   
+  /* SHOW mobile header */
+  .mobile-header {
+    display: block !important;
+  }
+  
   /* HIDE desktop grid layout completely on mobile */
   .grid-column {
     display: none !important;
@@ -387,8 +465,7 @@
   .mobile-grid-container {
     display: flex !important;
     flex-direction: column;
-    gap: 12px; /* Consistent gap between grids */
-    padding: 16px 12px; /* Top padding for content, side padding for margins */
+    gap: 12px; /* Reduced gap between grids from 12px to 8px */
     padding-bottom: 90px; /* Space for bottom navigation with proper gap */
     width: 100%;
     box-sizing: border-box;
@@ -401,14 +478,12 @@
     margin: 0 !important;
     border-radius: 12px;
     background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    padding: 16px;
     box-sizing: border-box;
   }
   
   /* Mobile draggable layout adjustments */
   .draggable-layout {
-    padding: 0;
+    padding: 0px 20px; /* Updated padding for mobile screens */
     flex-direction: column;
     width: 100%;
   }
@@ -435,16 +510,14 @@
   
   /* Mobile specific grid content adjustments */
   .card-content, .purchase-content, .sales-content {
-    padding: 12px 0;
+    padding: 8px 0; /* Reduced from 12px to 8px */
   }
   
-  /* Sales Overview Mobile Layout - 2x2 Grid */
+  /* Sales Overview Mobile Layout - 2x2 Grid with reduced spacing */
   .home-metrics-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     grid-template-rows: 1fr 1fr !important;
-    gap: 16px !important;
-    padding: 16px 0;
   }
   
   .home-metric {
@@ -452,7 +525,6 @@
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
-    padding: 12px !important;
     background: transparent;
     border-radius: 8px;
   }
@@ -460,25 +532,25 @@
   .home-metric img {
     width: 32px !important;
     height: 32px !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important; /* Reduced from 8px to 6px */
   }
   
   .home-metric-map {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 4px;
+    gap: 2px; /* Reduced from 4px to 2px */
   }
   
   .home-metric-value {
-    font-size: 20px !important;
+    font-size: 18px !important; /* Reduced from 20px to 18px */
     font-weight: bold !important;
     color: #333 !important;
     margin: 0 !important;
   }
   
   .home-metric-label {
-    font-size: 14px !important;
+    font-size: 13px !important; /* Reduced from 14px to 13px */
     color: #666 !important;
     margin: 0 !important;
   }
@@ -504,6 +576,11 @@
   .top-products-list {
     max-height: 200px;
     overflow-y: auto;
+  }
+  
+  /* Remove border from home-card on mobile screens only */
+  .home-card {
+    border: none !important;
   }
 }
 

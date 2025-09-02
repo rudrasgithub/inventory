@@ -1,21 +1,21 @@
 /* Bottom Navigation for Mobile */
 .bottom-nav {
   position: fixed;
-  bottom: 16px; /* 16px gap from bottom as shown in image */
-  left: 16px;
-  right: 16px;
-  background: #424457;
+  bottom: 0px; /* 16px gap from bottom as shown in image */
+  left: 0px;
+  right: 0px;
+  background: #242531;
   display: none; /* Hidden by default, shown on mobile */
   justify-content: space-around;
   align-items: center;
-  padding: 12px 0;
+  padding: 20px 0;
   border-radius: 16px; /* Rounded corners like in the image */
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 1000;
+  z-index: 1000; /* High z-index to ensure it stays fixed at bottom */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
 }
 
-.nav-item {
+.bottom-nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,11 +25,11 @@
   transition: all 0.2s ease;
 }
 
-.nav-item:hover {
+.bottom-nav-item:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.nav-item.active {
+.bottom-nav-item.active {
   background: rgba(255, 255, 255, 0.2);
 }
 
@@ -37,10 +37,6 @@
   width: 24px;
   height: 24px;
   filter: brightness(0) invert(1); /* Make icons white */
-}
-
-.nav-item.active .nav-icon {
-  filter: brightness(0) invert(1);
 }
 
 /* Show bottom nav only on mobile screens (320px - 414px) */

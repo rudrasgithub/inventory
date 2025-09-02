@@ -15,17 +15,17 @@ export default function Home() {
     // Inventory Summary
     quantityInHand: 0, // Total available product items (sum of current quantities)
     toBeReceived: 200, // Static as requested
-    
+
     // Product Summary
     numberOfSuppliers: 31, // Static as requested
     numberOfCategories: 0, // Dynamic - distinct count of categories
-    
+
     // Purchase Overview
     totalPurchases: 0, // Total product items purchased by user
     purchaseCost: 0,   // Total cost of purchases
     cancelCount: 5,    // Static as requested
     returnValue: 17432, // Static as requested
-    
+
     // Sales Overview
     totalSales: 0,
     totalRevenue: 0,
@@ -35,7 +35,7 @@ export default function Home() {
 
   const [topProducts, setTopProducts] = useState([]);
   const [chartData, setChartData] = useState([]);
-  
+
   // Grid layout state
   const [leftColumnOrder, setLeftColumnOrder] = useState([0, 1, 2]);
   const [rightColumnOrder, setRightColumnOrder] = useState([0, 1, 2]);
@@ -46,10 +46,10 @@ export default function Home() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 414);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -75,21 +75,21 @@ export default function Home() {
       console.log('Home.jsx: Drag and drop disabled on mobile');
       return;
     }
-    
+
     console.log('Home.jsx: useEffect for drag-drop is running');
     console.log('Home.jsx: leftColumnOrder:', leftColumnOrder);
     console.log('Home.jsx: rightColumnOrder:', rightColumnOrder);
-    
+
     // Small delay to ensure DOM is fully rendered
     const timeoutId = setTimeout(() => {
       const gridItems = document.querySelectorAll('.grid-item');
       console.log('Home.jsx: Found grid items:', gridItems.length);
-      
+
       if (gridItems.length === 0) {
         console.error('Home.jsx: No .grid-item elements found!');
         return;
       }
-      
+
       gridItems.forEach((item, index) => {
         console.log(`Home.jsx: Grid item ${index}:`, item.className);
       });
@@ -98,192 +98,192 @@ export default function Home() {
       let initialMouseY = 0;
       let initialPositions = new Map();
 
-    const onMouseDown = function(e) {
-      console.log('Home.jsx: onMouseDown triggered', e.target);
-      e.preventDefault();
+      const onMouseDown = function (e) {
+        console.log('Home.jsx: onMouseDown triggered', e.target);
+        e.preventDefault();
 
-      draggedItem = this;
-      console.log('Home.jsx: draggedItem:', draggedItem);
-      
-      const container = draggedItem.parentElement;
-      initialPositions.set(container, container.getBoundingClientRect());
+        draggedItem = this;
+        console.log('Home.jsx: draggedItem:', draggedItem);
 
-      const siblings = Array.from(container.children);
-      siblings.forEach(child => {
-        initialPositions.set(child, child.getBoundingClientRect());
-      });
-      
-      initialMouseY = e.clientY;
-      draggedItem.classList.add('is-dragging');
+        const container = draggedItem.parentElement;
+        initialPositions.set(container, container.getBoundingClientRect());
 
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    };
+        const siblings = Array.from(container.children);
+        siblings.forEach(child => {
+          initialPositions.set(child, child.getBoundingClientRect());
+        });
 
-    const onMouseMove = function(e) {
-      if (!draggedItem) return;
+        initialMouseY = e.clientY;
+        draggedItem.classList.add('is-dragging');
 
-      const container = draggedItem.parentElement;
-      const containerRect = initialPositions.get(container);
-      const draggedItemInitialRect = initialPositions.get(draggedItem);
-      
-      let deltaY = e.clientY - initialMouseY;
-
-      // --- Constrain dragging within the container ---
-      const futureTop = draggedItemInitialRect.top + deltaY;
-      const futureBottom = draggedItemInitialRect.bottom + deltaY;
-      const containerPadding = 24;
-
-      if (futureTop < containerRect.top + containerPadding) {
-        deltaY = (containerRect.top + containerPadding) - draggedItemInitialRect.top;
-      }
-      if (futureBottom > containerRect.bottom - containerPadding) {
-        deltaY = (containerRect.bottom - containerPadding) - draggedItemInitialRect.bottom;
-      }
-
-      // Move the dragged item
-      draggedItem.style.transform = `translateY(${deltaY}px)`;
-
-      const draggedCurrentRect = {
-        top: draggedItemInitialRect.top + deltaY,
-        bottom: draggedItemInitialRect.bottom + deltaY
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
       };
 
-      const draggedItemHeight = draggedItemInitialRect.height;
-      const gap = 16;
+      const onMouseMove = function (e) {
+        if (!draggedItem) return;
 
-      // --- Scaled Proportional Override Logic ---
-      for (const sibling of container.children) {
-        if (sibling === draggedItem) continue;
+        const container = draggedItem.parentElement;
+        const containerRect = initialPositions.get(container);
+        const draggedItemInitialRect = initialPositions.get(draggedItem);
 
-        const siblingInitialRect = initialPositions.get(sibling);
-        const siblingHeight = siblingInitialRect.height;
-        let translation = 0;
-        
-        // If dragged item and sibling overlap vertically
-        if (draggedCurrentRect.bottom > siblingInitialRect.top && draggedCurrentRect.top < siblingInitialRect.bottom) {
-          const requiredDisplacement = draggedItemHeight + gap;
+        let deltaY = e.clientY - initialMouseY;
 
-          // Case 1: Dragging DOWN over a sibling that was initially below
-          if (deltaY > 0 && siblingInitialRect.top > draggedItemInitialRect.top) {
-            const overlap = draggedCurrentRect.bottom - siblingInitialRect.top;
-            // Scale the movement: as overlap approaches siblingHeight, translation approaches requiredDisplacement
-            const overlapRatio = Math.min(overlap / siblingHeight, 1);
-            translation = -overlapRatio * requiredDisplacement;
-          } 
-          
-          // Case 2: Dragging UP over a sibling that was initially above
-          else if (deltaY < 0 && siblingInitialRect.top < draggedItemInitialRect.top) {
-            const overlap = siblingInitialRect.bottom - draggedCurrentRect.top;
-            const overlapRatio = Math.min(overlap / siblingHeight, 1);
-            translation = overlapRatio * requiredDisplacement;
+        // --- Constrain dragging within the container ---
+        const futureTop = draggedItemInitialRect.top + deltaY;
+        const futureBottom = draggedItemInitialRect.bottom + deltaY;
+        const containerPadding = 24;
+
+        if (futureTop < containerRect.top + containerPadding) {
+          deltaY = (containerRect.top + containerPadding) - draggedItemInitialRect.top;
+        }
+        if (futureBottom > containerRect.bottom - containerPadding) {
+          deltaY = (containerRect.bottom - containerPadding) - draggedItemInitialRect.bottom;
+        }
+
+        // Move the dragged item
+        draggedItem.style.transform = `translateY(${deltaY}px)`;
+
+        const draggedCurrentRect = {
+          top: draggedItemInitialRect.top + deltaY,
+          bottom: draggedItemInitialRect.bottom + deltaY
+        };
+
+        const draggedItemHeight = draggedItemInitialRect.height;
+        const gap = 16;
+
+        // --- Scaled Proportional Override Logic ---
+        for (const sibling of container.children) {
+          if (sibling === draggedItem) continue;
+
+          const siblingInitialRect = initialPositions.get(sibling);
+          const siblingHeight = siblingInitialRect.height;
+          let translation = 0;
+
+          // If dragged item and sibling overlap vertically
+          if (draggedCurrentRect.bottom > siblingInitialRect.top && draggedCurrentRect.top < siblingInitialRect.bottom) {
+            const requiredDisplacement = draggedItemHeight + gap;
+
+            // Case 1: Dragging DOWN over a sibling that was initially below
+            if (deltaY > 0 && siblingInitialRect.top > draggedItemInitialRect.top) {
+              const overlap = draggedCurrentRect.bottom - siblingInitialRect.top;
+              // Scale the movement: as overlap approaches siblingHeight, translation approaches requiredDisplacement
+              const overlapRatio = Math.min(overlap / siblingHeight, 1);
+              translation = -overlapRatio * requiredDisplacement;
+            }
+
+            // Case 2: Dragging UP over a sibling that was initially above
+            else if (deltaY < 0 && siblingInitialRect.top < draggedItemInitialRect.top) {
+              const overlap = siblingInitialRect.bottom - draggedCurrentRect.top;
+              const overlapRatio = Math.min(overlap / siblingHeight, 1);
+              translation = overlapRatio * requiredDisplacement;
+            }
           }
+
+          sibling.style.transform = `translateY(${translation}px)`;
         }
-        
-        sibling.style.transform = `translateY(${translation}px)`;
-      }
-    };
+      };
 
-    const onMouseUp = function(e) {
-      if (!draggedItem) return;
+      const onMouseUp = function (e) {
+        if (!draggedItem) return;
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
 
-      const container = draggedItem.parentElement;
-      
-      // Determine final order based on the mouse position at drop
-      const dropTarget = getDragAfterElement(container, e.clientY);
-      const siblings = [...container.children];
-      const finalOrder = siblings.filter(child => child !== draggedItem);
-      const dropIndex = dropTarget ? finalOrder.indexOf(dropTarget) : finalOrder.length;
-      finalOrder.splice(dropIndex, 0, draggedItem);
-      
-      // Animate every item to its correct final resting place
-      siblings.forEach(child => {
-        const initialPos = initialPositions.get(child);
-        const newIndex = finalOrder.indexOf(child);
-        
-        let newTop = initialPositions.get(container).top + 24; // container top + padding
-        const gap = 16; // 1rem
+        const container = draggedItem.parentElement;
 
-        for (let i = 0; i < newIndex; i++) {
-          const itemAbove = finalOrder[i];
-          const itemAboveRect = initialPositions.get(itemAbove);
-          newTop += itemAboveRect.height + gap;
-        }
-        
-        const deltaY = newTop - initialPos.top;
+        // Determine final order based on the mouse position at drop
+        const dropTarget = getDragAfterElement(container, e.clientY);
+        const siblings = [...container.children];
+        const finalOrder = siblings.filter(child => child !== draggedItem);
+        const dropIndex = dropTarget ? finalOrder.indexOf(dropTarget) : finalOrder.length;
+        finalOrder.splice(dropIndex, 0, draggedItem);
 
-        child.style.transition = 'transform 0.2s ease-in-out';
-        child.style.transform = `translateY(${deltaY}px)`;
+        // Animate every item to its correct final resting place
+        siblings.forEach(child => {
+          const initialPos = initialPositions.get(child);
+          const newIndex = finalOrder.indexOf(child);
+
+          let newTop = initialPositions.get(container).top + 24; // container top + padding
+          const gap = 16; // 1rem
+
+          for (let i = 0; i < newIndex; i++) {
+            const itemAbove = finalOrder[i];
+            const itemAboveRect = initialPositions.get(itemAbove);
+            newTop += itemAboveRect.height + gap;
+          }
+
+          const deltaY = newTop - initialPos.top;
+
+          child.style.transition = 'transform 0.2s ease-in-out';
+          child.style.transform = `translateY(${deltaY}px)`;
+        });
+
+        // After the animation, clean up and reorder the DOM
+        setTimeout(() => {
+          finalOrder.forEach(item => container.appendChild(item));
+
+          for (const child of container.children) {
+            child.style.transition = '';
+            child.style.transform = '';
+            child.classList.remove('is-dragging');
+          }
+
+          // Save the new order to state and backend
+          const isLeftColumn = container.classList.contains('left-column');
+          const newOrder = Array.from(container.children).map((child, index) => index);
+
+          if (isLeftColumn) {
+            setLeftColumnOrder(newOrder);
+            saveGridLayout({
+              leftColumn: newOrder,
+              rightColumn: rightColumnOrder
+            });
+          } else {
+            setRightColumnOrder(newOrder);
+            saveGridLayout({
+              leftColumn: leftColumnOrder,
+              rightColumn: newOrder
+            });
+          }
+
+          draggedItem = null;
+          initialPositions.clear();
+        }, 200);
+      };
+
+      const getDragAfterElement = function (container, y) {
+        const draggableElements = [...container.querySelectorAll('.grid-item:not(.is-dragging)')];
+
+        return draggableElements.reduce((closest, child) => {
+          const box = child.getBoundingClientRect();
+          const offset = y - box.top - box.height / 2;
+
+          if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+          } else {
+            return closest;
+          }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+      };
+
+      // Attach event listeners
+      gridItems.forEach((item, index) => {
+        console.log(`Home.jsx: Attaching mousedown listener to item ${index}:`, item);
+        item.addEventListener('mousedown', onMouseDown);
       });
 
-      // After the animation, clean up and reorder the DOM
-      setTimeout(() => {
-        finalOrder.forEach(item => container.appendChild(item));
+      console.log('Home.jsx: All event listeners attached');
 
-        for (const child of container.children) {
-          child.style.transition = '';
-          child.style.transform = '';
-          child.classList.remove('is-dragging');
-        }
-        
-        // Save the new order to state and backend
-        const isLeftColumn = container.classList.contains('left-column');
-        const newOrder = Array.from(container.children).map((child, index) => index);
-        
-        if (isLeftColumn) {
-          setLeftColumnOrder(newOrder);
-          saveGridLayout({
-            leftColumn: newOrder,
-            rightColumn: rightColumnOrder
-          });
-        } else {
-          setRightColumnOrder(newOrder);
-          saveGridLayout({
-            leftColumn: leftColumnOrder,
-            rightColumn: newOrder
-          });
-        }
-        
-        draggedItem = null;
-        initialPositions.clear();
-      }, 200);
-    };
-
-    const getDragAfterElement = function(container, y) {
-      const draggableElements = [...container.querySelectorAll('.grid-item:not(.is-dragging)')];
-
-      return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        
-        if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
-        }
-      }, { offset: Number.NEGATIVE_INFINITY }).element;
-    };
-
-    // Attach event listeners
-    gridItems.forEach((item, index) => {
-      console.log(`Home.jsx: Attaching mousedown listener to item ${index}:`, item);
-      item.addEventListener('mousedown', onMouseDown);
-    });
-
-    console.log('Home.jsx: All event listeners attached');
-
-    // Cleanup function
-    return () => {
-      console.log('Home.jsx: Cleaning up event listeners');
-      gridItems.forEach(item => {
-        item.removeEventListener('mousedown', onMouseDown);
-      });
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
+      // Cleanup function
+      return () => {
+        console.log('Home.jsx: Cleaning up event listeners');
+        gridItems.forEach(item => {
+          item.removeEventListener('mousedown', onMouseDown);
+        });
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      };
     }, 100);
 
     // Cleanup function
@@ -299,7 +299,7 @@ export default function Home() {
       const box = child.getBoundingClientRect();
       // Calculate the offset between the mouse position and the center of the element
       const offset = y - box.top - box.height / 2;
-      
+
       // We are looking for the element that is just below the cursor
       if (offset < 0 && offset > closest.offset) {
         return { offset: offset, element: child };
@@ -312,37 +312,29 @@ export default function Home() {
   const saveGridLayout = async (layout) => {
     if (!token) return;
     
+    // Save to localStorage as fallback since backend endpoint doesn't exist
     try {
-      await fetch(`${API_BASE_URL}/api/user/grid-layout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(layout)
-      });
+      localStorage.setItem('gridLayout', JSON.stringify(layout));
+      console.log('Grid layout saved to localStorage');
     } catch (error) {
-      console.error('Error saving grid layout:', error);
+      console.log('Could not save grid layout to localStorage');
     }
   };
 
   const loadGridLayout = async () => {
     if (!token) return;
     
+    // Load from localStorage as fallback since backend endpoint doesn't exist
     try {
-      const response = await fetch(`${API_BASE_URL}/api/user/grid-layout`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (response.ok) {
-        const layout = await response.json();
+      const savedLayout = localStorage.getItem('gridLayout');
+      if (savedLayout) {
+        const layout = JSON.parse(savedLayout);
         if (layout.leftColumn) setLeftColumnOrder(layout.leftColumn);
         if (layout.rightColumn) setRightColumnOrder(layout.rightColumn);
+        console.log('Grid layout loaded from localStorage');
       }
     } catch (error) {
-      console.error('Error loading grid layout:', error);
+      console.log('Could not load grid layout from localStorage, using default layout');
     }
   };
 
@@ -359,10 +351,10 @@ export default function Home() {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (productsResponse.ok) {
         const productsData = await productsResponse.json();
-        
+
         setSummaryData(prev => ({
           ...prev,
           quantityInHand: productsData.totalProducts || 0, // Total available items
@@ -378,10 +370,10 @@ export default function Home() {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (invoiceResponse.ok) {
         const invoiceData = await invoiceResponse.json();
-        
+
         setSummaryData(prev => ({
           ...prev,
           totalSales: invoiceData.recentTransactions || 0,
@@ -547,13 +539,13 @@ export default function Home() {
             <div key={i} className="top-product-row">
               <div className="product-info">
                 {product.image ? (
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
+                  <img
+                    src={product.image}
+                    alt={product.name}
                     className="product-thumbnail"
-                    style={{ 
-                      width: '40px', 
-                      height: '40px', 
+                    style={{
+                      width: '40px',
+                      height: '40px',
                       borderRadius: '6px',
                       objectFit: 'cover',
                       marginRight: '12px',
@@ -564,7 +556,7 @@ export default function Home() {
                     }}
                   />
                 ) : (
-                  <div 
+                  <div
                     className="product-placeholder"
                     style={{
                       width: '40px',
@@ -642,21 +634,30 @@ export default function Home() {
     <div className="dashboard-home">
       {!isMobile && <Sidebar />}
       <main className="main-home">
-        {/* Only show header on desktop */}
         {!isMobile && <header className="header-main"><h1>Home</h1></header>}
-        
+
+        {isMobile && (
+          <header className="mobile-header">
+            <div className="mobile-header-content">
+              <img src="/product-logo.svg" alt="product logo" height={47} width={47} />
+              <div className="mobile-header-settings">
+                <img src="/settings.svg" alt="Settings" height={18} width={18} />
+              </div>
+            </div>
+          </header>
+        )}
+
         <section className="grid-layout-home draggable-layout">
           {isMobile ? (
-            // Mobile: Single Column Layout
             <div className="mobile-grid-container">
               <div className="grid-item mobile">
                 {renderSalesOverview()}
               </div>
               <div className="grid-item mobile">
-                {renderChart()}
+                {renderPurchaseOverview()}
               </div>
               <div className="grid-item mobile">
-                {renderPurchaseOverview()}
+                {renderChart()}
               </div>
               <div className="grid-item mobile">
                 {renderInventorySummary()}
@@ -669,9 +670,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            // Desktop: Two Column Layout
             <>
-              {/* Left Grid Container */}
               <div className="grid-column left-column">
                 <div className="grid-item left">
                   {renderSalesOverview()}
@@ -700,7 +699,7 @@ export default function Home() {
           )}
         </section>
       </main>
-      
+
       {/* Mobile Bottom Navigation - only show on mobile */}
       {isMobile && <BottomNav />}
     </div>

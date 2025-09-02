@@ -3,6 +3,7 @@ import { AuthContext } from '../Context/ContextProvider';
 import toast, { Toaster } from 'react-hot-toast';
 import "../css/Product.css";
 import Sidebar from "./Sidebar";
+import BottomNav from "./BottomNav";
 import AddProduct from "./AddProduct";
 import NewProduct from "./NewProduct";
 import IndividualProduct from "./NewProduct";
@@ -11,6 +12,7 @@ import PurchaseModal from "./PurchaseModal";
 
 export default function Product() {
   const { token, isInitialized } = useContext(AuthContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 414);
   const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [renderComponent, setRenderComponent] = useState(null);
@@ -31,6 +33,18 @@ export default function Product() {
   const [productToBuy, setProductToBuy] = useState(null);
 
   const backendUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
+
+  // Check if mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 414);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Debounce search query to avoid too many API calls
   useEffect(() => {
@@ -278,26 +292,40 @@ export default function Product() {
 
   return (
     <div className="dashboard">
-      <Sidebar />
+      {!isMobile && <Sidebar />}
 
       <div className={`main-product ${(isAddProductModalOpen || renderComponent === "MultipleProduct") ? "blur" : ""}`}>
-        <header className="product-header">
-          <h1>Product</h1>
-          <div className="search-box-product">
-            <img src="/search-icon.svg" className="search-icon-product" />
-            <input 
-              className="search-box-input-product" 
-              type="text" 
-              placeholder="Search products..." 
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1); // Reset to first page when searching
-              }}
-              title="Search across all fields: name, ID, category, price, quantity, threshold, status, unit"
-            />
-          </div>
-        </header>
+        {/* Desktop header */}
+        {!isMobile && (
+          <header className="product-header">
+            <h1>Product</h1>
+            <div className="search-box-product">
+              <img src="/search-icon.svg" className="search-icon-product" />
+              <input 
+                className="search-box-input-product" 
+                type="text" 
+                placeholder="Search products..." 
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1); // Reset to first page when searching
+                }}
+                title="Search across all fields: name, ID, category, price, quantity, threshold, status, unit"
+              />
+            </div>
+          </header>
+        )}
+
+        {isMobile && (
+          <header className="mobile-header">
+            <div className="mobile-header-content">
+              <img src="/product-logo.svg" width={40} height={40} />
+              <div className="mobile-header-settings">
+                <img src="/settings.svg" alt="Settings" height={18} width={18} />
+              </div>
+            </div>
+          </header>
+        )}
 
 
         {renderComponent === "IndividualProduct" && <IndividualProduct setRenderComponent={setRenderComponent} refreshProducts={refreshProducts} />}
@@ -305,7 +333,92 @@ export default function Product() {
 
         {renderComponent !== "IndividualProduct" && (
           <main className="product-content">
-            <section className="product-overview">
+            {isMobile ? (
+              // Mobile layout
+              <>
+                <section className="mobile-product-overview">
+                  <h2>Overall Inventory</h2>
+                  <div className="mobile-product-overview-grid">
+                    <div className="mobile-product-card">
+                      <p>Categories</p>
+                      <p>{summary.categories}</p>
+                      <div className="mobile-product-card-meta">
+                        <span>Last 7 days</span>
+                      </div>
+                    </div>
+                    <div className="mobile-product-card">
+                      <p>Total Products</p>
+                      <div className="mobile-product-card-values">
+                        <p>{summary.totalProducts}</p>
+                        <p>₹{summary.revenue}</p>
+                      </div>
+                      <div className="mobile-product-card-meta">
+                        <span>Last 7 days</span>
+                        <span>Revenue</span>
+                      </div>
+                    </div>
+                    <div className="mobile-product-card">
+                      <p>Top Selling</p>
+                      <div className="mobile-product-card-values">
+                        <p>5</p>
+                        <p>₹2500</p>
+                      </div>
+                      <div className="mobile-product-card-meta">
+                        <span>Last 7 days</span>
+                        <span>Cost</span>
+                      </div>
+                    </div>
+                    <div className="mobile-product-card">
+                      <p>Low Stocks</p>
+                      <div className="mobile-product-card-values">
+                        <p>{summary.ordered}</p>
+                        <p>{summary.notInStock}</p>
+                      </div>
+                      <div className="mobile-product-card-meta">
+                        <span>Ordered</span>
+                        <span>Not in stock</span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="mobile-products">
+                  <div className="mobile-products-table">
+                    <div className="mobile-table-header">
+                      <div className="mobile-header-cell">Products</div>
+                      <div className="mobile-header-cell">Availability</div>
+                    </div>
+                    <div className="mobile-table-body">
+                      {products.map((product, index) => (
+                        <div key={index} className="mobile-table-row">
+                          <div className="mobile-product-name-cell">
+                            {product.name}
+                          </div>
+                          <div className="mobile-availability-cell">
+                            <span className={`availability-status ${
+                              product.quantity > 0 ? 'in-stock' : 'out-of-stock'
+                            }`}>
+                              {product.quantity > 0 ? 'In-stock' : 'Out of stock'}
+                            </span>
+                            <div className="info-icon-circle">
+                              <span className="info-icon-text">i</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Floating Add Product Button */}
+                  <button className="mobile-add-product-fab" onClick={openAddProductModal}>
+                    Add Product
+                  </button>
+                </section>
+              </>
+            ) : (
+              // Desktop layout - original design
+              <>
+                <section className="product-overview">
               <h2>Overall Inventory</h2>
               <div className="product-overview-grid">
                 <div className="product-card">
@@ -422,6 +535,8 @@ export default function Product() {
                 </button>
               </div>
             </section>
+              </>
+            )}
           </main>
         )}
       </div>
@@ -465,6 +580,9 @@ export default function Product() {
           },
         }}
       />
+      
+      {/* Mobile Bottom Navigation - only show on mobile */}
+      {isMobile && <BottomNav />}
     </div>
   );
 }
