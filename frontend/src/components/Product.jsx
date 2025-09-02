@@ -25,7 +25,7 @@ export default function Product() {
   const [summary, setSummary] = useState({
     categories: 0,
     totalProducts: 0,
-    revenue: 0, 
+    revenue: 0,
     notInStock: 0, // Count of products with quantity === 0 (current stock)
     ordered: 0,    // Total products bought (sum of purchase quantities)
   });
@@ -39,10 +39,10 @@ export default function Product() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 414);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -60,7 +60,7 @@ export default function Product() {
       console.log('No token available, skipping summary fetch');
       return;
     }
-    
+
     console.log('[fetchSummary] calling');
     try {
       const url = `${backendUrl}/api/products/summary`;
@@ -95,7 +95,7 @@ export default function Product() {
         console.log('No token available, skipping product fetch');
         return;
       }
-      
+
       try {
         const searchParam = debouncedSearchQuery ? `&search=${encodeURIComponent(debouncedSearchQuery)}` : '';
         const response = await fetch(`${backendUrl}/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}${searchParam}`, {
@@ -138,7 +138,7 @@ export default function Product() {
       console.log('No token available, skipping product refresh');
       return;
     }
-    
+
     try {
       const pageToFetch = isNewProduct && currentPage === totalPages ? totalPages : currentPage;
       const searchParam = debouncedSearchQuery ? `&search=${encodeURIComponent(debouncedSearchQuery)}` : '';
@@ -147,7 +147,7 @@ export default function Product() {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (!response.ok) {
         if (response.status === 401) {
           console.log('Token invalid during refresh, user may need to re-login');
@@ -156,7 +156,7 @@ export default function Product() {
         }
         throw new Error("Failed to fetch products");
       }
-      
+
       const data = await response.json();
       setProducts(data.products);
       setTotalPages(data.totalPages);
@@ -226,7 +226,7 @@ export default function Product() {
       toast.error(`Cannot purchase ${product.status === 'Expired' ? 'expired' : 'out-of-stock'} product`);
       return;
     }
-    
+
     setProductToBuy(product);
     setBuyModalOpen(true);
   };
@@ -244,7 +244,7 @@ export default function Product() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        
+
         // Handle token expiration or invalid token
         if (response.status === 401 && (errorData.message.includes('Token is not valid') || errorData.message.includes('authorization denied'))) {
           toast.error('Session expired. Please login again.');
@@ -254,7 +254,7 @@ export default function Product() {
           window.location.href = '/';
           return;
         }
-        
+
         toast.error(errorData.message || "Failed to buy product");
         throw new Error(errorData.message || "Failed to buy product");
       }
@@ -301,10 +301,10 @@ export default function Product() {
             <h1>Product</h1>
             <div className="search-box-product">
               <img src="/search-icon.svg" className="search-icon-product" />
-              <input 
-                className="search-box-input-product" 
-                type="text" 
-                placeholder="Search products..." 
+              <input
+                className="search-box-input-product"
+                type="text"
+                placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -383,32 +383,42 @@ export default function Product() {
                 </section>
 
                 <section className="mobile-products">
+                  <div className="mobile-products-header">
+                    <h3>Products</h3>
+                  </div>
                   <div className="mobile-products-table">
                     <div className="mobile-table-header">
-                      <div className="mobile-header-cell">Products</div>
+                      <div className="mobile-header-cell">Product</div>
                       <div className="mobile-header-cell">Availability</div>
                     </div>
                     <div className="mobile-table-body">
-                      {products.map((product, index) => (
-                        <div key={index} className="mobile-table-row">
-                          <div className="mobile-product-name-cell">
-                            {product.name}
-                          </div>
-                          <div className="mobile-availability-cell">
-                            <span className={`availability-status ${
-                              product.quantity > 0 ? 'in-stock' : 'out-of-stock'
-                            }`}>
-                              {product.quantity > 0 ? 'In-stock' : 'Out of stock'}
-                            </span>
-                            <div className="info-icon-circle">
-                              <span className="info-icon-text">i</span>
+                      {products.length === 0 ? (
+                        <div className="mobile-no-products">
+                          <p>No products found</p>
+                        </div>
+                      ) : (
+                        products.map((product, index) => (
+                          <div key={index} className="mobile-table-row">
+                            <div className="mobile-product-name-cell">
+                              {product.name}
+                            </div>
+                            <div className="mobile-availability-cell">
+                              <span className={`availability-status ${product.status === "Expired" ? 'expired' :
+                                  product.status === "Out of stock" || product.quantity === 0 ? 'out-of-stock' :
+                                    product.quantity > product.threshold ? 'in-stock' : 'low-stock'
+                                }`}>
+                                {product.status === "Expired" ? 'Expired' :
+                                  product.status === "Out of stock" || product.quantity === 0 ? 'Out of stock' :
+                                    product.quantity > product.threshold ? 'In-stock' : 'Low stock'}
+                              </span>
+                              <img src="/Info.svg" />
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                      )}
                     </div>
                   </div>
-                  
+
                   {/* Floating Add Product Button */}
                   <button className="mobile-add-product-fab" onClick={openAddProductModal}>
                     Add Product
@@ -419,134 +429,134 @@ export default function Product() {
               // Desktop layout - original design
               <>
                 <section className="product-overview">
-              <h2>Overall Inventory</h2>
-              <div className="product-overview-grid">
-                <div className="product-card">
-                  <p>Categories</p>
-                  <p>{summary.categories}</p>
-                  <div className="product-card-meta">
-                    <span>Last 7 days</span>
+                  <h2>Overall Inventory</h2>
+                  <div className="product-overview-grid">
+                    <div className="product-card">
+                      <p>Categories</p>
+                      <p>{summary.categories}</p>
+                      <div className="product-card-meta">
+                        <span>Last 7 days</span>
+                      </div>
+                    </div>
+                    <div className="product-card">
+                      <p>Total Products</p>
+                      <div className="product-card-values">
+                        <p>{summary.totalProducts}</p>
+                        <p>₹{summary.revenue}</p>
+                      </div>
+                      <div className="product-card-meta">
+                        <span>Last 7 days</span>
+                        <span>Revenue</span>
+                      </div>
+                    </div>
+                    <div className="product-card">
+                      <p>Top Selling</p>
+                      <div className="product-card-values">
+                        <p>5</p>
+                        <p>₹2500</p>
+                      </div>
+                      <div className="product-card-meta">
+                        <span>Last 7 days</span>
+                        <span>Cost</span>
+                      </div>
+                    </div>
+                    <div className="product-card">
+                      <p>Low Stocks</p>
+                      <div className="product-card-values">
+                        <p>{summary.ordered}</p> {/* Count of bought product items */}
+                        <p>{summary.notInStock}</p> {/* Out of stock items (current) */}
+                      </div>
+                      <div className="product-card-meta">
+                        <span>Ordered</span>
+                        <span>Not in stock</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="product-card">
-                  <p>Total Products</p>
-                  <div className="product-card-values">
-                    <p>{summary.totalProducts}</p>
-                    <p>₹{summary.revenue}</p>
-                  </div>
-                  <div className="product-card-meta">
-                    <span>Last 7 days</span>
-                    <span>Revenue</span>
-                  </div>
-                </div>
-                <div className="product-card">
-                  <p>Top Selling</p>
-                  <div className="product-card-values">
-                    <p>5</p>
-                    <p>₹2500</p>
-                  </div>
-                  <div className="product-card-meta">
-                    <span>Last 7 days</span>
-                    <span>Cost</span>
-                  </div>
-                </div>
-                <div className="product-card">
-                  <p>Low Stocks</p>
-                  <div className="product-card-values">
-                    <p>{summary.ordered}</p> {/* Count of bought product items */}
-                    <p>{summary.notInStock}</p> {/* Out of stock items (current) */}
-                  </div>
-                  <div className="product-card-meta">
-                    <span>Ordered</span>
-                    <span>Not in stock</span>
-                  </div>
-                </div>
-              </div>
-            </section>
+                </section>
 
-            <section className="products">
-              <div className="product-table-header">
-                <h3>Products</h3>
-                <button className="add-product-btn-product" onClick={openAddProductModal}>
-                  Add Product
-                </button>
-              </div>
+                <section className="products">
+                  <div className="product-table-header">
+                    <h3>Products</h3>
+                    <button className="add-product-btn-product" onClick={openAddProductModal}>
+                      Add Product
+                    </button>
+                  </div>
 
-              <div className="product-table-wrapper">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Products</th>
-                      <th>Price</th>
-                      <th>Quantity</th>
-                      <th>Threshold Value</th>
-                      <th>Expiry Date</th>
-                      <th>Availability</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map((product, index) => {
-                      const isNotPurchasable = product.status === 'Expired' || product.quantity === 0;
-                      return (
-                        <tr 
-                          key={index} 
-                          style={{ 
-                            cursor: isNotPurchasable ? "not-allowed" : "pointer",
-                            opacity: isNotPurchasable ? 0.6 : 1
-                          }} 
-                          onClick={() => handleRowClick(product)}
-                          title={isNotPurchasable ? `Cannot purchase ${product.status === 'Expired' ? 'expired' : 'out-of-stock'} product` : 'Click to purchase'}
-                        >
-                          <td>
-                            {product.name}
-                          </td>
-                          <td>₹{product.price}</td>
-                          <td>{product.quantity}</td>
-                          <td>{product.threshold}</td>
-                          <td>{new Date(product.expiry).toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          })}</td>
-                          <td className={getStatusClass(product.quantity, product.threshold, product.status)}>
-                            {getStatusText(product.quantity, product.threshold, product.status)}
-                          </td>
+                  <div className="product-table-wrapper">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Products</th>
+                          <th>Price</th>
+                          <th>Quantity</th>
+                          <th>Threshold Value</th>
+                          <th>Expiry Date</th>
+                          <th>Availability</th>
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-              <div className="pagination-product">
-                <button
-                  className={`product-btn-outline ${currentPage === 1 ? 'cursor-disabled' : ''}`}
-                  onClick={handlePreviousPage}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                <span>Page {currentPage} of {totalPages}</span>
-                <button
-                  className={`product-btn-outline ${currentPage === totalPages ? 'cursor-disabled' : ''}`}
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </button>
-              </div>
-            </section>
+                      </thead>
+                      <tbody>
+                        {products.map((product, index) => {
+                          const isNotPurchasable = product.status === 'Expired' || product.quantity === 0;
+                          return (
+                            <tr
+                              key={index}
+                              style={{
+                                cursor: isNotPurchasable ? "not-allowed" : "pointer",
+                                opacity: isNotPurchasable ? 0.6 : 1
+                              }}
+                              onClick={() => handleRowClick(product)}
+                              title={isNotPurchasable ? `Cannot purchase ${product.status === 'Expired' ? 'expired' : 'out-of-stock'} product` : 'Click to purchase'}
+                            >
+                              <td>
+                                {product.name}
+                              </td>
+                              <td>₹{product.price}</td>
+                              <td>{product.quantity}</td>
+                              <td>{product.threshold}</td>
+                              <td>{new Date(product.expiry).toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                              })}</td>
+                              <td className={getStatusClass(product.quantity, product.threshold, product.status)}>
+                                {getStatusText(product.quantity, product.threshold, product.status)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="pagination-product">
+                    <button
+                      className={`product-btn-outline ${currentPage === 1 ? 'cursor-disabled' : ''}`}
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button
+                      className={`product-btn-outline ${currentPage === totalPages ? 'cursor-disabled' : ''}`}
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </section>
               </>
             )}
           </main>
         )}
       </div>
       {renderComponent === "MultipleProduct" && (
-        <MultipleProduct 
+        <MultipleProduct
           onClose={() => {
             setRenderComponent(null);
             setAddProductModalOpen(false);
-          }} 
-          refreshProducts={refreshProducts} 
+          }}
+          refreshProducts={refreshProducts}
         />
       )}
       {renderComponent !== "MultipleProduct" && isAddProductModalOpen && (
@@ -563,7 +573,7 @@ export default function Product() {
           onBuy={handleBuy}
         />
       )}
-      <Toaster 
+      <Toaster
         position="top-right"
         toastOptions={{
           duration: 4000,
@@ -580,7 +590,7 @@ export default function Product() {
           },
         }}
       />
-      
+
       {/* Mobile Bottom Navigation - only show on mobile */}
       {isMobile && <BottomNav />}
     </div>

@@ -227,6 +227,11 @@ export default function Invoice() {
     setSelectedInvoice(null);
   };
 
+  const openModal = (invoice) => {
+    setSelectedInvoice(invoice);
+    setIsModalOpen(true);
+  };
+
   const handleDeleteClick = (invoiceId) => {
     setDeleteDialogInvoiceId(invoiceId);
     setIsDeleteDialogOpen(true);
@@ -319,7 +324,6 @@ export default function Invoice() {
           </header>
         )}
         
-        {/* Mobile header */}
         {isMobile && (
           <header className="mobile-header">
             <div className="mobile-header-content">
@@ -335,43 +339,50 @@ export default function Invoice() {
           <section className="invoice-card-summary">
             <h2>Overall Invoice</h2>
             <div className="invoice-grid">
-              <div className="invoice-grid-item">
-                <p className="invoice-label">Recent Transactions</p>
-                <p className="invoice-value">{overallStats.recentTransactions}</p>
-                <p className="invoice-note">Last 7 days</p>
+              {/* Left Column */}
+              <div className="invoice-grid-column">
+                <div className="invoice-grid-item">
+                  <p className="invoice-label">Recent Transactions</p>
+                  <p className="invoice-value">{overallStats.recentTransactions}</p>
+                  <p className="invoice-note">Last 7 days</p>
+                </div>
+                <div className="invoice-grid-item">
+                  <p className="invoice-label">Paid Amount</p>
+                  <p className="invoice-value">
+                    <span>{formatCurrency(overallStats.paidAmount.last7Days)}</span>
+                    <span>{overallStats.paidAmount.customers}</span>
+                  </p>
+                  <p className="invoice-note">
+                    <span>Last 7 days</span>
+                    <span>Customers</span>
+                  </p>
+                </div>
               </div>
-              <div className="invoice-grid-item">
-                <p className="invoice-label">Total Invoices</p>
-                <p className="invoice-value">
-                  <span>{overallStats.totalInvoices.last7Days}</span>
-                  <span>{overallStats.totalInvoices.processed}</span>
-                </p>
-                <p className="invoice-note">
-                  <span>Last 7 days</span>
-                  <span>Processed</span>
-                </p>
-              </div>
-              <div className="invoice-grid-item">
-                <p className="invoice-label">Paid Amount</p>
-                <p className="invoice-value">
-                  <span>{formatCurrency(overallStats.paidAmount.last7Days)}</span>
-                  <span>{overallStats.paidAmount.customers}</span>
-                </p>
-                <p className="invoice-note">
-                  <span>Last 7 days</span>
-                  <span>Customers</span>
-                </p>
-              </div>
-              <div className="invoice-grid-item">
-                <p className="invoice-label">Unpaid Amount</p>
-                <p className="invoice-value">
-                  <span>{formatCurrency(overallStats.unpaidAmount.ordered)}</span>
-                  <span>{overallStats.unpaidAmount.pendingPayments}</span>
-                </p>
-                <p className="invoice-note">
-                  <span>Ordered</span>
-                  <span>Pending Payment</span>
-                </p>
+              
+              {/* Right Column */}
+              <div className="invoice-grid-column">
+                <div className="invoice-grid-item">
+                  <p className="invoice-label">Total Invoices</p>
+                  <p className="invoice-value">
+                    <span>{overallStats.totalInvoices.last7Days}</span>
+                    <span>{overallStats.totalInvoices.processed}</span>
+                  </p>
+                  <p className="invoice-note">
+                    <span>Last 7 days</span>
+                    <span>Processed</span>
+                  </p>
+                </div>
+                <div className="invoice-grid-item">
+                  <p className="invoice-label">Unpaid Amount</p>
+                  <p className="invoice-value">
+                    <span>{formatCurrency(overallStats.unpaidAmount.ordered)}</span>
+                    <span>{overallStats.unpaidAmount.pendingPayments}</span>
+                  </p>
+                  <p className="invoice-note">
+                    <span>Ordered</span>
+                    <span>Pending Payment</span>
+                  </p>
+                </div>
               </div>
             </div>
           </section>
@@ -389,31 +400,38 @@ export default function Invoice() {
                   <div className="mobile-invoice-table">
                     <div className="mobile-table-header">
                       <div className="mobile-header-cell">Invoice ID</div>
+                      <div className="mobile-header-cell"></div>
                     </div>
                     <div className="mobile-table-body">
-                      {filteredInvoices.map((invoice) => (
-                        <div key={invoice._id} className="mobile-table-row">
-                          <div className="mobile-invoice-id-cell">
-                            {invoice.invoiceId}
-                          </div>
-                          <div className="mobile-invoice-actions">
-                            <button
-                              className="mobile-view-btn"
-                              onClick={() => openModal(invoice)}
-                              title="View Invoice"
-                            >
-                              <img src="/Eye.svg" alt="View" width={20} height={20} />
-                            </button>
-                            <button
-                              className="mobile-delete-btn"
-                              onClick={() => openDeleteDialog(invoice._id)}
-                              title="Delete Invoice"
-                            >
-                              <img src="/Delete.svg" alt="Delete" width={20} height={20} />
-                            </button>
-                          </div>
+                      {filteredInvoices.length === 0 ? (
+                        <div className="mobile-no-invoices">
+                          <p>No invoices found</p>
                         </div>
-                      ))}
+                      ) : (
+                        filteredInvoices.map((invoice) => (
+                          <div key={invoice._id} className="mobile-table-row">
+                            <div className="mobile-invoice-id-cell">
+                              {invoice.invoiceId}
+                            </div>
+                            <div className="mobile-invoice-actions">
+                              <button
+                                className="mobile-view-btn"
+                                onClick={() => openModal(invoice)}
+                                title="View Invoice"
+                              >
+                                <img src="/invoice_view.svg" alt="View" width={20} height={20} />
+                              </button>
+                              <button
+                                className="mobile-delete-btn"
+                                onClick={() => openDeleteDialog(invoice._id)}
+                                title="Delete Invoice"
+                              >
+                                <img src="/Delete.svg" alt="Delete" width={20} height={20} />
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 ) : (

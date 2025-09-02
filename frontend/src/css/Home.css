@@ -342,13 +342,15 @@
   margin-left:2px;
 }
 
-.home-product-stars .home-star.filled{ color: var(--accent-yellow); }
+.home-product-stars .home-star.filled{ color
+  : var(--accent-yellow); }
 
 /* Mobile Header Styles */
 .mobile-header {
   display: none;
   background: #424457;
   color: white;
+  margin-bottom: 25px;
   padding: 16px 16px 10px;
   height: 30px; /* Set height to 30px for mobile screens */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);

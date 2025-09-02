@@ -651,13 +651,13 @@ export default function Home() {
           {isMobile ? (
             <div className="mobile-grid-container">
               <div className="grid-item mobile">
+                {renderChart()}
+              </div>
+              <div className="grid-item mobile">
                 {renderSalesOverview()}
               </div>
               <div className="grid-item mobile">
                 {renderPurchaseOverview()}
-              </div>
-              <div className="grid-item mobile">
-                {renderChart()}
               </div>
               <div className="grid-item mobile">
                 {renderInventorySummary()}

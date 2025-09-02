@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../css/InvoiceTemplate.css";
+import BottomNav from "./BottomNav";
 
 export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 414);
+
+  // Check if mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 414);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   const defaultInvoiceData = {
     invoiceNumber: "INV-1007",
     invoiceDate: "01-Apr-2025",
@@ -54,10 +68,8 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
     <div className="modal-overlay-invoice-template" onClick={onClose}>
       <div className="modal-content-invoice-template" onClick={(e) => e.stopPropagation()}>
         <div className="invoice-template-container">
-          <div className="action-buttons">
-            <button className="btn btn-danger" onClick={onClose}><img src="/template_close.svg" /></button>
-            <button className="btn btn-blue"><img src="/download.svg" /></button>
-            <button className="btn btn-yellow"><img src="/print.svg" /></button>
+          <div className="close-button">
+            <button className="btn-close" onClick={onClose}>×</button>
           </div>
 
           <div className="invoice-template-card">
@@ -90,7 +102,7 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
                   <p>{invoiceData.invoiceDate}</p>
                 </div>
                 <div>
-                  <p className="templatelabel">Reference</p>
+                  <p className="template-label">Reference</p>
                   <p>{invoiceData.reference}</p>
                 </div>
                 <div>
@@ -106,13 +118,15 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
                   <p>Price</p>
                 </div>
 
-                {invoiceData.items.map((item, index) => (
-                  <div className="table-row" key={index}>
-                    <p className="col-6">{item.productName || item.product}</p>
-                    <p className="col-2 text-center">{item.quantity || item.qty}</p>
-                    <p className="col-4 text-right">₹{(item.price || item.price)}</p>
-                  </div>
-                ))}
+                <div className="invoice-template-table-body">
+                  {invoiceData.items.map((item, index) => (
+                    <div className="table-row" key={index}>
+                      <p className="col-6">{item.productName || item.product}</p>
+                      <p className="col-2 text-center">{item.quantity || item.qty}</p>
+                      <p className="col-4 text-right">₹{item.price}</p>
+                    </div>
+                  ))}
+                </div>
 
                 <div className="invoice-template-table-footer">
                   <div className="footer-row">
@@ -128,6 +142,10 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
                     <span>Total due</span>
                     <span className="highlight">₹{invoiceData.total.toLocaleString()}</span>
                   </div>
+                  
+                  <div className="payment-notice">
+                    <p>📋 Please pay within 15 days of receiving this invoice.</p>
+                  </div>
               </div>
             </div>
 
@@ -138,6 +156,9 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
             </div>
           </div>
         </div>
+        
+        {/* Add Bottom Navigation for mobile */}
+        {isMobile && <BottomNav />}
       </div>
     </div>
   );

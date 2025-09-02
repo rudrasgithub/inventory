@@ -359,49 +359,52 @@ tbody tr:hover {
   
   /* Mobile invoice content adjustments */
   .invoice-content {
-    padding: 12px !important;
+    flex: 1 !important;
+    padding: 10px;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .invoice-card-summary {
+    background: white !important;
+    border-radius: 16px !important;
+  }
+  
+  .invoice-card-summary h2 {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+  }
+  
+  .invoice-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0px !important;
+    padding: 0px !important;
+  }
+  
+  /* Each column takes equal width */
+  .invoice-grid-column {
     flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
   }
   
-  /* Mobile Overall Invoice card */
-  .invoice-card-summary {
-    background: white !important;
-    border-radius: 16px !important;
-    padding: 16px !important;
-    margin-bottom: 0 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  }
-  
-  .invoice-card-summary h2 {
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    margin-bottom: 16px !important;
-    color: #374151 !important;
-  }
-  
-  /* Mobile invoice grid - 2x2 layout */
-  .invoice-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: 1fr 1fr !important;
-    gap: 16px !important;
-    padding: 0 !important;
-  }
-  
   .invoice-grid-item {
-    padding: 16px !important;
     text-align: left !important;
     border-right: none !important;
     border: none !important;
-    background: #F9FAFB !important;
     border-radius: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 0px !important;
   }
   
   .invoice-grid-item p {
     margin: 0 !important;
+    max-width: 90px;
   }
   
   .invoice-label {
@@ -412,15 +415,27 @@ tbody tr:hover {
   }
   
   .invoice-value {
+    display: flex !important;
     font-size: 18px !important;
     font-weight: 600 !important;
     color: #111827 !important;
     margin-bottom: 4px !important;
   }
   
+  .invoice-value span {
+    flex: 1 !important;
+  }
+  
   .invoice-note {
+    display: flex !important;
+    gap: 16px !important;
     font-size: 12px !important;
     color: #9CA3AF !important;
+  }
+  
+  .invoice-note span {
+    flex: 1 !important;
+  }
   }
   
   /* Mobile Invoices List card */
@@ -441,24 +456,31 @@ tbody tr:hover {
     border-bottom: 1px solid #F3F4F6 !important;
   }
   
-  /* Mobile invoice table styles - matching reference design */
   .mobile-invoice-table {
-    background: transparent !important;
-    border-radius: 0 !important;
+    background: white !important;
     overflow: hidden !important;
-    box-shadow: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
     margin-top: 0 !important;
   }
   
   .mobile-table-header {
-    background: #E5E7EB !important;
-    padding: 12px 16px !important;
+    background: #B6B9CF !important;
+    padding: 12px 0 !important;
+    display: flex !important;
+    border-bottom: 1px solid #D1D5DB !important;
   }
   
   .mobile-header-cell {
+    flex: 1 !important;
     font-weight: 600 !important;
     font-size: 16px !important;
-    color: #374151 !important;
+    color: #424457 !important;
+    text-align: start !important;
+    padding: 5px 0px 0px 50px !important;
+  }
+  
+  .mobile-header-cell:first-child {
+    border-right: 1px solid #D1D5DB !important;
   }
   
   .mobile-table-body {
@@ -467,10 +489,32 @@ tbody tr:hover {
   
   .mobile-table-row {
     display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .mobile-table-row:last-child {
+    border-bottom: none !important;
+  }
+  
+  .mobile-invoice-id-cell {
+    flex: 1 !important;
     padding: 12px 16px !important;
-    border-bottom: 1px solid #F3F4F6 !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .mobile-invoice-actions {
+    flex: 1 !important;
+    padding: 12px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
   }
   
   .mobile-table-row:last-child {
@@ -501,16 +545,8 @@ tbody tr:hover {
     justify-content: center !important;
   }
   
-  .mobile-view-btn {
-    background: #DBEAFE !important;
-  }
-  
   .mobile-view-btn:hover {
     background: #BFDBFE !important;
-  }
-  
-  .mobile-delete-btn {
-    background: #FEE2E2 !important;
   }
   
   .mobile-delete-btn:hover {
@@ -526,18 +562,16 @@ tbody tr:hover {
     display: none !important;
   }
   
-  /* Ensure mobile-only elements don't show on desktop */
+  /* Show mobile components */
   .mobile-invoice-table,
   .mobile-table-header,
   .mobile-table-body,
-  .mobile-table-row {
-    display: block;
+  .mobile-table-row,
+  .mobile-invoice-actions {
+    display: block !important;
   }
   
-  .mobile-table-row {
-    display: flex !important;
-  }
-  
+  .mobile-table-row,
   .mobile-invoice-actions {
     display: flex !important;
   }
@@ -551,6 +585,23 @@ tbody tr:hover {
   .mobile-header-settings img {
     filter: brightness(0) invert(1) !important;
   }
+
+/* Mobile invoice value styles */
+@media (max-width: 414px) {
+  .invoice-value span {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    display: block !important;
+    line-height: 1.4 !important;
+  }
+  
+  .invoice-note span {
+    font-size: 11px !important;
+    color: #9CA3AF !important;
+    display: block !important;
+    line-height: 1.3 !important;
+  }
 }
 
 /* Ensure mobile-specific elements are hidden on desktop by default */
@@ -560,4 +611,20 @@ tbody tr:hover {
 .mobile-table-row,
 .mobile-invoice-actions {
   display: none;
+}
+
+/* Ensure mobile-specific elements are hidden on desktop by default */
+.mobile-invoice-table,
+.mobile-table-header, 
+.mobile-table-body,
+.mobile-table-row,
+.mobile-invoice-actions {
+  display: none;
+}
+
+.mobile-no-invoices {
+  padding: 20px;
+  text-align: center;
+  color: #6B7280;
+  font-style: italic;
 }
