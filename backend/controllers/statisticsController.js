@@ -279,19 +279,38 @@ export const getStatistics = async (req, res) => {
 // Get user layout configuration
 export const getUserLayout = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('gridLayout');
+    const user = await User.findById(req.user._id).select('gridLayout layouts');
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Return statistics layout (using gridLayout for now, can be extended)
-    const statisticsLayout = {
-      firstRow: user.gridLayout?.leftColumn || [0, 1, 2],
-      secondRow: user.gridLayout?.rightColumn || []
-    };
+    // Prepare response object
+    const response = {};
 
-    res.json({ statisticsLayout });
+    // Statistics layout (new system)
+    if (user.layouts?.statisticsLayout) {
+      response.statisticsLayout = user.layouts.statisticsLayout;
+    } else {
+      // Fallback to legacy gridLayout for statistics
+      response.statisticsLayout = {
+        firstRow: user.gridLayout?.leftColumn || [0, 1, 2],
+        secondRow: user.gridLayout?.rightColumn || [3, 4]
+      };
+    }
+
+    // Home layout (new system)
+    if (user.layouts?.homeLayout) {
+      response.homeLayout = user.layouts.homeLayout;
+    } else {
+      // Fallback to legacy gridLayout for home
+      response.homeLayout = {
+        leftColumn: user.gridLayout?.leftColumn || [0, 1, 2],
+        rightColumn: user.gridLayout?.rightColumn || [0, 1, 2]
+      };
+    }
+
+    res.json(response);
   } catch (error) {
     console.error('Error fetching user layout:', error);
     res.status(500).json({ message: 'Server error while fetching layout' });
@@ -301,10 +320,10 @@ export const getUserLayout = async (req, res) => {
 // Update user layout configuration
 export const updateUserLayout = async (req, res) => {
   try {
-    const { statisticsLayout } = req.body;
+    const { statisticsLayout, homeLayout } = req.body;
 
-    if (!statisticsLayout) {
-      return res.status(400).json({ message: 'Statistics layout is required' });
+    if (!statisticsLayout && !homeLayout) {
+      return res.status(400).json({ message: 'At least one layout type is required' });
     }
 
     const user = await User.findById(req.user._id);
@@ -313,17 +332,39 @@ export const updateUserLayout = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Update the grid layout (we'll use leftColumn for firstRow and rightColumn for secondRow)
-    user.gridLayout = {
-      leftColumn: statisticsLayout.firstRow || [0, 1, 2],
-      rightColumn: statisticsLayout.secondRow || []
-    };
+    // Initialize layouts object if it doesn't exist
+    if (!user.layouts) {
+      user.layouts = {};
+    }
+
+    // Update statistics layout
+    if (statisticsLayout) {
+      user.layouts.statisticsLayout = {
+        firstRow: statisticsLayout.firstRow || [0, 1, 2],
+        secondRow: statisticsLayout.secondRow || [3, 4]
+      };
+      
+      // Also update legacy gridLayout for backward compatibility
+      user.gridLayout = {
+        leftColumn: statisticsLayout.firstRow || [0, 1, 2],
+        rightColumn: statisticsLayout.secondRow || [3, 4]
+      };
+    }
+
+    // Update home layout
+    if (homeLayout) {
+      user.layouts.homeLayout = {
+        leftColumn: homeLayout.leftColumn || [0, 1, 2],
+        rightColumn: homeLayout.rightColumn || [0, 1, 2]
+      };
+    }
 
     await user.save();
 
     res.json({ 
       message: 'Layout updated successfully',
-      statisticsLayout 
+      statisticsLayout: user.layouts.statisticsLayout,
+      homeLayout: user.layouts.homeLayout
     });
   } catch (error) {
     console.error('Error updating user layout:', error);

@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   resetToken: { type: String },
   resetTokenExpiry: { type: Date },
   lastLoginAt: { type: Date },
+  // Legacy grid layout (for backward compatibility)
   gridLayout: {
     type: {
       leftColumn: [Number],
@@ -21,6 +22,20 @@ const userSchema = new mongoose.Schema({
       leftColumn: [0, 1, 2],
       rightColumn: [3, 4]
     }
+  },
+  // New layout system for different pages
+  layouts: {
+    type: {
+      statisticsLayout: {
+        firstRow: { type: [Number], default: [0, 1, 2] },
+        secondRow: { type: [Number], default: [3, 4] }
+      },
+      homeLayout: {
+        leftColumn: { type: [Number], default: [0, 1, 2] },
+        rightColumn: { type: [Number], default: [0, 1, 2] }
+      }
+    },
+    default: {}
   }
 }, { timestamps: true });
 
