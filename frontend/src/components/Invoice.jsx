@@ -278,7 +278,9 @@ export default function Invoice() {
         isDeleteDialogOpen &&
         !event.target.closest('.options-dropdown') &&
         !event.target.closest('.btn-confirm-cancel') &&
-        !event.target.closest('.btn-confirm-delete')
+        !event.target.closest('.btn-confirm-delete') &&
+        !event.target.closest('.mobile-delete-btn') &&
+        !event.target.closest('.mobile-delete-overlay')
       ) {
         closeDeleteDialog();
       }
@@ -423,7 +425,10 @@ export default function Invoice() {
                               </button>
                               <button
                                 className="mobile-delete-btn"
-                                onClick={() => handleDeleteClick(invoice._id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteClick(invoice._id);
+                                }}
                                 title="Delete Invoice"
                               >
                                 <img src="/Delete.svg" alt="Delete" width={20} height={20} />
