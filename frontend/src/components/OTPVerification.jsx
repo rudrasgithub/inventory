@@ -51,11 +51,9 @@ export default function OTPVerification({ email }) { // Accept email as a prop
       <div className="otp-form-panel">
         <div className="otp-form-content">
           <div className="otp-form-header">
-            <h1>Enter Your OTP</h1>
+            <h1>Company name</h1>
             <div className="otp-instructions">
-              <p>We've sent a 6-digit OTP to your</p>
-              <p>registered mail.</p>
-              <p>Please enter it below to sign in.</p>
+              <p>We've sent a 6-digit OTP to your registered email. Please enter it below to verify your account.</p>
             </div>
           </div>
 

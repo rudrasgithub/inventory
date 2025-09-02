@@ -44,12 +44,8 @@ export default function ResetPassword() {
       <div className="reset-password-form-panel">
         <div className="form-content">
           <div className="form-header">
-            <h1>Create New Password</h1>
-            <p>
-              Today is a new day. It's your day. You shape it.
-              <br />
-              Sign in to start managing your projects.
-            </p>
+            <h1>Company name</h1>
+            <p>Create a new password for your account</p>
           </div>
 
           <form className="form-body-reset-password">
