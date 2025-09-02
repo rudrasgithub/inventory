@@ -247,6 +247,8 @@ export default function Invoice() {
   const confirmDelete = () => {
     if (deleteDialogInvoiceId) {
       handleDeleteInvoice(deleteDialogInvoiceId);
+      setIsDeleteDialogOpen(false);
+      setDeleteDialogInvoiceId(null);
     }
   };
 
@@ -332,7 +334,7 @@ export default function Invoice() {
           <header className="mobile-invoice-header">
             <div className="mobile-invoice-header-content">
               <div className="mobile-header-pie">
-                <div className="pie-chart-mini"></div>
+                <img src="/product-logo.svg" width={40} height={40} />
               </div>
               <div className="mobile-header-settings">
                 <img 
@@ -357,7 +359,7 @@ export default function Invoice() {
                 <div className="mobile-invoice-card">
                   <p>Recent Transactions</p>
                   <div className="mobile-invoice-card-main-value">
-                    <span className="large-number">{overallStats.recentTransactions || 24}</span>
+                    <span className="large-number">{overallStats.recentTransactions || 0}</span>
                   </div>
                   <div className="mobile-invoice-card-meta">
                     <span>Last 7 days</span>
@@ -366,33 +368,41 @@ export default function Invoice() {
                 <div className="mobile-invoice-card">
                   <p>Total Invoices</p>
                   <div className="mobile-invoice-card-main-value horizontal">
-                    <span className="large-number">{overallStats.totalInvoices.last7Days || 152}</span>
-                    <span className="secondary-number">{overallStats.totalInvoices.processed || 138}</span>
+                    <span className="large-number">{filteredInvoices.length || 0}</span>
+                    <span className="secondary-number">{filteredInvoices.filter(inv => inv.status === 'paid').length || 0}</span>
                   </div>
                   <div className="mobile-invoice-card-meta horizontal-labels">
-                    <span>Last 7 days</span>
+                    <span>Total</span>
                     <span>Processed</span>
                   </div>
                 </div>
                 <div className="mobile-invoice-card">
                   <p>Paid Amount</p>
                   <div className="mobile-invoice-card-main-value horizontal">
-                    <span className="large-number">{formatCurrency(overallStats.paidAmount.last7Days || 120500)}</span>
-                    <span className="secondary-number">{overallStats.paidAmount.customers || 97}</span>
+                    <span className="large-number">{formatCurrency(
+                      filteredInvoices
+                        .filter(inv => inv.status === 'paid')
+                        .reduce((sum, inv) => sum + (inv.totalAmount || 0), 0)
+                    )}</span>
+                    <span className="secondary-number">{filteredInvoices.filter(inv => inv.status === 'paid').length}</span>
                   </div>
                   <div className="mobile-invoice-card-meta horizontal-labels">
-                    <span>Last 7 days</span>
-                    <span>customers</span>
+                    <span>Total Paid</span>
+                    <span>Customers</span>
                   </div>
                 </div>
                 <div className="mobile-invoice-card">
                   <p>Unpaid Amount</p>
                   <div className="mobile-invoice-card-main-value horizontal">
-                    <span className="large-number">{formatCurrency(overallStats.unpaidAmount.ordered || 45800)}</span>
-                    <span className="secondary-number">{overallStats.unpaidAmount.pendingPayments || 18}</span>
+                    <span className="large-number">{formatCurrency(
+                      filteredInvoices
+                        .filter(inv => inv.status === 'unpaid')
+                        .reduce((sum, inv) => sum + (inv.totalAmount || 0), 0)
+                    )}</span>
+                    <span className="secondary-number">{filteredInvoices.filter(inv => inv.status === 'unpaid').length}</span>
                   </div>
                   <div className="mobile-invoice-card-meta horizontal-labels">
-                    <span>Ordered</span>
+                    <span>Total Unpaid</span>
                     <span>Pending Payment</span>
                   </div>
                 </div>

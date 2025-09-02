@@ -426,7 +426,7 @@ export default function Product() {
                     <div className="mobile-product-card">
                       <p>Categories</p>
                       <div className="mobile-product-card-main-value">
-                        <span className="large-number">{summary.categories || 14}</span>
+                        <span className="large-number">{summary.categories || 0}</span>
                       </div>
                       <div className="mobile-product-card-meta">
                         <span>Last 7 days</span>
@@ -435,8 +435,8 @@ export default function Product() {
                     <div className="mobile-product-card">
                       <p>Total Products</p>
                       <div className="mobile-product-card-main-value horizontal">
-                        <span className="large-number">{summary.totalProducts || 868}</span>
-                        <span className="revenue-amount">₹{(summary.revenue || 25000).toFixed(2)}</span>
+                        <span className="large-number">{products.length || 0}</span>
+                        <span className="revenue-amount">₹{(summary.revenue || 0).toFixed(2)}</span>
                       </div>
                       <div className="mobile-product-card-meta horizontal-labels">
                         <span>Last 7 days</span>
@@ -457,8 +457,8 @@ export default function Product() {
                     <div className="mobile-product-card">
                       <p>Low Stocks</p>
                       <div className="mobile-product-card-main-value horizontal">
-                        <span className="large-number">{summary.notInStock || 12}</span>
-                        <span className="secondary-number">{summary.ordered || 2}</span>
+                        <span className="large-number">{summary.notInStock || 0}</span>
+                        <span className="secondary-number">{summary.ordered || 0}</span>
                       </div>
                       <div className="mobile-product-card-meta horizontal-labels">
                         <span>Ordered</span>
