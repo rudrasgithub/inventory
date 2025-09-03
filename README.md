@@ -373,15 +373,15 @@ For OTP verification to work, you need to configure email settings:
    - Update `EMAIL_HOST`, `EMAIL_PORT`, and credentials accordingly
    - Ensure SMTP settings match your provider's requirements
 
-## 🎮 Demo & Testing
+## 🎮 Demo
 
 ### Test Accounts
 
 Use these pre-configured accounts for testing:
 
 **Demo User Account:**
-- Email: `demo@inventory.com`
-- Password: `demo12345`
+- Email: `user@gmail.com`
+- Password: `12345678`
 - Access: Standard user with limited sample data
 
 ### Sample Data
