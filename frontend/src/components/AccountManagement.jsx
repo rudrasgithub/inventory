@@ -4,17 +4,66 @@ import { AuthContext } from '../Context/ContextProvider';
 import toast from 'react-hot-toast';
 import "../css/AccountManagement.css";
 
+const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
+
 const AccountManagement = () => {
   const navigate = useNavigate();
   const { setUser, setToken, token } = useContext(AuthContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isResettingLayout, setIsResettingLayout] = useState(false);
+
+  const handleResetLayout = async () => {
+    setIsResettingLayout(true);
+    
+    const defaultLayout = {
+      leftColumn: [0, 1, 2],
+      rightColumn: [0, 1, 2]
+    };
+    
+    if (!token) {
+      toast.success('Layout reset to default!');
+      setIsResettingLayout(false);
+      return;
+    }
+    
+    try {
+      // Reset in database
+      const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ homeLayout: defaultLayout })
+      });
+
+      if (response.ok) {
+        toast.success('Dashboard layout reset to default!');
+        console.log('Dashboard layout reset in database');
+      } else {
+        toast.error('Failed to reset dashboard layout.');
+      }
+    } catch (error) {
+      console.error('Error resetting dashboard layout:', error);
+      toast.error('Failed to reset dashboard layout.');
+      // Clear localStorage as fallback
+      try {
+        localStorage.removeItem('gridLayout');
+        console.log('Dashboard layout cleared from localStorage as fallback');
+      } catch (localError) {
+        console.log('Could not clear dashboard layout from localStorage');
+      }
+    }
+    
+    setIsResettingLayout(false);
+  };
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     
     try {
       // Call backend logout API for validation and tracking
-      const response = await fetch('http://localhost:5000/api/auth/logout', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,6 +97,19 @@ const AccountManagement = () => {
   return (
     <div className="account-management">
       <div className='account-management-container'>
+        <button 
+          className='reset-layout-btn-account-management' 
+          onClick={handleResetLayout}
+          disabled={isResettingLayout}
+          style={{
+            cursor: isResettingLayout ? 'not-allowed' : 'pointer',
+            opacity: isResettingLayout ? 0.6 : 1,
+            marginBottom: '1rem'
+          }}
+        >
+          {isResettingLayout ? 'Resetting...' : 'Reset Layout'}
+        </button>
+        
         <button 
           className='logout-btn-account-management' 
           onClick={handleLogout}

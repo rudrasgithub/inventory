@@ -64,86 +64,166 @@ export default function SalesPurchaseChart({ chartData = [] }) {
 
     const barGap = 0.6;
 
-    // Use dynamic chart data if available, otherwise use static data
+    // Generate dynamic data for Weekly and Yearly periods
+    const generateWeeklyData = () => {
+        const today = new Date();
+        const weekData = [];
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        
+        // Get current week's Monday
+        const currentDay = today.getDay();
+        const monday = new Date(today);
+        monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+        
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(monday);
+            date.setDate(monday.getDate() + i);
+            
+            // Generate some sample data based on day pattern
+            const baseValue = 3000 + (i * 200);
+            const variance = Math.random() * 1000;
+            const purchase = Math.round(baseValue + variance);
+            const sales = Math.round(purchase * 0.85 + Math.random() * 500);
+            
+            weekData.push({
+                day: days[i],
+                purchase,
+                sales
+            });
+        }
+        
+        return weekData;
+    };
+
+    const generateYearlyData = () => {
+        const currentYear = new Date().getFullYear();
+        const yearData = [];
+        
+        for (let i = 4; i >= 0; i--) {
+            const year = currentYear - i;
+            
+            // Generate data based on year growth pattern
+            const baseValue = 300000 + (i * 50000);
+            const variance = Math.random() * 100000;
+            const purchase = Math.round(baseValue + variance);
+            const sales = Math.round(purchase * 0.9 + Math.random() * 50000);
+            
+            yearData.push({
+                year: year.toString(),
+                purchase,
+                sales
+            });
+        }
+        
+        return yearData;
+    };
+
+    // Use dynamic chart data based on filter
     const getChartData = () => {
-        if (chartData && chartData.length > 0 && filter === "Monthly") {
-            return {
-                labels: chartData.map(item => item.month),
+        let data = { labels: [], datasets: [] };
+
+        if (filter === "Monthly") {
+            if (chartData && chartData.length > 0) {
+                data = {
+                    labels: chartData.map(item => item.month),
+                    datasets: [
+                        {
+                            label: "Purchase",
+                            data: chartData.map(item => item.purchase),
+                        },
+                        {
+                            label: "Sales",
+                            data: chartData.map(item => item.sales),
+                        }
+                    ]
+                };
+            }
+        } else if (filter === "Weekly") {
+            const weeklyData = generateWeeklyData();
+            data = {
+                labels: weeklyData.map(item => item.day),
                 datasets: [
                     {
                         label: "Purchase",
-                        data: chartData.map(item => item.purchase),
-                        backgroundColor: (context) => {
-                            const ctx = context.chart.ctx;
-                            return getGradient(ctx, [
-                                [1, "#817AF3"],
-                                [0.48, "#74B0FA"],
-                                [0, "#79D0F1"],
-                            ]);
-                        },
-                        borderWidth: 0,
-                        borderRadius: 5,
-                        categoryPercentage: 0.5,
-                        barPercentage: barGap,
+                        data: weeklyData.map(item => item.purchase),
                     },
                     {
                         label: "Sales",
-                        data: chartData.map(item => item.sales),
-                        backgroundColor: (context) => {
-                            const ctx = context.chart.ctx;
-                            return getGradient(ctx, [
-                                [1, "#46A46C"],
-                                [0.48, "#51CC5D"],
-                                [0, "#57DA65"],
-                            ]);
-                        },
-                        borderWidth: 0,
-                        borderRadius: 5,
-                        categoryPercentage: 0.5,
-                        barPercentage: barGap,
+                        data: weeklyData.map(item => item.sales),
+                    }
+                ]
+            };
+        } else if (filter === "Yearly") {
+            const yearlyData = generateYearlyData();
+            data = {
+                labels: yearlyData.map(item => item.year),
+                datasets: [
+                    {
+                        label: "Purchase",
+                        data: yearlyData.map(item => item.purchase),
                     },
-                ],
+                    {
+                        label: "Sales",
+                        data: yearlyData.map(item => item.sales),
+                    }
+                ]
             };
         }
 
-        // Fallback to static data for Weekly/Yearly
-        return {
-            labels: filter === "Weekly" ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] : filter === "Monthly" ? ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] : ["2021", "2022", "2023", "2024", "2025"],
-            datasets: [
-                {
-                    label: "Purchase",
-                    data: filter === "Weekly" ? [4800, 5200, 3800, 3000, 3700, 2300, 2900] : filter === "Monthly" ? [48000, 52000, 38000, 30000, 37000, 23000, 29000, 24000, 37000, 26000, 31000, 40000] : [480000, 520000, 380000, 300000, 370000],
-                    backgroundColor: (context) => {
-                        const ctx = context.chart.ctx;
-                        return getGradient(ctx, [
-                            [1, "#817AF3"],
-                            [0.48, "#74B0FA"],
-                            [0, "#79D0F1"],
-                        ]);
-                    },
-                    borderWidth: 0,
-                    borderRadius: 5,
-                    categoryPercentage: 0.5,
-                    barPercentage: barGap,
-                },
-                {
-                    label: "Sales",
-                    data: filter === "Weekly" ? [4200, 4100, 4600, 3700, 4000, 3500, 2600] : filter === "Monthly" ? [42000, 41000, 46000, 37000, 40000, 35000, 26000, 22000, 38000, 31000, 29000, 45000] : [420000, 410000, 460000, 370000, 400000],
-                    backgroundColor: (context) => {
-                        const ctx = context.chart.ctx;
-                        return getGradient(ctx, [
-                            [1, "#46A46C"],
-                            [0.48, "#51CC5D"],
-                            [0, "#57DA65"],
-                        ]);
-                    },
-                    borderWidth: 0,
-                    borderRadius: 5,
-                    categoryPercentage: 0.5,
-                    barPercentage: barGap,
-                },
-            ],
-        };
+        // Add styling to datasets
+        data.datasets.forEach((dataset, index) => {
+            const isPurchase = dataset.label === "Purchase";
+            dataset.backgroundColor = (context) => {
+                const ctx = context.chart.ctx;
+                const colors = isPurchase 
+                    ? ["#817AF3", "#74B0FA", "#79D0F1"] 
+                    : ["#46A46C", "#51CC5D", "#57DA65"];
+                return getGradient(ctx, [[1, colors[0]], [0.48, colors[1]], [0, colors[2]]]);
+            };
+            dataset.borderWidth = 0;
+            dataset.borderRadius = 5;
+            dataset.categoryPercentage = 0.5;
+            dataset.barPercentage = barGap;
+        });
+
+        return data;
+    };
+
+    // Smart Y-axis scaling function
+    const calculateYAxisMax = (data) => {
+        // Get maximum value from all datasets
+        let maxValue = 0;
+        data.datasets.forEach(dataset => {
+            const datasetMax = Math.max(...dataset.data);
+            if (datasetMax > maxValue) maxValue = datasetMax;
+        });
+
+        // If max is 0, return 50 as minimum
+        if (maxValue === 0) return 50;
+
+        // Determine appropriate scale based on data size
+        let stepSize, maxTicks;
+        
+        if (maxValue <= 50) {
+            stepSize = 10;
+            maxTicks = 6; // 0, 10, 20, 30, 40, 50
+        } else if (maxValue <= 500) {
+            stepSize = 100;
+            maxTicks = 6; // 0, 100, 200, 300, 400, 500
+        } else if (maxValue <= 5000) {
+            stepSize = 1000;
+            maxTicks = 6; // 0, 1K, 2K, 3K, 4K, 5K
+        } else if (maxValue <= 50000) {
+            stepSize = 10000;
+            maxTicks = 6; // 0, 10K, 20K, 30K, 40K, 50K
+        } else {
+            stepSize = 100000;
+            maxTicks = 6; // 0, 100K, 200K, 300K, 400K, 500K
+        }
+
+        // Calculate max that accommodates all data
+        const suggestedMax = Math.ceil(maxValue / stepSize) * stepSize;
+        return { stepSize, suggestedMax, maxTicks };
     };
 
     const options = {
@@ -165,29 +245,25 @@ export default function SalesPurchaseChart({ chartData = [] }) {
                     display: true
                 },
                 ticks: {
-                    // Custom Y-axis scale with proper increments
                     callback: function(value) {
                         if (value >= 1000) {
                             return (value / 1000) + 'K';
                         }
                         return value;
                     },
-                    stepSize: 5000, // 5K increments
-                    maxTicksLimit: 8
+                    stepSize: function() {
+                        const { stepSize } = calculateYAxisMax(getChartData());
+                        return stepSize;
+                    }(),
+                    maxTicksLimit: function() {
+                        const { maxTicks } = calculateYAxisMax(getChartData());
+                        return maxTicks;
+                    }()
                 },
                 suggestedMin: 0,
                 suggestedMax: function() {
-                    // Calculate max value from data and round up to nearest 5K
-                    const allData = getChartData();
-                    let maxValue = 0;
-                    
-                    allData.datasets.forEach(dataset => {
-                        const datasetMax = Math.max(...dataset.data);
-                        if (datasetMax > maxValue) maxValue = datasetMax;
-                    });
-                    
-                    // Round up to nearest 5000
-                    return Math.ceil(maxValue / 5000) * 5000;
+                    const { suggestedMax } = calculateYAxisMax(getChartData());
+                    return suggestedMax;
                 }()
             },
         },
@@ -197,8 +273,51 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         <div className="chart-card-graph">
             <div className="chart-header-graph" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", height: "40px" }}>
                 <h3 style={{ margin: 0 }}>Sales & Purchase</h3>
-                <div className="dropdown-container" style={{ display: "flex", alignItems: "center", gap: "10px", height: "40px" }}>
-                    <select className="filter-dropdown" value={filter} onChange={handleFilterChange} style={{ backgroundImage: `url('/graph-period.svg')`, backgroundRepeat: "no-repeat", backgroundPosition: "left 7px center", backgroundSize: "20px 20px", paddingLeft: "35px" }}>
+                <div 
+                    className="dropdown-container" 
+                    style={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: "10px", 
+                        height: "40px",
+                        pointerEvents: "all",
+                        zIndex: 10,
+                        position: "relative"
+                    }}
+                    onMouseEnter={(e) => {
+                        // Enable pointer events for dropdown when hover
+                        e.currentTarget.style.pointerEvents = "all";
+                        e.currentTarget.style.cursor = "pointer";
+                    }}
+                    onMouseLeave={(e) => {
+                        // Keep pointer events enabled
+                        e.currentTarget.style.pointerEvents = "all";
+                    }}
+                >
+                    <select 
+                        className="filter-dropdown" 
+                        value={filter} 
+                        onChange={handleFilterChange} 
+                        style={{ 
+                            backgroundImage: `url('/graph-period.svg')`, 
+                            backgroundRepeat: "no-repeat", 
+                            backgroundPosition: "left 7px center", 
+                            backgroundSize: "20px 20px", 
+                            paddingLeft: "35px",
+                            pointerEvents: "all",
+                            cursor: "pointer",
+                            zIndex: 20,
+                            position: "relative"
+                        }}
+                        onMouseDown={(e) => {
+                            // Prevent drag behavior when clicking dropdown
+                            e.stopPropagation();
+                        }}
+                        onClick={(e) => {
+                            // Prevent drag behavior when clicking dropdown
+                            e.stopPropagation();
+                        }}
+                    >
                         <option value="Weekly" style={{ alignItems: 'start'}}>Weekly</option>
                         <option value="Monthly" style={{ alignItems: 'start'}}>Monthly</option>
                         <option value="Yearly" style={{ alignItems: 'start'}}>Yearly</option>

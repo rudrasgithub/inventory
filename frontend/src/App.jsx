@@ -1,5 +1,6 @@
 import './App.css'
 import { Route, Routes } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Home from './pages/Home';
 import DragDropPage from './pages/DragDropPage';
 import Login from './components/Login';
@@ -30,6 +31,40 @@ function App() {
         <Route path='/statistics' element={<Statistics />} />
         <Route path='/setting' element={<Setting />} />
       </Routes>
+      
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#fff',
+            color: '#333',
+            border: '1px solid #e5e5e5',
+            borderRadius: '8px',
+            fontSize: '14px',
+            padding: '12px 16px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+            style: {
+              border: '1px solid #10b981',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+            style: {
+              border: '1px solid #ef4444',
+            },
+          },
+        }}
+      />
     </>
   )
 }

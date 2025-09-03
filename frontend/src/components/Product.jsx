@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Context/ContextProvider';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import "../css/Product.css";
 import Sidebar from "./Sidebar";
 import BottomNav from "./BottomNav";
@@ -10,11 +10,12 @@ import NewProduct from "./NewProduct";
 import IndividualProduct from "./NewProduct";
 import MultipleProduct from "./CSVModal";
 import PurchaseModal from "./PurchaseModal";
+import MobileHeader from "./MobileHeader";
 
 export default function Product() {
   const { token, isInitialized } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(false);  // Initialize as false to prevent SSR issues
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAddProductModalOpen, setAddProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [renderComponent, setRenderComponent] = useState(null);
@@ -367,6 +368,13 @@ export default function Product() {
     setSelectedProductInfo(null);
   };
 
+  // Authentication protection - redirect to login if not authenticated
+  useEffect(() => {
+    if (isInitialized && !token) {
+      navigate('/login');
+    }
+  }, [isInitialized, token, navigate]);
+
   return (
     <div className="dashboard">
       {!isMobile && <Sidebar />}
@@ -393,23 +401,7 @@ export default function Product() {
           </header>
         )}
 
-        {isMobile && (
-          <header className="mobile-header">
-            <div className="mobile-header-content">
-              <img src="/product-logo.svg" width={40} height={40} />
-              <div className="mobile-header-settings">
-                <img 
-                  src="/settings.svg" 
-                  alt="Settings" 
-                  height={18} 
-                  width={18}
-                  onClick={() => navigate('/setting')}
-                  style={{ cursor: 'pointer' }}
-                />
-              </div>
-            </div>
-          </header>
-        )}
+  {isMobile && <MobileHeader />}
 
 
         {renderComponent === "IndividualProduct" && <IndividualProduct setRenderComponent={setRenderComponent} refreshProducts={refreshProducts} />}
@@ -479,8 +471,27 @@ export default function Product() {
                     </div>
                     <div className="mobile-table-body">
                       {products.length === 0 ? (
-                        <div className="mobile-no-products">
-                          <p>No products found</p>
+                        <div className="mobile-no-products" style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '40px 20px',
+                          textAlign: 'center',
+                          color: '#6B7280',
+                          minHeight: '200px'
+                        }}>
+                          <img 
+                            src="/product-logo.svg" 
+                            alt="No Products" 
+                            style={{ 
+                              width: '64px', 
+                              height: '64px', 
+                              marginBottom: '16px',
+                              opacity: 0.5 
+                            }} 
+                          />
+                          <h3 style={{ margin: '0 0 8px 0', color: '#374151', fontSize: '18px' }}>No Products Found</h3>
                         </div>
                       ) : (
                         products.map((product, index) => (
@@ -575,6 +586,20 @@ export default function Product() {
                     {loading ? (
                       <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
                         Loading products...
+                      </div>
+                    ) : products.length === 0 ? (
+                      <div style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column',
+                        justifyContent: 'center', 
+                        alignItems: 'center',
+                        padding: '60px 20px', 
+                        textAlign: 'center',
+                        color: '#6b7280',
+                        fontSize: '16px'
+                      }}>
+                        <img src="/box-icon.svg" alt="No products" style={{ width: '48px', height: '48px', marginBottom: '16px', opacity: 0.5 }} />
+                        <h3 style={{ margin: '0 0 8px 0', color: '#374151' }}>No Products Found</h3>
                       </div>
                     ) : (
                       <table>
@@ -709,24 +734,6 @@ export default function Product() {
           </div>
         </div>
       )}
-      
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-          success: {
-            duration: 3000,
-            theme: {
-              primary: 'green',
-              secondary: 'black',
-            },
-          },
-        }}
-      />
 
       {/* Mobile Bottom Navigation - only show on mobile */}
       {isMobile && <BottomNav />}

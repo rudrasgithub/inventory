@@ -1,10 +1,9 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { AuthContext } from '../Context/ContextProvider';
 import "../css/Home.css";
 import Sidebar from "../components/Sidebar";
-import MobileHeader from "../components/MobileHeader";
 import BottomNav from "../components/BottomNav";
 import SalesPurchaseChart from "../components/SalesPurchaseChart";
 import CustomLegend from "../components/CustomLegend";
@@ -45,7 +44,18 @@ export default function Home() {
   const [leftColumnOrder, setLeftColumnOrder] = useState([0, 1, 2]);
   const [rightColumnOrder, setRightColumnOrder] = useState([0, 1, 2]);
   const [draggedGrid, setDraggedGrid] = useState(null);
-  const saveTimeoutRef = useRef(null);
+
+  // Check if mobile screen
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Grid management functions
   const moveGridToPosition = (column, fromIndex, toIndex) => {
@@ -65,42 +75,34 @@ export default function Home() {
   const saveGridLayout = async (layout) => {
     if (!token) return;
     
-    // Clear any existing timeout to prevent multiple rapid calls
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
-    }
-    
-    // Debounce the save operation
-    saveTimeoutRef.current = setTimeout(async () => {
-      try {
-        // Save to database
-        const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ homeLayout: layout })
-        });
+    try {
+      // Save to database
+      const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ homeLayout: layout })
+      });
 
-        if (response.ok) {
-          toast.success('Layout saved successfully!');
-          console.log('Home grid layout saved to database');
-        } else {
-          toast.error('Failed to save layout.');
-        }
-      } catch (error) {
-        console.error('Error saving home layout to database:', error);
+      if (response.ok) {
+        toast.success('Layout saved successfully!');
+        console.log('Home grid layout saved to database');
+      } else {
         toast.error('Failed to save layout.');
-        // Fallback to localStorage
-        try {
-          localStorage.setItem('gridLayout', JSON.stringify(layout));
-          console.log('Grid layout saved to localStorage as fallback');
-        } catch (localError) {
-          console.log('Could not save grid layout to localStorage');
-        }
       }
-    }, 500); // 500ms debounce
+    } catch (error) {
+      console.error('Error saving home layout to database:', error);
+      toast.error('Failed to save layout.');
+      // Fallback to localStorage
+      try {
+        localStorage.setItem('gridLayout', JSON.stringify(layout));
+        console.log('Grid layout saved to localStorage as fallback');
+      } catch (localError) {
+        console.log('Could not save grid layout to localStorage');
+      }
+    }
   };
 
   const loadGridLayout = async () => {
@@ -139,121 +141,6 @@ export default function Home() {
       console.log('Could not load grid layout from localStorage, using default layout');
     }
   };
-
-  const resetGridLayout = async () => {
-    const defaultLayout = {
-      leftColumn: [0, 1, 2],
-      rightColumn: [0, 1, 2]
-    };
-    
-    setLeftColumnOrder(defaultLayout.leftColumn);
-    setRightColumnOrder(defaultLayout.rightColumn);
-    
-    if (!token) {
-      toast.success('Layout reset to default!');
-      return;
-    }
-    
-    try {
-      // Reset in database
-      const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ homeLayout: defaultLayout })
-      });
-
-      if (response.ok) {
-        toast.success('Layout reset to default!');
-        console.log('Home grid layout reset in database');
-      } else {
-        toast.error('Failed to reset layout in database.');
-      }
-    } catch (error) {
-      console.error('Error resetting home layout in database:', error);
-      toast.error('Failed to reset layout in database.');
-      // Clear localStorage as fallback
-      try {
-        localStorage.removeItem('gridLayout');
-        console.log('Grid layout cleared from localStorage as fallback');
-      } catch (localError) {
-        console.log('Could not clear grid layout from localStorage');
-      }
-    }
-  };
-
-  const fetchDashboardData = async () => {
-    if (!token) {
-      console.log('No token available, skipping dashboard data fetch');
-      return;
-    }
-
-    try {
-      // Fetch products summary for inventory and categories
-      const productsResponse = await fetch(`${API_BASE_URL}/api/products/summary`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (productsResponse.ok) {
-        const productsData = await productsResponse.json();
-
-        setSummaryData(prev => ({
-          ...prev,
-          quantityInHand: productsData.totalProducts || 0, // Total available items
-          numberOfCategories: productsData.categories || 0, // Distinct categories count
-          totalPurchases: productsData.ordered || 0, // Total purchased items
-          purchaseCost: productsData.revenue || 0 // Total purchase cost
-        }));
-      }
-
-      // Fetch statistics for top products, chart data, and sales overview
-      const statisticsResponse = await fetch(`${API_BASE_URL}/api/statistics`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (statisticsResponse.ok) {
-        const statsData = await statisticsResponse.json();
-        setTopProducts(statsData.topProducts || []);
-        setChartData(statsData.chartData || []);
-        
-        // Update sales overview with data from statistics
-        setSummaryData(prev => ({
-          ...prev,
-          totalSales: statsData.productsSold?.value || 0,
-          totalRevenue: statsData.totalRevenue?.value || 0,
-          totalCost: statsData.totalCost?.value || 0,
-          totalProfit: statsData.totalProfit?.value || 0,
-        }));
-      }
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-    }
-  };
-
-  // Check if mobile screen
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (isInitialized && !token) {
-      navigate('/login');
-    }
-  }, [token, isInitialized, navigate]);
 
   // Advanced mouse-based drag and drop logic - Based on working HTML reference
   useEffect(() => {
@@ -483,17 +370,64 @@ export default function Home() {
     };
   }, [leftColumnOrder, rightColumnOrder, isMobile]); // Added isMobile dependency
 
+  const fetchDashboardData = async () => {
+    if (!token) {
+      console.log('No token available, skipping dashboard data fetch');
+      return;
+    }
+
+    try {
+      // Fetch products summary for inventory and categories
+      const productsResponse = await fetch(`${API_BASE_URL}/api/products/summary`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (productsResponse.ok) {
+        const productsData = await productsResponse.json();
+
+        setSummaryData(prev => ({
+          ...prev,
+          quantityInHand: productsData.totalProducts || 0, // Total available items
+          numberOfCategories: productsData.categories || 0, // Distinct categories count
+          totalPurchases: productsData.ordered || 0, // Total purchased items
+          purchaseCost: productsData.revenue || 0 // Total purchase cost
+        }));
+      }
+
+      // Fetch statistics for top products, chart data, and sales overview
+      const statisticsResponse = await fetch(`${API_BASE_URL}/api/statistics`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (statisticsResponse.ok) {
+        const statsData = await statisticsResponse.json();
+        setTopProducts(statsData.topProducts || []);
+        setChartData(statsData.chartData || []);
+        
+        // Update sales overview with data from statistics
+        setSummaryData(prev => ({
+          ...prev,
+          totalSales: statsData.productsSold?.value || 0,
+          totalRevenue: statsData.totalRevenue?.value || 0,
+          totalCost: statsData.totalCost?.value || 0,
+          totalProfit: statsData.totalProfit?.value || 0,
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    }
+  };
+
   useEffect(() => {
     if (token && isInitialized) {
       fetchDashboardData();
       loadGridLayout();
     }
   }, [token, isInitialized]);
-
-  // If not initialized or no token, don't render anything (will redirect)
-  if (!isInitialized || !token) {
-    return null;
-  }
 
   // Grid component definitions
   const renderSalesOverview = () => (
@@ -632,11 +566,28 @@ export default function Home() {
 
   return (
     <div className="dashboard-home">
+      <Toaster position="bottom-right" />
       {!isMobile && <Sidebar />}
       <main className="main-home">
         {!isMobile && <header className="header-main"><h1>Home</h1></header>}
 
-  {isMobile && <MobileHeader />}
+        {isMobile && (
+          <header className="mobile-header">
+            <div className="mobile-header-content">
+              <img src="/product-logo.svg" alt="product logo" height={47} width={47} />
+              <div className="mobile-header-settings">
+                <img 
+                  src="/settings.svg" 
+                  alt="Settings" 
+                  height={18} 
+                  width={18}
+                  onClick={() => navigate('/setting')}
+                  style={{ cursor: 'pointer' }}
+                />
+              </div>
+            </div>
+          </header>
+        )}
 
         <section className="grid-layout-home draggable-layout">
           {isMobile ? (

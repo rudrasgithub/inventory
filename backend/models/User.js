@@ -47,6 +47,70 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// Cascade delete - remove all associated data when user is deleted
+userSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+  try {
+    console.log(`Cascading delete for user: ${this._id}`);
+    
+    // Import models dynamically to avoid circular dependencies
+    const Product = mongoose.model('Product');
+    const Purchase = mongoose.model('Purchase');
+    const Invoice = mongoose.model('Invoice');
+    
+    // Delete all products associated with this user
+    const deletedProducts = await Product.deleteMany({ userId: this._id });
+    console.log(`Deleted ${deletedProducts.deletedCount} products for user ${this._id}`);
+    
+    // Delete all purchases associated with this user
+    const deletedPurchases = await Purchase.deleteMany({ userId: this._id });
+    console.log(`Deleted ${deletedPurchases.deletedCount} purchases for user ${this._id}`);
+    
+    // Delete all invoices associated with this user
+    const deletedInvoices = await Invoice.deleteMany({ userId: this._id });
+    console.log(`Deleted ${deletedInvoices.deletedCount} invoices for user ${this._id}`);
+    
+    next();
+  } catch (error) {
+    console.error('Error during cascade delete:', error);
+    next(error);
+  }
+});
+
+// Also handle findOneAndDelete
+userSchema.pre('findOneAndDelete', async function(next) {
+  try {
+    // Get the user document that will be deleted
+    const user = await this.model.findOne(this.getQuery());
+    if (!user) {
+      return next();
+    }
+    
+    console.log(`Cascading delete for user: ${user._id}`);
+    
+    // Import models dynamically to avoid circular dependencies
+    const Product = mongoose.model('Product');
+    const Purchase = mongoose.model('Purchase');
+    const Invoice = mongoose.model('Invoice');
+    
+    // Delete all products associated with this user
+    const deletedProducts = await Product.deleteMany({ userId: user._id });
+    console.log(`Deleted ${deletedProducts.deletedCount} products for user ${user._id}`);
+    
+    // Delete all purchases associated with this user
+    const deletedPurchases = await Purchase.deleteMany({ userId: user._id });
+    console.log(`Deleted ${deletedPurchases.deletedCount} purchases for user ${user._id}`);
+    
+    // Delete all invoices associated with this user
+    const deletedInvoices = await Invoice.deleteMany({ userId: user._id });
+    console.log(`Deleted ${deletedInvoices.deletedCount} invoices for user ${user._id}`);
+    
+    next();
+  } catch (error) {
+    console.error('Error during cascade delete:', error);
+    next(error);
+  }
+});
+
 // Compare password method
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);

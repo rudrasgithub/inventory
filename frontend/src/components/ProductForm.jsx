@@ -95,6 +95,25 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
     setIsSubmitting(true);
     
     try {
+      // First, check if product ID already exists
+      const checkResponse = await fetch(`${backendUrl}/api/products/check-id/${encodeURIComponent(form.productId)}`, {
+        method: "GET",
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (checkResponse.ok) {
+        const checkData = await checkResponse.json();
+        if (checkData.exists) {
+          toast.error(`Product ID "${form.productId}" already exists! Please use a different ID.`);
+          setIsSubmitting(false);
+          return;
+        } else {
+          toast.success(`Product ID "${form.productId}" is available!`);
+        }
+      }
+
       const { image, ...productData } = form;
       const formData = new FormData();
 
@@ -115,7 +134,15 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to add product");
+        const errorData = await response.json();
+        if (response.status === 409) {
+          // Handle duplicate product ID error from backend
+          toast.error(errorData.message || "Product ID already exists!");
+        } else {
+          throw new Error(errorData.message || "Failed to add product");
+        }
+        setIsSubmitting(false);
+        return;
       }
 
       const data = await response.json();

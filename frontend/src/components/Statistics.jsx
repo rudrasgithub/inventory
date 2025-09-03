@@ -7,9 +7,11 @@ import Sidebar from "./Sidebar";
 import BottomNav from "./BottomNav";
 import SalesPurchaseChart from "./SalesPurchaseChart";
 import CustomLegend from "./CustomLegend";
+import TopProducts from "./TopProducts";
+import MobileHeader from "./MobileHeader";
 
 export default function Statistics() {
-  const { token } = useContext(AuthContext);
+  const { token, isInitialized } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [statistics, setStatistics] = useState({
@@ -19,7 +21,6 @@ export default function Statistics() {
     chartData: [],
     topProducts: []
   });
-  const [loading, setLoading] = useState(true);
   const [layoutLoading, setLayoutLoading] = useState(true);
   
   const [initialLayout, setInitialLayout] = useState({
@@ -37,7 +38,7 @@ export default function Statistics() {
         return;
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/api/user/layout`, {
+        const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -57,8 +58,10 @@ export default function Statistics() {
 
   // Save layout to backend
   const saveLayoutToBackend = async (newLayout) => {
+    if (!token) return;
+    
     try {
-      await fetch(`${API_BASE_URL}/api/user/layout`, {
+      await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -66,8 +69,9 @@ export default function Statistics() {
         },
         body: JSON.stringify({ statisticsLayout: newLayout })
       });
+      console.log('Statistics layout saved to database');
     } catch (error) {
-      console.error('Error saving layout:', error);
+      console.error('Error saving statistics layout to database:', error);
     }
   };
 
@@ -118,24 +122,14 @@ export default function Statistics() {
       id: 4,
       title: "Top Products",
       component: (
-        <div className="top-products-card">
-          <h3>Top Products</h3>
-          <div className="top-products-statistics">
-            {statistics.topProducts.map((product, index) => (
-              <div key={index} className="statistics-product">
-                <span>{product.name}</span>
-                <div className="stars">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className={`star ${i < product.rating ? "filled" : ""}`}
-                    ></span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <TopProducts
+          topProducts={statistics.topProducts}
+          className="statistics-style"
+          showTitle={true}
+          titleText="Top Products"
+          showImage={false}
+          showSoldCount={false}
+        />
       ),
       className: "top-products-card-wrapper",
       flexGrow: 1
@@ -166,12 +160,10 @@ export default function Statistics() {
         }
       } catch (error) {
         console.error('Error fetching statistics:', error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchStatistics();
-  }, [token]);
+  }, [token, isMobile]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -195,8 +187,12 @@ export default function Statistics() {
         key={card.id}
         data-card-id={card.id}
         className={`draggable-card ${card.className}`}
-        onMouseDown={(e) => handleMouseDown(e, card.id, rowType)}
-        style={{ flexGrow: card.flexGrow, cursor: isMobile ? 'default' : 'grab' }}
+        onMouseDown={isMobile ? undefined : (e) => handleMouseDown(e, card.id, rowType)}
+        style={{ 
+          flexGrow: card.flexGrow, 
+          cursor: isMobile ? 'default' : 'grab',
+          pointerEvents: isMobile ? 'auto' : 'auto' // Allow all interactions
+        }}
       >
         {card.component ? card.component : (
           <div className={`card-statistics ${card.className}`}>
@@ -214,6 +210,13 @@ export default function Statistics() {
     );
   };
 
+  // Authentication protection - redirect to login if not authenticated
+  useEffect(() => {
+    if (isInitialized && !token) {
+      navigate('/login');
+    }
+  }, [isInitialized, token, navigate]);
+
   return (
     <div className="statistics-dashboard">
       {!isMobile && <Sidebar />}
@@ -227,23 +230,7 @@ export default function Statistics() {
         )}
 
         {/* Mobile header */}
-        {isMobile && (
-          <header className="mobile-header">
-            <div className="mobile-header-content">
-              <img src="/product-logo.svg" alt="product logo" height={47} width={47} />
-              <div className="mobile-header-settings">
-                <img 
-                  src="/settings.svg" 
-                  alt="Settings" 
-                  height={18} 
-                  width={18} 
-                  onClick={() => navigate('/setting')}
-                  style={{ cursor: 'pointer' }}
-                />
-              </div>
-            </div>
-          </header>
-        )}
+  {isMobile && <MobileHeader />}
 
         <main className="content-statistics">
           {isMobile ? (
@@ -271,8 +258,8 @@ export default function Statistics() {
               </div>
             </>
           ) : (
-            // Only render desktop layout when both loading and layoutLoading are false
-            !loading && !layoutLoading ? (
+            // Only render desktop layout when layoutLoading is false
+            !layoutLoading ? (
               <>
                 <div className="cards-statistics draggable-row" data-row-type="firstRow">
                   {layout.firstRow.map(cardId => renderCard(cardId, 'firstRow'))}
@@ -287,7 +274,7 @@ export default function Statistics() {
               </>
             ) : (
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', color: 'white' }}>
-                Loading statistics...
+                Loading layout...
               </div>
             )
           )}

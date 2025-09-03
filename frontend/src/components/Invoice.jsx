@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect, useContext, useCallback } from "react"
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Context/ContextProvider';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import "../css/Invoice.css"
 import Sidebar from "./Sidebar"
 import BottomNav from "./BottomNav"
 import InvoiceTemplate from "./InvoiceTemplate"
+import MobileHeader from "./MobileHeader"
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
 
@@ -49,7 +50,7 @@ export default function Invoice() {
   }, []);
 
   // Fetch invoices
-  const fetchInvoices = async (page = 1) => {
+  const fetchInvoices = useCallback(async (page = 1) => {
     if (!token) {
       console.log('No token available, skipping invoice fetch');
       return;
@@ -75,10 +76,10 @@ export default function Invoice() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   // Fetch overall statistics
-  const fetchOverallStats = async () => {
+  const fetchOverallStats = useCallback(async () => {
     if (!token) {
       console.log('No token available, skipping stats fetch');
       return;
@@ -98,14 +99,22 @@ export default function Invoice() {
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
-  };
+  }, [token]);
 
+  // Refresh data when mobile state changes to ensure proper data loading
   useEffect(() => {
     if (token && isInitialized) {
       fetchInvoices();
       fetchOverallStats();
     }
-  }, [token, isInitialized]);
+  }, [isMobile, token, isInitialized, fetchInvoices, fetchOverallStats]);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (isInitialized && !token) {
+      navigate('/login');
+    }
+  }, [token, isInitialized, navigate]);
 
   // Filter invoices based on search
   useEffect(() => {
@@ -297,18 +306,13 @@ export default function Invoice() {
     };
   }, [isDeleteDialogOpen]);
 
+  // If not initialized or no token, don't render anything (will redirect)
+  if (!isInitialized || !token) {
+    return null;
+  }
+
   return (
     <div className="dashboard-invoice">
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-        }}
-      />
       {!isMobile && <Sidebar />}
 
       <div className={`main-invoice ${isModalOpen || (isMobile && isDeleteDialogOpen) ? "blurred" : ""}`}>
@@ -330,27 +334,9 @@ export default function Invoice() {
           </header>
         )}
         
-        {isMobile && (
-          <header className="mobile-invoice-header">
-            <div className="mobile-invoice-header-content">
-              <div className="mobile-header-pie">
-                <img src="/product-logo.svg" width={40} height={40} />
-              </div>
-              <div className="mobile-header-settings">
-                <img 
-                  src="/settings.svg" 
-                  alt="Settings" 
-                  height={18} 
-                  width={18}
-                  onClick={() => navigate('/setting')}
-                  style={{ cursor: 'pointer' }}
-                />
-              </div>
-            </div>
-          </header>
-        )}
+  {isMobile && <MobileHeader />}
 
-                        <main className="invoice-content">
+        <main className="invoice-content">
           {isMobile ? (
             // Mobile layout matching the screenshot design
             <section className="mobile-invoice-overview">
@@ -464,7 +450,7 @@ export default function Invoice() {
             ) : (
               <>
                 {isMobile ? (
-                  // Mobile layout: Table-like format matching the reference design
+                  // Mobile layout: Table-like format
                   <div className="mobile-invoice-table">
                     <div className="mobile-table-header">
                       <div className="mobile-header-cell">Invoice ID</div>
@@ -472,14 +458,33 @@ export default function Invoice() {
                     </div>
                     <div className="mobile-table-body">
                       {filteredInvoices.length === 0 ? (
-                        <div className="mobile-no-invoices">
-                          <p>No invoices found</p>
+                        <div className="mobile-no-invoices" style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '40px 20px',
+                          textAlign: 'center',
+                          color: '#6B7280',
+                          minHeight: '200px'
+                        }}>
+                          <img 
+                            src="/invoice.svg" 
+                            alt="No Invoices" 
+                            style={{ 
+                              width: '64px', 
+                              height: '64px', 
+                              marginBottom: '16px',
+                              opacity: 0.5 
+                            }} 
+                          />
+                          <h3 style={{ margin: '0 0 8px 0', color: '#374151', fontSize: '18px' }}>No invoices available</h3>
                         </div>
                       ) : (
                         filteredInvoices.map((invoice) => (
                           <div key={invoice._id} className="mobile-table-row">
                             <div className="mobile-invoice-id-cell">
-                              {invoice.invoiceId}
+                              {invoice.invoiceId} 
                             </div>
                             <div className="mobile-invoice-actions">
                               <button
@@ -519,7 +524,22 @@ export default function Invoice() {
                         </tr>
                       </thead>
                       <tbody>
-                    {filteredInvoices.map((invoice, index) => (
+                    {filteredInvoices.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" style={{ textAlign: 'center', padding: '60px 20px' }}>
+                          <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#6B7280'
+                          }}>
+                            <h3 style={{ margin: '0 0 8px 0', color: '#374151' }}>No Invoices Found</h3>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                    filteredInvoices.map((invoice, index) => (
                       <tr key={invoice._id} className={index % 2 === 1 ? "alt-row" : ""}>
                         <td>{invoice.invoiceId}</td>
                         <td>{invoice.referenceNumber}</td>
@@ -583,7 +603,7 @@ export default function Invoice() {
                           )}
                         </td>
                       </tr>
-                    ))}
+                    )))}
                       </tbody>
                     </table>
                   </>

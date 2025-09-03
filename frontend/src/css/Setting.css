@@ -98,7 +98,7 @@
 }
 
 /* Mobile Responsive Styles */
-@media (max-width: 414px) {
+@media (max-width: 768px) {
   .setting-dashboard {
     display: block;
     padding: 0;
@@ -118,8 +118,15 @@
     display: none !important; 
   }
   
+  /* Show shared mobile header on settings */
   .mobile-header {
-    display: none !important;
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
   }
   
   .mobile-close-container {
@@ -136,6 +143,7 @@
   
   .main-setting {
     padding: 0; 
+    padding-top: 60px; /* Reserve space for fixed header */
     width: 100% !important; 
     margin: 0;
     min-height: 100vh;

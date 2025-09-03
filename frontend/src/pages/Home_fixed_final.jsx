@@ -1,10 +1,9 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { AuthContext } from '../Context/ContextProvider';
 import "../css/Home.css";
 import Sidebar from "../components/Sidebar";
-import MobileHeader from "../components/MobileHeader";
 import BottomNav from "../components/BottomNav";
 import SalesPurchaseChart from "../components/SalesPurchaseChart";
 import CustomLegend from "../components/CustomLegend";
@@ -45,7 +44,6 @@ export default function Home() {
   const [leftColumnOrder, setLeftColumnOrder] = useState([0, 1, 2]);
   const [rightColumnOrder, setRightColumnOrder] = useState([0, 1, 2]);
   const [draggedGrid, setDraggedGrid] = useState(null);
-  const saveTimeoutRef = useRef(null);
 
   // Grid management functions
   const moveGridToPosition = (column, fromIndex, toIndex) => {
@@ -65,42 +63,34 @@ export default function Home() {
   const saveGridLayout = async (layout) => {
     if (!token) return;
     
-    // Clear any existing timeout to prevent multiple rapid calls
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
-    }
-    
-    // Debounce the save operation
-    saveTimeoutRef.current = setTimeout(async () => {
-      try {
-        // Save to database
-        const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ homeLayout: layout })
-        });
+    try {
+      // Save to database
+      const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ homeLayout: layout })
+      });
 
-        if (response.ok) {
-          toast.success('Layout saved successfully!');
-          console.log('Home grid layout saved to database');
-        } else {
-          toast.error('Failed to save layout.');
-        }
-      } catch (error) {
-        console.error('Error saving home layout to database:', error);
+      if (response.ok) {
+        toast.success('Layout saved successfully!');
+        console.log('Home grid layout saved to database');
+      } else {
         toast.error('Failed to save layout.');
-        // Fallback to localStorage
-        try {
-          localStorage.setItem('gridLayout', JSON.stringify(layout));
-          console.log('Grid layout saved to localStorage as fallback');
-        } catch (localError) {
-          console.log('Could not save grid layout to localStorage');
-        }
       }
-    }, 500); // 500ms debounce
+    } catch (error) {
+      console.error('Error saving home layout to database:', error);
+      toast.error('Failed to save layout.');
+      // Fallback to localStorage
+      try {
+        localStorage.setItem('gridLayout', JSON.stringify(layout));
+        console.log('Grid layout saved to localStorage as fallback');
+      } catch (localError) {
+        console.log('Could not save grid layout to localStorage');
+      }
+    }
   };
 
   const loadGridLayout = async () => {
@@ -137,50 +127,6 @@ export default function Home() {
       }
     } catch (error) {
       console.log('Could not load grid layout from localStorage, using default layout');
-    }
-  };
-
-  const resetGridLayout = async () => {
-    const defaultLayout = {
-      leftColumn: [0, 1, 2],
-      rightColumn: [0, 1, 2]
-    };
-    
-    setLeftColumnOrder(defaultLayout.leftColumn);
-    setRightColumnOrder(defaultLayout.rightColumn);
-    
-    if (!token) {
-      toast.success('Layout reset to default!');
-      return;
-    }
-    
-    try {
-      // Reset in database
-      const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ homeLayout: defaultLayout })
-      });
-
-      if (response.ok) {
-        toast.success('Layout reset to default!');
-        console.log('Home grid layout reset in database');
-      } else {
-        toast.error('Failed to reset layout in database.');
-      }
-    } catch (error) {
-      console.error('Error resetting home layout in database:', error);
-      toast.error('Failed to reset layout in database.');
-      // Clear localStorage as fallback
-      try {
-        localStorage.removeItem('gridLayout');
-        console.log('Grid layout cleared from localStorage as fallback');
-      } catch (localError) {
-        console.log('Could not clear grid layout from localStorage');
-      }
     }
   };
 
@@ -632,11 +578,28 @@ export default function Home() {
 
   return (
     <div className="dashboard-home">
+      <Toaster position="bottom-right" />
       {!isMobile && <Sidebar />}
       <main className="main-home">
         {!isMobile && <header className="header-main"><h1>Home</h1></header>}
 
-  {isMobile && <MobileHeader />}
+        {isMobile && (
+          <header className="mobile-header">
+            <div className="mobile-header-content">
+              <img src="/product-logo.svg" alt="product logo" height={47} width={47} />
+              <div className="mobile-header-settings">
+                <img 
+                  src="/settings.svg" 
+                  alt="Settings" 
+                  height={18} 
+                  width={18}
+                  onClick={() => navigate('/setting')}
+                  style={{ cursor: 'pointer' }}
+                />
+              </div>
+            </div>
+          </header>
+        )}
 
         <section className="grid-layout-home draggable-layout">
           {isMobile ? (

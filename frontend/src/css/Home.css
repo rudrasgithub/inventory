@@ -436,6 +436,23 @@
   }
 }
 
+/* Ensure mobile header shows on small screens */
+@media (max-width: 768px) {
+  .mobile-header {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  
+  .main-home {
+    padding-top: 60px; /* Reserve space for fixed header */
+  }
+}
+
 @media (max-width: 768px){
   .grid-layout-home { 
     grid-template-columns: 1fr; 

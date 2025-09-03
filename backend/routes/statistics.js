@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/statistics', auth, getStatistics);
 
 // Layout management routes
-router.get('/user/layout', auth, getUserLayout);
-router.put('/user/layout', auth, updateUserLayout);
+router.get('/statistics/user/layout', auth, getUserLayout);
+router.put('/statistics/user/layout', auth, updateUserLayout);
 
 export default router;

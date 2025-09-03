@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from '../Context/ContextProvider';
 import "../css/Sidebar.css";
 
 export default function Sidebar() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   
   const navigation = [
     { icon: "/home.svg", label: "Home", path: "/" },
@@ -60,7 +61,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="sidebar-btm">
-        <div className="profile">
+        <div className="profile" onClick={() => navigate('/setting')}>
           <div className="avatar">{getUserInitial()}</div>
           <div className="profile-name">{getUserName()}</div>
         </div>

@@ -1,0 +1,159 @@
+/* Top Products Component Styles */
+.top-products-component {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.top-products-header {
+  padding: 0 0 16px 0;
+}
+
+.top-products-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.top-products-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.top-product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f3f4f6;
+  gap: 16px;
+}
+
+.top-product-item:last-child {
+  border-bottom: none;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.product-image-small {
+  width: 100%;
+  max-width: 30px; /* Limit image size */
+  height: auto;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+.product-stars {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.star {
+  font-size: 10px;
+  color: #d1d5db;
+  transition: color 0.2s ease;
+}
+
+.star.filled {
+  color: #facc15;
+}
+
+.no-products-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  color: #6b7280;
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Home page specific styles */
+.top-products-component.home-style {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.top-products-component.home-style .top-products-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Statistics page specific styles */
+.top-products-component.statistics-style {
+  background: transparent;
+  padding: 0;
+}
+
+.top-products-component.statistics-style .top-products-header {
+  border-bottom: none;
+  margin-bottom: 12px;
+  padding-bottom: 0;
+}
+
+.top-products-component.statistics-style .top-products-title {
+  font-size: 16px;
+  color: white;
+}
+
+.top-products-component.statistics-style .product-name {
+  color: white;
+}
+
+.top-products-component.statistics-style .product-sold {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.top-products-component.statistics-style .top-product-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .top-products-component {
+    padding: 16px;
+  }
+  
+  .top-product-item {
+    padding: 10px 0;
+  }
+  
+  .product-thumbnail,
+  .product-placeholder {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .product-name {
+    font-size: 13px;
+  }
+  
+  .star {
+    font-size: 12px;
+  }
+  
+  .product-sold {
+    font-size: 11px;
+  }
+}

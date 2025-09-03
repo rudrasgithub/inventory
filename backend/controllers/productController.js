@@ -10,6 +10,30 @@ export const getProducts = async (req, res) => {
   }
 };
 
+export const checkProductId = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    
+    if (!productId) {
+      return res.status(400).json({ message: 'Product ID is required' });
+    }
+
+    // Check if product with this ID already exists for this user
+    const existingProduct = await Product.findOne({ 
+      productId: productId, 
+      userId: req.user._id 
+    });
+
+    res.status(200).json({ 
+      exists: !!existingProduct,
+      productId: productId
+    });
+  } catch (error) {
+    console.error('Error checking product ID:', error);
+    res.status(500).json({ message: 'Error checking product ID', error: error.message });
+  }
+};
+
 export const addProduct = async (req, res) => {
   try {
     console.log('[addProduct] req.body:', req.body);
@@ -31,6 +55,18 @@ export const addProduct = async (req, res) => {
 
     if (isNaN(thresholdNum) || thresholdNum < 0) {
       return res.status(400).json({ message: 'Threshold must be a positive number' });
+    }
+
+    // Check if product ID already exists for this user
+    const existingProduct = await Product.findOne({ 
+      productId: productId, 
+      userId: req.user._id 
+    });
+
+    if (existingProduct) {
+      return res.status(409).json({ 
+        message: `Product ID "${productId}" already exists. Please use a different ID.` 
+      });
     }
 
     let status;
@@ -160,7 +196,7 @@ export const getPaginatedProducts = async (req, res) => {
     res.status(200).json({
       products,
       totalProducts,
-      totalPages: Math.ceil(totalProducts / limit),
+      totalPages: Math.max(1, Math.ceil(totalProducts / limit)), // Always show at least 1 page
       currentPage: page,
     });
   } catch (error) {

@@ -130,7 +130,7 @@ export const getStatistics = async (req, res) => {
       
       const monthName = monthDate.toLocaleString('default', { month: 'short' });
       
-      // Get purchases for this month (total cost of products purchased)
+      // Get purchases for this month (actual purchase cost)
       const monthPurchases = await Purchase.aggregate([
         {
           $match: {
@@ -146,8 +146,8 @@ export const getStatistics = async (req, res) => {
         }
       ]);
 
-      // Get sales for this month (simple calculation based on purchases)
-      const monthSales = await Purchase.aggregate([
+      // Get sales revenue for this month (quantity * price when sold)
+      const monthSalesRevenue = await Purchase.aggregate([
         {
           $match: {
             userId: req.user._id,
@@ -157,15 +157,19 @@ export const getStatistics = async (req, res) => {
         {
           $group: {
             _id: null,
-            sales: { $sum: '$totalAmount' }
+            salesRevenue: { $sum: { $multiply: ['$quantity', '$priceAtPurchase'] } }
           }
         }
       ]);
       
+      // Calculate sales cost (5% of revenue)
+      const salesRevenue = monthSalesRevenue[0]?.salesRevenue || 0;
+      const salesCost = Math.round(salesRevenue * 0.05);
+      
       chartData.push({
         month: monthName,
         purchase: Math.round(monthPurchases[0]?.purchase || 0),
-        sales: Math.round(monthSales[0]?.sales || 0)
+        sales: Math.round(salesRevenue) // Using sales revenue instead of same as purchase
       });
     }
 
@@ -246,10 +250,20 @@ export const getStatistics = async (req, res) => {
     const lastStock = lastMonthStock[0]?.totalStock || currentStock;
     const stockChange = lastStock > 0 ? ((currentStock - lastStock) / lastStock * 100) : 0;
 
+    // Calculate total cost and profit for the current month
+    const totalCost = Math.round(currentRevenue * 0.05);
+    const totalProfit = Math.round(currentRevenue - totalCost);
+
     res.json({
       totalRevenue: {
         value: Math.round(currentRevenue),
         change: Math.round(revenueChange * 10) / 10
+      },
+      totalCost: {
+        value: totalCost
+      },
+      totalProfit: {
+        value: totalProfit
       },
       productsSold: {
         value: currentSold,

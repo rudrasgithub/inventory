@@ -217,3 +217,36 @@ export const verifyToken = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// Delete user account and all associated data
+export const deleteUser = async (req, res) => {
+  try {
+    console.log(`Delete user request for user ID: ${req.user._id}`);
+    
+    // Find the user to be deleted
+    const user = await User.findById(req.user._id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log(`Deleting user: ${user.email} (${user.name})`);
+    
+    // Delete the user - this will trigger the cascade delete middleware
+    await User.findOneAndDelete({ _id: req.user._id });
+    
+    console.log(`User ${user.email} and all associated data deleted successfully`);
+    
+    res.json({ 
+      message: 'User account and all associated data deleted successfully',
+      deletedUser: {
+        id: user._id,
+        email: user.email,
+        name: user.name
+      }
+    });
+  } catch (err) {
+    console.error('Delete user error:', err);
+    res.status(500).json({ message: 'Server error while deleting user account' });
+  }
+};

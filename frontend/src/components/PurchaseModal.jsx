@@ -80,7 +80,7 @@ const PurchaseModal = ({ product, onClose, onBuy }) => {
           >
             {isLoading ? 'Processing...' : 'Buy'}
           </button>
-          <button onClick={onClose} className="close-button" disabled={isLoading}>Close</button>
+          <button onClick={onClose} className="close-button-purchase-modal" disabled={isLoading}>Close</button>
         </div>
       </div>
     </div>

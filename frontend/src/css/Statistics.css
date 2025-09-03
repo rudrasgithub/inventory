@@ -14,7 +14,7 @@
   background: white;
   border-radius: 10px;
   padding: 10px;
-  flex: 2;
+  flex: 1.5;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -267,6 +267,12 @@
   
   .mobile-header {
     display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
   }
   
   .statistics-header {
@@ -275,12 +281,11 @@
   
   .statistics-main {
     padding: 0; 
+    padding-top: 60px; /* Reserve space for fixed header */
     width: 100% !important; 
     margin: 0;
     padding-bottom: 90px;
-  }
-  
-  /* Mobile-specific layout */
+  }  /* Mobile-specific layout */
   .mobile-chart-section {
     padding: 16px;
     padding-bottom: 0;
