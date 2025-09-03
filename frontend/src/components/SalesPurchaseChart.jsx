@@ -25,16 +25,10 @@ export default function SalesPurchaseChart({ chartData = [] }) {
 
     const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
 
-    // Debug: Log monthly chart data when it changes
-    useEffect(() => {
-        console.log('Monthly chartData prop received:', chartData);
-    }, [chartData]);
-
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
     };
 
-    // Calculate responsive height based on screen size
     useEffect(() => {
         const updateChartHeight = () => {
             const screenHeight = window.innerHeight;
@@ -61,11 +55,9 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         return () => window.removeEventListener('resize', updateChartHeight);
     }, []);
 
-    // Fetch weekly data from backend
     const fetchWeeklyData = async () => {
         setLoading(true);
         try {
-            console.log('Fetching weekly data...');
             const response = await fetch(`${API_BASE_URL}/api/statistics/weekly`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -74,7 +66,6 @@ export default function SalesPurchaseChart({ chartData = [] }) {
             
             if (response.ok) {
                 const data = await response.json();
-                console.log('Weekly data received:', data);
                 setWeeklyData(data.weeklyData || []);
             } else {
                 console.error('Failed to fetch weekly data');
@@ -88,11 +79,9 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         }
     };
 
-    // Fetch yearly data from backend
     const fetchYearlyData = async () => {
         setLoading(true);
         try {
-            console.log('Fetching yearly data...');
             const response = await fetch(`${API_BASE_URL}/api/statistics/yearly`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -101,7 +90,6 @@ export default function SalesPurchaseChart({ chartData = [] }) {
             
             if (response.ok) {
                 const data = await response.json();
-                console.log('Yearly data received:', data);
                 setYearlyData(data.yearlyData || []);
             } else {
                 console.error('Failed to fetch yearly data');
@@ -115,7 +103,6 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         }
     };
 
-    // Fetch data when filter changes
     useEffect(() => {
         if (filter === "Weekly" && token) {
             fetchWeeklyData();
@@ -134,7 +121,6 @@ export default function SalesPurchaseChart({ chartData = [] }) {
 
     const barGap = 0.6;
 
-    // Use dynamic chart data based on filter
     const getChartData = () => {
         let data = { labels: [], datasets: [] };
 
@@ -184,7 +170,6 @@ export default function SalesPurchaseChart({ chartData = [] }) {
             };
         }
 
-        // Add styling to datasets
         data.datasets.forEach((dataset, index) => {
             const isPurchase = dataset.label === "Purchase";
             dataset.backgroundColor = (context) => {
@@ -203,11 +188,9 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         return data;
     };
 
-    // Smart Y-axis scaling function
     const calculateYAxisMax = (data) => {
         let maxValue = 0;
         
-        // Handle case where data or datasets might be empty
         if (!data || !data.datasets || data.datasets.length === 0) {
             return { stepSize: 10, suggestedMax: 50, maxTicks: 6 };
         }

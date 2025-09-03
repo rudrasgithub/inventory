@@ -4,25 +4,19 @@ import TotalCounter from '../models/TotalCounter.js';
 
 export const getSummary = async (req, res) => {
   try {
-    console.log('[getSummary] called for user:', req.user._id);
     const userId = req.user._id;
     
-    // determine timeframe (if last7Days flag is present)
     const last7DaysFlag = req.query.last7Days === 'true' || req.query.last7Days === '1' || req.query.last7Days === true;
     const last7Days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-    // categories (distinct count for user's products)
     const categories = await Product.distinct('category', { userId });
 
-    // totalProducts: sum of all product quantities for this user
     const totalProductsAgg = await Product.aggregate([
       { $match: { userId } },
       { $group: { _id: null, totalProducts: { $sum: '$quantity' } } }
     ]);
     const totalProducts = totalProductsAgg[0]?.totalProducts || 0;
-    console.log('[getSummary] totalProducts for user:', totalProducts);
 
-    // ordered & revenue: aggregate from Purchase documents for this user
     const purchasesAgg = await Purchase.aggregate([
       { $match: { userId } },
       {
@@ -37,12 +31,8 @@ export const getSummary = async (req, res) => {
     const ordered = purchasesAgg[0]?.totalOrderedItems || 0;
     const totalRevenueFromPurchases = purchasesAgg[0]?.totalRevenue || 0;
 
-    console.log('[getSummary] ordered:', ordered, 'revenue:', totalRevenueFromPurchases);
-
-    // Not in stock count for user's products
     const notInStock = await Product.countDocuments({ userId, quantity: 0 });
     
-    // Low stock count for user's products
     const lowStock = await Product.countDocuments({ 
       userId, 
       quantity: { $gt: 0 }, 

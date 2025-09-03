@@ -36,9 +36,6 @@ export const checkProductId = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   try {
-    console.log('[addProduct] req.body:', req.body);
-    console.log('[addProduct] req.file:', req.file);
-    
     const { name, productId, category, price, quantity, unit, expiry, threshold } = req.body;
 
     if (!name || !productId || !category || !price || !quantity || !unit || !expiry || !threshold) {
@@ -103,12 +100,9 @@ export const addProduct = async (req, res) => {
     
     await newProduct.save();
 
-    // Increment the totalProducts counter by the quantity added
     const counter = await TotalCounter.getCounter();
-    console.log('[addProduct] incrementing totalProducts from', counter.totalProducts, 'by', quantityNum);
     counter.totalProducts += quantityNum;
     await counter.save();
-    console.log('[addProduct] totalProducts now:', counter.totalProducts);
 
     res.status(201).json(newProduct);
   } catch (error) {
@@ -206,8 +200,6 @@ export const getPaginatedProducts = async (req, res) => {
 
 export const addBulkProducts = async (req, res) => {
   try {
-    console.log('[addBulkProducts] req.body:', req.body);
-    
     const { products } = req.body;
 
     if (!products || !Array.isArray(products) || products.length === 0) {
@@ -339,10 +331,8 @@ export const addBulkProducts = async (req, res) => {
     // Update the totalProducts counter
     if (totalQuantityAdded > 0) {
       const counter = await TotalCounter.getCounter();
-      console.log('[addBulkProducts] incrementing totalProducts from', counter.totalProducts, 'by', totalQuantityAdded);
       counter.totalProducts += totalQuantityAdded;
       await counter.save();
-      console.log('[addBulkProducts] totalProducts now:', counter.totalProducts);
     }
 
     res.status(201).json({
@@ -369,13 +359,10 @@ export const checkExpiredProducts = async (req, res) => {
     });
 
     if (expiredProducts.length > 0) {
-      // Update all expired products for current user
       await Product.updateMany(
         { userId: req.user._id, expiry: { $lt: today }, status: { $ne: 'Expired' } },
         { status: 'Expired', quantity: 0 }
       );
-
-      console.log(`[checkExpiredProducts] Updated ${expiredProducts.length} expired products for user ${req.user._id}`);
     }
 
     res.status(200).json({
