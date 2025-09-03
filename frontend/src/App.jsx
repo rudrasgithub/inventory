@@ -2,7 +2,6 @@ import './App.css'
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Home from './pages/Home';
-import DragDropPage from './pages/DragDropPage';
 import Login from './components/Login';
 import Product from './components/Product';
 import Statistics from './components/Statistics';
@@ -25,7 +24,6 @@ function App() {
         <Route path='/reset-password' element={<ResetPassword />} />
 
         <Route path='/' element={<Home />} />
-        <Route path='/dragdrop' element={<DragDropPage />} />
         <Route path='/product' element={<Product />} />
         <Route path='/invoice' element={<Invoice />} />
         <Route path='/statistics' element={<Statistics />} />
