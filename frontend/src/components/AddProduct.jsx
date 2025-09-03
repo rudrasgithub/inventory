@@ -14,7 +14,7 @@ export default function AddProduct({ onClose, setRenderComponent, setAddProductM
 
   const handleMultipleProduct = () => {
     setRenderComponent("MultipleProduct");
-    // Don't close the AddProduct modal here, let the CSVModal handle it
+
   };
 
   return (

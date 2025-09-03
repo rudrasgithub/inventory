@@ -80,7 +80,7 @@ export default function OTPVerification({ email }) { // Accept email as a prop
               }}
               onClick={handleOtpSubmit} // Attach the OTP submit handler
             >
-              {isLoading ? "Verifying..." : "Confirm"} {/* Show loading text */}
+              {isLoading ? "Verifying..." : "Confirm"} {}
             </button>
           </div>
         </div>

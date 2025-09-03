@@ -6,7 +6,6 @@ import { auth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// All product routes require authentication since products are user-specific
 router.get('/', auth, getProducts);
 router.get('/paginated', auth, getPaginatedProducts);
 router.get('/check-id/:productId', auth, checkProductId);

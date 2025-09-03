@@ -6,7 +6,7 @@ import "../css/Sidebar.css";
 export default function Sidebar() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  
+
   const navigation = [
     { icon: "/home.svg", label: "Home", path: "/" },
     { icon: "/box-icon.svg", label: "Product", path: "/product" },
@@ -15,7 +15,6 @@ export default function Sidebar() {
     { icon: "/settings.svg", label: "Setting", path: "/setting" },
   ];
 
-  // Get user's first letter and name
   const getUserInitial = () => {
     if (user?.firstName) {
       return user.firstName.charAt(0).toUpperCase();
@@ -33,7 +32,7 @@ export default function Sidebar() {
     } else if (user?.name) {
       return user.name;
     }
-    return "User"; 
+    return "User";
   };
 
   return (

@@ -11,7 +11,6 @@ const totalCounterSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-// Ensure only one document exists
 totalCounterSchema.statics.getCounter = async function() {
   let counter = await this.findOne();
   if (!counter) {

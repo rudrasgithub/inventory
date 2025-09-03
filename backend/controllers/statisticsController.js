@@ -3,34 +3,31 @@ import Product from '../models/Product.js';
 import Purchase from '../models/Purchase.js';
 import User from '../models/User.js';
 
-// Get weekly statistics
 export const getWeeklyStatistics = async (req, res) => {
   try {
     const currentDate = new Date();
     const weeklyData = [];
-    
-    // Get current week's Monday
+
     const currentDay = currentDate.getDay();
     const monday = new Date(currentDate);
     monday.setDate(currentDate.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
-    
+
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    
+
     for (let i = 0; i < 7; i++) {
       const dayStart = new Date(monday);
       dayStart.setDate(monday.getDate() + i);
       dayStart.setHours(0, 0, 0, 0);
-      
+
       const dayEnd = new Date(dayStart);
       dayEnd.setHours(23, 59, 59, 999);
-      
-      // Only get data for past days and today
+
       const isPastOrToday = dayStart <= currentDate;
       let purchase = 0;
       let sales = 0;
-      
+
       if (isPastOrToday) {
-        // Get purchases for this day
+
         const dayPurchases = await Purchase.aggregate([
           {
             $match: {
@@ -46,20 +43,20 @@ export const getWeeklyStatistics = async (req, res) => {
             }
           }
         ]);
-        
+
         if (dayPurchases.length > 0) {
           purchase = Math.round(dayPurchases[0].purchase || 0);
           sales = Math.round(dayPurchases[0].sales || 0);
         }
       }
-      
+
       weeklyData.push({
         day: days[i],
         purchase: purchase,
         sales: sales
       });
     }
-    
+
     res.json({ weeklyData });
   } catch (error) {
     console.error('Error fetching weekly statistics:', error);
@@ -67,18 +64,15 @@ export const getWeeklyStatistics = async (req, res) => {
   }
 };
 
-// Get yearly statistics
 export const getYearlyStatistics = async (req, res) => {
   try {
     const currentYear = new Date().getFullYear();
     const yearlyData = [];
-    
-    // Get data for last 5 years
+
     for (let year = currentYear - 4; year <= currentYear; year++) {
       const yearStart = new Date(year, 0, 1, 0, 0, 0, 0);
       const yearEnd = new Date(year, 11, 31, 23, 59, 59, 999);
-      
-      // Get purchases for this year
+
       const yearPurchases = await Purchase.aggregate([
         {
           $match: {
@@ -94,17 +88,17 @@ export const getYearlyStatistics = async (req, res) => {
           }
         }
       ]);
-      
+
       const purchase = yearPurchases.length > 0 ? Math.round(yearPurchases[0].purchase || 0) : 0;
       const sales = yearPurchases.length > 0 ? Math.round(yearPurchases[0].sales || 0) : 0;
-      
+
       yearlyData.push({
         year: year.toString(),
         purchase: purchase,
         sales: sales
       });
     }
-    
+
     res.json({ yearlyData });
   } catch (error) {
     console.error('Error fetching yearly statistics:', error);
@@ -112,26 +106,21 @@ export const getYearlyStatistics = async (req, res) => {
   }
 };
 
-// Get comprehensive statistics
 export const getStatistics = async (req, res) => {
   try {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
-    
-    // Calculate last month dates
+
     const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear;
 
-    // Current month date ranges
     const currentMonthStart = new Date(currentYear, currentMonth - 1, 1);
     const currentMonthEnd = new Date(currentYear, currentMonth, 0, 23, 59, 59);
 
-    // Last month date ranges
     const lastMonthStart = new Date(lastMonthYear, lastMonth - 1, 1);
     const lastMonthEnd = new Date(lastMonthYear, lastMonth, 0, 23, 59, 59);
 
-    // Calculate total revenue (current month) - sum of totalAmount from purchases
     const currentMonthRevenue = await Purchase.aggregate([
       {
         $match: {
@@ -147,7 +136,6 @@ export const getStatistics = async (req, res) => {
       }
     ]);
 
-    // Calculate last month revenue
     const lastMonthRevenue = await Purchase.aggregate([
       {
         $match: {
@@ -163,7 +151,6 @@ export const getStatistics = async (req, res) => {
       }
     ]);
 
-    // Calculate products sold (current month)
     const currentMonthSold = await Purchase.aggregate([
       {
         $match: {
@@ -179,7 +166,6 @@ export const getStatistics = async (req, res) => {
       }
     ]);
 
-    // Calculate last month products sold
     const lastMonthSold = await Purchase.aggregate([
       {
         $match: {
@@ -195,7 +181,6 @@ export const getStatistics = async (req, res) => {
       }
     ]);
 
-    // Calculate current stock (products in stock)
     const stockData = await Product.aggregate([
       {
         $match: {
@@ -210,7 +195,6 @@ export const getStatistics = async (req, res) => {
       }
     ]);
 
-    // Calculate stock from last month for comparison
     const lastMonthStock = await Product.aggregate([
       {
         $match: {
@@ -226,20 +210,18 @@ export const getStatistics = async (req, res) => {
       }
     ]);
 
-    // Get chart data for last 12 months
     const chartData = [];
     for (let i = 11; i >= 0; i--) {
       const monthDate = new Date();
       monthDate.setMonth(monthDate.getMonth() - i);
       const month = monthDate.getMonth() + 1;
       const year = monthDate.getFullYear();
-      
+
       const monthStart = new Date(year, month - 1, 1);
       const monthEnd = new Date(year, month, 0, 23, 59, 59);
-      
+
       const monthName = monthDate.toLocaleString('default', { month: 'short' });
-      
-      // Get purchases for this month (actual purchase cost)
+
       const monthPurchases = await Purchase.aggregate([
         {
           $match: {
@@ -255,7 +237,6 @@ export const getStatistics = async (req, res) => {
         }
       ]);
 
-      // Get sales revenue for this month (quantity * price when sold)
       const monthSalesRevenue = await Purchase.aggregate([
         {
           $match: {
@@ -270,11 +251,10 @@ export const getStatistics = async (req, res) => {
           }
         }
       ]);
-      
-      // Calculate sales cost (5% of revenue)
+
       const salesRevenue = monthSalesRevenue[0]?.salesRevenue || 0;
       const salesCost = Math.round(salesRevenue * 0.05);
-      
+
       chartData.push({
         month: monthName,
         purchase: Math.round(monthPurchases[0]?.purchase || 0),
@@ -282,7 +262,6 @@ export const getStatistics = async (req, res) => {
       });
     }
 
-    // Get top products based on purchase frequency with product details
     const topProducts = await Purchase.aggregate([
       {
         $match: {
@@ -346,7 +325,6 @@ export const getStatistics = async (req, res) => {
       }
     ]);
 
-    // Calculate percentage changes
     const currentRevenue = currentMonthRevenue[0]?.totalRevenue || 0;
     const lastRevenue = lastMonthRevenue[0]?.totalRevenue || 0;
     const revenueChange = lastRevenue > 0 ? ((currentRevenue - lastRevenue) / lastRevenue * 100) : 0;
@@ -359,7 +337,6 @@ export const getStatistics = async (req, res) => {
     const lastStock = lastMonthStock[0]?.totalStock || currentStock;
     const stockChange = lastStock > 0 ? ((currentStock - lastStock) / lastStock * 100) : 0;
 
-    // Calculate total cost and profit for the current month
     const totalCost = Math.round(currentRevenue * 0.05);
     const totalProfit = Math.round(currentRevenue - totalCost);
 
@@ -392,34 +369,30 @@ export const getStatistics = async (req, res) => {
   }
 };
 
-// Get user layout configuration
 export const getUserLayout = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('gridLayout layouts');
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Prepare response object
     const response = {};
 
-    // Statistics layout (new system)
     if (user.layouts?.statisticsLayout) {
       response.statisticsLayout = user.layouts.statisticsLayout;
     } else {
-      // Fallback to legacy gridLayout for statistics
+
       response.statisticsLayout = {
         firstRow: user.gridLayout?.leftColumn || [0, 1, 2],
         secondRow: user.gridLayout?.rightColumn || [3, 4]
       };
     }
 
-    // Home layout (new system)
     if (user.layouts?.homeLayout) {
       response.homeLayout = user.layouts.homeLayout;
     } else {
-      // Fallback to legacy gridLayout for home
+
       response.homeLayout = {
         leftColumn: user.gridLayout?.leftColumn || [0, 1, 2],
         rightColumn: user.gridLayout?.rightColumn || [0, 1, 2]
@@ -433,7 +406,6 @@ export const getUserLayout = async (req, res) => {
   }
 };
 
-// Update user layout configuration
 export const updateUserLayout = async (req, res) => {
   try {
     const { statisticsLayout, homeLayout } = req.body;
@@ -443,31 +415,27 @@ export const updateUserLayout = async (req, res) => {
     }
 
     const user = await User.findById(req.user._id);
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Initialize layouts object if it doesn't exist
     if (!user.layouts) {
       user.layouts = {};
     }
 
-    // Update statistics layout
     if (statisticsLayout) {
       user.layouts.statisticsLayout = {
         firstRow: statisticsLayout.firstRow || [0, 1, 2],
         secondRow: statisticsLayout.secondRow || [3, 4]
       };
-      
-      // Also update legacy gridLayout for backward compatibility
+
       user.gridLayout = {
         leftColumn: statisticsLayout.firstRow || [0, 1, 2],
         rightColumn: statisticsLayout.secondRow || [3, 4]
       };
     }
 
-    // Update home layout
     if (homeLayout) {
       user.layouts.homeLayout = {
         leftColumn: homeLayout.leftColumn || [0, 1, 2],
@@ -477,7 +445,7 @@ export const updateUserLayout = async (req, res) => {
 
     await user.save();
 
-    res.json({ 
+    res.json({
       message: 'Layout updated successfully',
       statisticsLayout: user.layouts.statisticsLayout,
       homeLayout: user.layouts.homeLayout

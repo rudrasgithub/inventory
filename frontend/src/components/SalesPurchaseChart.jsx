@@ -33,9 +33,9 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         const updateChartHeight = () => {
             const screenHeight = window.innerHeight;
             const screenWidth = window.innerWidth;
-            
+
             let height;
-            
+
             if (screenWidth <= 768) {
                 height = Math.min(screenHeight * 0.35, 280);
             } else if (screenWidth <= 1024) {
@@ -45,7 +45,7 @@ export default function SalesPurchaseChart({ chartData = [] }) {
             } else {
                 height = Math.min(screenHeight * 0.5, 400);
             }
-            
+
             setChartHeight(height);
         };
 
@@ -63,7 +63,7 @@ export default function SalesPurchaseChart({ chartData = [] }) {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            
+
             if (response.ok) {
                 const data = await response.json();
                 setWeeklyData(data.weeklyData || []);
@@ -87,7 +87,7 @@ export default function SalesPurchaseChart({ chartData = [] }) {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            
+
             if (response.ok) {
                 const data = await response.json();
                 setYearlyData(data.yearlyData || []);
@@ -174,8 +174,8 @@ export default function SalesPurchaseChart({ chartData = [] }) {
             const isPurchase = dataset.label === "Purchase";
             dataset.backgroundColor = (context) => {
                 const ctx = context.chart.ctx;
-                const colors = isPurchase 
-                    ? ["#817AF3", "#74B0FA", "#79D0F1"] 
+                const colors = isPurchase
+                    ? ["#817AF3", "#74B0FA", "#79D0F1"]
                     : ["#46A46C", "#51CC5D", "#57DA65"];
                 return getGradient(ctx, [[1, colors[0]], [0.48, colors[1]], [0, colors[2]]]);
             };
@@ -190,11 +190,11 @@ export default function SalesPurchaseChart({ chartData = [] }) {
 
     const calculateYAxisMax = (data) => {
         let maxValue = 0;
-        
+
         if (!data || !data.datasets || data.datasets.length === 0) {
             return { stepSize: 10, suggestedMax: 50, maxTicks: 6 };
         }
-        
+
         data.datasets.forEach(dataset => {
             if (dataset.data && dataset.data.length > 0) {
                 const datasetMax = Math.max(...dataset.data);
@@ -205,7 +205,7 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         if (maxValue === 0) return { stepSize: 10, suggestedMax: 50, maxTicks: 6 };
 
         let stepSize, maxTicks;
-        
+
         if (maxValue <= 50) {
             stepSize = 10;
             maxTicks = 6;
@@ -274,12 +274,12 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         <div className="chart-card-graph">
             <div className="chart-header-graph" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", height: "40px" }}>
                 <h3 style={{ margin: 0 }}>Sales & Purchase</h3>
-                <div 
-                    className="dropdown-container" 
-                    style={{ 
-                        display: "flex", 
-                        alignItems: "center", 
-                        gap: "10px", 
+                <div
+                    className="dropdown-container"
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
                         height: "40px",
                         pointerEvents: "all",
                         zIndex: 10,
@@ -293,15 +293,15 @@ export default function SalesPurchaseChart({ chartData = [] }) {
                         e.currentTarget.style.pointerEvents = "all";
                     }}
                 >
-                    <select 
-                        className="filter-dropdown" 
-                        value={filter} 
-                        onChange={handleFilterChange} 
-                        style={{ 
-                            backgroundImage: `url('/graph-period.svg')`, 
-                            backgroundRepeat: "no-repeat", 
-                            backgroundPosition: "left 7px center", 
-                            backgroundSize: "20px 20px", 
+                    <select
+                        className="filter-dropdown"
+                        value={filter}
+                        onChange={handleFilterChange}
+                        style={{
+                            backgroundImage: `url('/graph-period.svg')`,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "left 7px center",
+                            backgroundSize: "20px 20px",
                             paddingLeft: "35px",
                             pointerEvents: "all",
                             cursor: "pointer",
@@ -323,10 +323,10 @@ export default function SalesPurchaseChart({ chartData = [] }) {
             </div>
             <div style={{ height: `${chartHeight}px`, width: '100%', position: 'relative' }}>
                 {loading ? (
-                    <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        alignItems: 'center', 
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         height: '100%',
                         color: '#666'
                     }}>

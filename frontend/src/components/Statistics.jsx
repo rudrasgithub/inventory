@@ -24,7 +24,7 @@ export default function Statistics() {
   });
   const [layoutLoading, setLayoutLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
-  
+
   const [initialLayout, setInitialLayout] = useState({
     firstRow: [0, 1, 2],
     secondRow: [3, 4]
@@ -32,7 +32,6 @@ export default function Statistics() {
 
   const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
 
-  // Fetch user layout and update initialLayout
   useEffect(() => {
     const fetchUserLayout = async () => {
       if (!token) {
@@ -58,10 +57,9 @@ export default function Statistics() {
     fetchUserLayout();
   }, [token]);
 
-  // Save layout to backend
   const saveLayoutToBackend = async (newLayout) => {
     if (!token) return;
-    
+
     try {
       await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
         method: 'PUT',
@@ -81,7 +79,6 @@ export default function Statistics() {
 
   const { layout, handleMouseDown } = useDraggableRows(initialLayout, saveLayoutToBackend);
 
-  // Card data mapping - memoized to prevent unnecessary re-renders
   const cardData = useMemo(() => [
     {
       id: 0,
@@ -141,7 +138,6 @@ export default function Statistics() {
     }
   ], [statistics, isMobile]); // Only re-compute when statistics or isMobile changes
 
-  // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
@@ -149,16 +145,15 @@ export default function Statistics() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Fetch statistics data
   useEffect(() => {
     const fetchStatistics = async () => {
       if (!token) {
         setDataLoading(false);
         return;
       }
-      
+
       const loadingToast = toast.loading('Loading statistics data...');
-      
+
       try {
         const response = await fetch(`${API_BASE_URL}/api/statistics`, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -204,8 +199,8 @@ export default function Statistics() {
         data-card-id={card.id}
         className={`draggable-card ${card.className}`}
         onMouseDown={isMobile ? undefined : (e) => handleMouseDown(e, card.id, rowType)}
-        style={{ 
-          flexGrow: card.flexGrow, 
+        style={{
+          flexGrow: card.flexGrow,
           cursor: isMobile ? 'default' : 'grab',
           pointerEvents: isMobile ? 'auto' : 'auto' // Allow all interactions
         }}
@@ -214,7 +209,7 @@ export default function Statistics() {
           <div className={`card-statistics ${card.className}`}>
             <p>{card.title}</p>
             <h2>
-              {card.format === 'currency' 
+              {card.format === 'currency'
                 ? formatCurrency(card.value)
                 : card.value.toLocaleString()
               }
@@ -226,7 +221,6 @@ export default function Statistics() {
     );
   };
 
-  // Authentication protection - redirect to login if not authenticated
   useEffect(() => {
     if (isInitialized && !token) {
       navigate('/login');
@@ -238,7 +232,7 @@ export default function Statistics() {
       {!isMobile && <Sidebar />}
 
       <div className="statistics-main">
-        {/* Desktop header */}
+        {}
         {!isMobile && (
           <header className="statistics-header">
             <h1>Statistics</h1>
@@ -255,13 +249,13 @@ export default function Statistics() {
                   <CustomLegend />
                 </div>
               </div>
-              
+
               <div className="mobile-cards-statistics">
                 {cardData.slice(0, 3).map(card => (
                   <div key={card.id} className={`card-statistics ${card.className}`}>
                     <p>{card.title}</p>
                     <h2>
-                      {card.format === 'currency' 
+                      {card.format === 'currency'
                         ? formatCurrency(card.value)
                         : card.value.toLocaleString()
                       }
@@ -272,15 +266,15 @@ export default function Statistics() {
               </div>
             </>
           ) : (
-            // Only render desktop layout when both layoutLoading and dataLoading are false
+
             !layoutLoading && !dataLoading ? (
               <>
                 <div className="cards-statistics draggable-row" data-row-type="firstRow">
                   {layout.firstRow.map(cardId => renderCard(cardId, 'firstRow'))}
                 </div>
 
-                <div 
-                  className="charts-section draggable-row" 
+                <div
+                  className="charts-section draggable-row"
                   data-row-type="secondRow"
                 >
                   {layout.secondRow.map(cardId => renderCard(cardId, 'secondRow'))}
@@ -295,8 +289,8 @@ export default function Statistics() {
 
         </main>
       </div>
-      
-      {/* Mobile Bottom Navigation - only show on mobile */}
+
+      {}
       {isMobile && <BottomNav />}
     </div>
   )

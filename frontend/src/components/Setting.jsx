@@ -14,19 +14,17 @@ const Setting = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const navigate = useNavigate();
 
-    // Check if mobile screen
     useEffect(() => {
       const checkMobile = () => {
         setIsMobile(window.innerWidth <= 768);
       };
-  
+
       checkMobile();
       window.addEventListener('resize', checkMobile);
-  
+
       return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    // Authentication protection - redirect to login if not authenticated
     useEffect(() => {
         if (isInitialized && !token) {
             navigate('/login');
@@ -40,20 +38,20 @@ const Setting = () => {
     return (
         <div className="setting-dashboard">
             {!isMobile && <Sidebar />}
-            
+
             <div className="main-setting">
-                
+
                 {!isMobile && (
                   <header className="header-setting">
                       <h1>Setting</h1>
                   </header>
                 )}
-                
-                {/* Mobile Close Button - only show on mobile */}
+
+                {}
                 {isMobile && (
                     <div className="mobile-close-container">
-                        <button 
-                            className="mobile-close-btn" 
+                        <button
+                            className="mobile-close-btn"
                             onClick={handleMobileClose}
                             aria-label="Close Settings"
                         >
@@ -61,7 +59,7 @@ const Setting = () => {
                         </button>
                     </div>
                 )}
-                
+
                 <div className="content-setting">
                     <div className="tabs-setting">
                         <button
@@ -81,8 +79,8 @@ const Setting = () => {
                     {activeTab === 'AccountManagement' && <AccountManagement />}
                 </div>
             </div>
-            
-            {/* Mobile Bottom Navigation - only show on mobile */}
+
+            {}
             {isMobile && <BottomNav />}
         </div>
     );

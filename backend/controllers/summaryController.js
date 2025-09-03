@@ -5,7 +5,7 @@ import TotalCounter from '../models/TotalCounter.js';
 export const getSummary = async (req, res) => {
   try {
     const userId = req.user._id;
-    
+
     const last7DaysFlag = req.query.last7Days === 'true' || req.query.last7Days === '1' || req.query.last7Days === true;
     const last7Days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
@@ -32,11 +32,11 @@ export const getSummary = async (req, res) => {
     const totalRevenueFromPurchases = purchasesAgg[0]?.totalRevenue || 0;
 
     const notInStock = await Product.countDocuments({ userId, quantity: 0 });
-    
-    const lowStock = await Product.countDocuments({ 
-      userId, 
-      quantity: { $gt: 0 }, 
-      $expr: { $lte: ['$quantity', '$threshold'] } 
+
+    const lowStock = await Product.countDocuments({
+      userId,
+      quantity: { $gt: 0 },
+      $expr: { $lte: ['$quantity', '$threshold'] }
     });
 
     const result = {

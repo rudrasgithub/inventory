@@ -2,7 +2,6 @@ import Product from '../models/Product.js';
 import Purchase from '../models/Purchase.js';
 import Invoice from '../models/Invoice.js';
 
-// Generate random invoice ID
 const generateInvoiceId = () => {
   const randomNumber = Math.floor(Math.random() * 10000) + 1000;
   return `INV-${randomNumber}`;
@@ -22,9 +21,9 @@ export const buyProduct = async (req, res) => {
       return res.status(400).json({ message: 'Quantity must be a positive number' });
     }
 
-    const product = await Product.findOne({ 
-      _id: productId, 
-      userId: req.user._id 
+    const product = await Product.findOne({
+      _id: productId,
+      userId: req.user._id
     });
 
     if (!product) {
@@ -39,10 +38,8 @@ export const buyProduct = async (req, res) => {
     product.quantity -= qtyNumber;
     await product.save();
 
-    // Create invoice for this purchase
     const totalAmount = product.price * qtyNumber;
-    
-    // create a Purchase record to track ordered items and revenue
+
     const purchase = new Purchase({
       productId: product._id,
       quantity: qtyNumber,
@@ -72,9 +69,9 @@ export const buyProduct = async (req, res) => {
     await invoice.save();
     console.log('[buyProduct] created invoice:', invoice);
 
-    res.status(200).json({ 
-      message: 'Purchase successful', 
-      product, 
+    res.status(200).json({
+      message: 'Purchase successful',
+      product,
       purchase,
       invoice: {
         id: invoice._id,

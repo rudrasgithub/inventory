@@ -37,8 +37,8 @@
   background-color: rgba(255, 255, 255, 0.13);
   border-radius: 24px;
   padding: 5px 15px;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
@@ -68,8 +68,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin: 10px 24px;
-  overflow: hidden; /* Prevent elements from going outside container */
-  position: relative; /* Establish containing block */
+  overflow: hidden;
+  position: relative;
 }
 .card-statistics {
   padding: 9px 15px;
@@ -93,11 +93,10 @@
   margin: 0 24px 24px;
   opacity: 1;
   visibility: visible;
-  overflow: hidden; /* Prevent elements from going outside container */
-  position: relative; /* Establish containing block */
+  overflow: hidden;
+  position: relative;
 }
 
-/* Force visibility on all screen sizes except mobile */
 .statistics-main .content-statistics .charts-section.draggable-row[data-row-type="secondRow"] {
   display: flex !important;
   opacity: 1 !important;
@@ -221,7 +220,6 @@
   background: #fad85d;
 }
 
-/* Mobile Header Styles */
 .mobile-header {
   display: none;
   background: #424457;
@@ -270,7 +268,6 @@
   filter: brightness(0) invert(1);
 }
 
-/* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .statistics-dashboard {
     display: block;
@@ -282,11 +279,11 @@
     background: #424457;
     overflow-x: hidden;
   }
-  
-  .sidebar { 
-    display: none !important; 
+
+  .sidebar {
+    display: none !important;
   }
-  
+
   .mobile-header {
   display: block !important;
   position: relative;
@@ -296,30 +293,29 @@
   height: 30px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .statistics-header {
     display: none !important;
   }
-  
+
   .statistics-main {
-    padding: 0; 
-    width: 100% !important; 
+    padding: 0;
+    width: 100% !important;
     margin: 0;
     padding-bottom: 90px;
   }
-  
-  /* Mobile-specific layout */
+
   .mobile-chart-section {
     padding: 16px;
     padding-bottom: 0;
   }
-  
+
   .mobile-chart-section .statistics-graph-card {
     margin: 0;
     padding: 16px;
     border-radius: 16px;
   }
-  
+
   .mobile-cards-statistics {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -327,56 +323,51 @@
     padding: 16px;
     padding-top: 12px;
   }
-  
+
   .mobile-cards-statistics .card-statistics {
     padding: 12px;
     border-radius: 12px;
     text-align: left;
   }
-  
+
   .mobile-cards-statistics .card-statistics p {
     font-size: 11px;
     margin-bottom: 6px;
     font-weight: 500;
   }
-  
+
   .mobile-cards-statistics .card-statistics h2 {
     font-size: 16px;
     margin-bottom: 4px;
     font-weight: 600;
   }
-  
+
   .mobile-cards-statistics .card-statistics span {
     font-size: 10px;
   }
-  
-  /* Hide desktop layout elements on mobile */
+
   .cards-statistics {
     display: none !important;
   }
-  
-  /* Charts section is handled by mobile layout, hide desktop version */
-  
-  /* Card colors - update purple class */
+
   .card-statistics.purple {
     background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
     color: white;
   }
-  
+
   .card-statistics.purple p,
   .card-statistics.purple span {
     color: rgba(255, 255, 255, 0.9);
   }
 }
 
-/* Desktop specific styles to ensure visibility */
 @media (min-width: 415px) {
   .statistics-main .charts-section {
     display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
   }
-  
+
   .statistics-main .cards-statistics {
     display: grid !important;
     opacity: 1 !important;
@@ -384,17 +375,16 @@
   }
 }
 
-/* Horizontal Drag and Drop Styles */
 .draggable-row {
   position: relative;
-  overflow: hidden; /* Prevent dragged elements from escaping */
+  overflow: hidden;
 }
 
 .draggable-card {
   transition: transform 0.2s ease-in-out;
   user-select: none;
   position: relative;
-  flex-shrink: 0; /* Prevent shrinking during drag */
+  flex-shrink: 0;
 }
 
 .draggable-card:hover {
@@ -409,34 +399,32 @@
   z-index: 10;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   transition: none !important;
-  /* Keep dragged element within bounds */
+
   max-width: 100%;
   overflow: hidden;
 }
 
-/* Disable drag on mobile */
 @media (max-width: 768px) {
   .draggable-card {
     cursor: default !important;
   }
-  
+
   .draggable-card:hover {
     cursor: default !important;
   }
-  
+
   .draggable-card:active {
     cursor: default !important;
   }
 }
 
 .content-statistics {
-  overflow: hidden; /* Prevent elements from escaping container */
-  position: relative; /* Establish containing block */
+  overflow: hidden;
+  position: relative;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* FINAL OVERRIDE - This must be visible on desktop */
 .charts-section,
 .statistics-main .charts-section,
 .content-statistics .charts-section,
@@ -446,7 +434,6 @@
   opacity: 1 !important;
 }
 
-/* Ensure this only applies to desktop */
 @media (min-width: 415px) {
   .charts-section,
   .statistics-main .charts-section,

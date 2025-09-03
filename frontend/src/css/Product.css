@@ -66,11 +66,10 @@
   background-color: rgba(255, 255, 255, 0.13);
   border-radius: 24px;
   padding: 5px 15px;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
-
 
 .search-icon-product {
   position: relative;
@@ -190,7 +189,7 @@ tr:not(:first-child):hover {
 }
 
 tr > th, tr > td {
-  border-right: 1px solid rgba(0, 0, 0, 0.2); /* Added right border for entire rows */
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .status.in-stock { color: #10a760; font-weight: 600; }
@@ -262,7 +261,6 @@ tr > th, tr > td {
   filter: blur(4px);
 }
 
-/* Mobile Header Styles */
 .mobile-header {
   display: none;
   background: #424457;
@@ -311,9 +309,6 @@ tr > th, tr > td {
   filter: brightness(0) invert(1);
 }
 
-/* Mobile Responsive Styles */
-
-/* Hide mobile-specific elements on desktop by default */
 .mobile-product-overview,
 .mobile-invoice-overview,
 .mobile-products,
@@ -337,11 +332,11 @@ tr > th, tr > td {
     background: #424457;
     overflow-x: hidden;
   }
-  
-  .sidebar { 
-    display: none !important; 
+
+  .sidebar {
+    display: none !important;
   }
-  
+
   .mobile-header {
     display: block !important;
     position: relative;
@@ -351,32 +346,30 @@ tr > th, tr > td {
     padding: 16px 16px 10px;
     height: 30px;
   }
-  
+
   .product-header {
     display: none !important;
   }
-  
+
   .main-product {
-    padding: 0; 
-    width: 100% !important; 
+    padding: 0;
+    width: 100% !important;
     margin: 0;
     padding-bottom: 90px;
   }
-  
+
   .product-content {
     padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
-  
-  /* Hide desktop sections on mobile */
+
   .product-overview,
   .products {
     display: none !important;
   }
-  
-  /* Show mobile components */
+
   .mobile-product-overview,
   .mobile-invoice-overview,
   .mobile-products,
@@ -386,27 +379,25 @@ tr > th, tr > td {
   .mobile-add-product-fab {
     display: block !important;
   }
-  
+
   .mobile-table-header,
   .mobile-table-row {
     display: flex !important;
   }
-  
-  /* Mobile Overall Inventory Card */
+
   .mobile-product-overview {
     background: white;
     border-radius: 16px;
     padding: 20px;
   }
 
-  /* Mobile Invoice Overview Card */
   .mobile-invoice-overview {
     background: white;
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   .mobile-product-overview h2,
   .mobile-invoice-overview h2 {
     font-size: 20px;
@@ -415,7 +406,7 @@ tr > th, tr > td {
     color: #374151;
     text-align: left;
   }
-  
+
   .mobile-product-overview-grid,
   .mobile-invoice-overview-grid {
     display: grid;
@@ -424,7 +415,7 @@ tr > th, tr > td {
     gap: 20px;
     width: 100%;
   }
-  
+
   .mobile-product-card,
   .mobile-invoice-card {
     border-radius: 12px;
@@ -435,7 +426,7 @@ tr > th, tr > td {
     justify-content: space-between;
     min-height: 80px;
   }
-  
+
   .mobile-product-card p:first-child,
   .mobile-invoice-card p:first-child {
     font-size: 13px;
@@ -444,7 +435,7 @@ tr > th, tr > td {
     margin: 0 0 6px 0;
     line-height: 1.2;
   }
-  
+
   .mobile-product-card-main-value,
   .mobile-invoice-card-main-value {
     display: flex;
@@ -452,7 +443,7 @@ tr > th, tr > td {
     gap: 4px;
     margin: 8px 0;
   }
-  
+
   .mobile-product-card-main-value.horizontal,
   .mobile-invoice-card-main-value.horizontal {
     display: flex;
@@ -463,12 +454,12 @@ tr > th, tr > td {
     margin: 6px 0;
     min-height: 24px;
   }
-  
+
   .mobile-product-card-main-value.horizontal .large-number,
   .mobile-invoice-card-main-value.horizontal .large-number {
     flex: 0 0 auto;
   }
-  
+
   .mobile-product-card-main-value.horizontal .revenue-amount,
   .mobile-product-card-main-value.horizontal .cost-amount,
   .mobile-product-card-main-value.horizontal .secondary-number,
@@ -477,7 +468,7 @@ tr > th, tr > td {
     flex: 0 0 auto;
     margin-left: auto;
   }
-  
+
   .mobile-product-card-main-value .large-number,
   .mobile-invoice-card-main-value .large-number {
     font-size: 16px;
@@ -486,7 +477,7 @@ tr > th, tr > td {
     margin: 0;
     line-height: 1.1;
   }
-  
+
   .mobile-product-card-main-value.horizontal .large-number,
   .mobile-product-card-main-value.horizontal .revenue-amount,
   .mobile-product-card-main-value.horizontal .cost-amount,
@@ -500,7 +491,7 @@ tr > th, tr > td {
     margin: 0;
     line-height: 1.1;
   }
-  
+
   .mobile-product-card-meta.horizontal-labels,
   .mobile-invoice-card-meta.horizontal-labels {
     display: flex;
@@ -509,18 +500,18 @@ tr > th, tr > td {
     width: 100%;
     margin-top: 4px;
   }
-  
+
   .mobile-product-card-meta.horizontal-labels span:first-child,
   .mobile-invoice-card-meta.horizontal-labels span:first-child {
     flex: 0 0 auto;
   }
-  
+
   .mobile-product-card-meta.horizontal-labels span:last-child,
   .mobile-invoice-card-meta.horizontal-labels span:last-child {
     flex: 0 0 auto;
     margin-left: auto;
   }
-  
+
   .mobile-product-card-meta.horizontal-labels span,
   .mobile-invoice-card-meta.horizontal-labels span {
     font-size: 11px;
@@ -528,7 +519,7 @@ tr > th, tr > td {
     font-weight: 400;
     margin: 0;
   }
-  
+
   .mobile-product-card-main-value .revenue-amount,
   .mobile-product-card-main-value .cost-amount,
   .mobile-product-card-main-value .secondary-number {
@@ -538,7 +529,7 @@ tr > th, tr > td {
     margin: 0;
     line-height: 1.1;
   }
-  
+
   .mobile-product-card-main-value.horizontal .revenue-amount,
   .mobile-product-card-main-value.horizontal .cost-amount,
   .mobile-product-card-main-value.horizontal .secondary-number {
@@ -549,7 +540,6 @@ tr > th, tr > td {
     line-height: 1.1;
   }
 
-  /* Invoice-specific styling */
   .mobile-invoice-card-main-value .success-amount {
     font-size: 12px;
     font-weight: 500;
@@ -557,7 +547,7 @@ tr > th, tr > td {
     margin: 0;
     line-height: 1.1;
   }
-  
+
   .mobile-invoice-card-main-value .warning-amount {
     font-size: 12px;
     font-weight: 500;
@@ -565,7 +555,7 @@ tr > th, tr > td {
     margin: 0;
     line-height: 1.1;
   }
-  
+
   .mobile-invoice-card-main-value.horizontal .success-amount {
     font-size: 12px;
     font-weight: 600;
@@ -573,7 +563,7 @@ tr > th, tr > td {
     margin: 0;
     line-height: 1.1;
   }
-  
+
   .mobile-invoice-card-main-value.horizontal .warning-amount {
     font-size: 12px;
     font-weight: 600;
@@ -581,27 +571,27 @@ tr > th, tr > td {
     margin: 0;
     line-height: 1.1;
   }
-  
+
   .mobile-product-card-values {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
-  
+
   .mobile-product-card-values p {
     font-size: 18px;
     font-weight: 600;
     color: #111827;
     margin: 0;
   }
-  
+
   .mobile-product-card > p:nth-child(2) {
     font-size: 18px;
     font-weight: 600;
     color: #111827;
     margin-bottom: 4px;
   }
-  
+
   .mobile-product-card-meta,
   .mobile-invoice-card-meta {
     display: flex;
@@ -609,20 +599,19 @@ tr > th, tr > td {
     gap: 2px;
     margin-top: auto;
   }
-  
+
   .mobile-product-card-meta span,
   .mobile-invoice-card-meta span {
     font-size: 12px;
     color: #9CA3AF;
     font-weight: 400;
   }
-  
-  /* Mobile Products Section */
+
   .mobile-products {
     position: relative;
     flex: 1;
   }
-  
+
   .mobile-products-header {
     background: white;
     padding: 16px 20px;
@@ -630,21 +619,21 @@ tr > th, tr > td {
     border-bottom: 1px solid #E5E7EB;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   .mobile-products-header h3 {
     font-size: 18px;
     font-weight: 600;
     color: #374151;
     margin: 0;
   }
-  
+
   .mobile-products-table {
     background: white;
     border-radius: 0 0 16px 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
   }
-  
+
   .mobile-table-header {
     background: #B6B9CF;
     padding: 12px 0;
@@ -653,7 +642,7 @@ tr > th, tr > td {
     border-bottom: 1px solid #D1D5DB;
     border-right: 1px solid rgb(0,0,0,0.2);
   }
-  
+
   .mobile-header-cell {
     flex: 1;
     font-weight: 600;
@@ -662,25 +651,25 @@ tr > th, tr > td {
     text-align: center;
     padding: 0 16px;
   }
-  
+
   .mobile-header-cell:first-child {
     border-right: 2px solid #424457;
   }
-  
+
   .mobile-table-body {
     background: white;
     border-radius: 0 0 16px 16px;
   }
-  
+
   .mobile-table-row {
     display: flex;
     border-bottom: 1px solid #D1D5DB;
   }
-  
+
   .mobile-table-row:last-child {
     border-bottom: none;
   }
-  
+
   .mobile-product-name-cell {
     flex: 1;
     padding: 12px 16px;
@@ -692,7 +681,7 @@ tr > th, tr > td {
     align-items: center;
     justify-content: center;
   }
-  
+
   .mobile-availability-cell {
     flex: 1;
     padding: 12px 16px;
@@ -701,41 +690,41 @@ tr > th, tr > td {
     justify-content: center;
     gap: 8px;
   }
-  
+
   .mobile-table-row:last-child {
     border-bottom: none;
     border-radius: 0 0 16px 16px;
   }
-  
+
   .mobile-availability-cell {
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  
+
   .availability-status {
     font-size: 14px;
     font-weight: 500;
     padding: 4px 8px;
     border-radius: 6px;
   }
-  
+
   .availability-status.in-stock {
     color: #059669;
   }
-  
+
   .availability-status.out-of-stock {
     color: #DC2626;
   }
-  
+
   .availability-status.low-stock {
     color: #E19133;
   }
-  
+
   .availability-status.expired {
     color: #DC2626;
   }
-  
+
   .info-icon-circle {
     width: 20px;
     height: 20px;
@@ -747,20 +736,19 @@ tr > th, tr > td {
     cursor: pointer;
     transition: all 0.2s;
   }
-  
+
   .info-icon-circle:hover {
     background: #2563EB;
     transform: scale(1.1);
   }
-  
+
   .info-icon-text {
     color: white;
     font-size: 12px;
     font-weight: 600;
     font-style: italic;
   }
-  
-  /* Floating Add Product Button */
+
   .mobile-add-product-fab {
     position: fixed;
     bottom: 100px;
@@ -793,7 +781,7 @@ tr > th, tr > td {
     transform: translateY(0);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
-  
+
   .mobile-no-products {
     padding: 20px;
     text-align: center;
@@ -820,7 +808,6 @@ tr > th, tr > td {
   }
 }
 
-/* Mobile Info Icon Styles */
 .mobile-info-icon {
   cursor: pointer;
   width: 20px;
@@ -833,7 +820,6 @@ tr > th, tr > td {
   transform: scale(1.1);
 }
 
-/* Mobile Product Info Modal Styles */
 .mobile-product-info-overlay {
   position: fixed;
   top: 0;

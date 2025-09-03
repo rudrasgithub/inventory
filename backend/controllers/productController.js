@@ -13,18 +13,17 @@ export const getProducts = async (req, res) => {
 export const checkProductId = async (req, res) => {
   try {
     const { productId } = req.params;
-    
+
     if (!productId) {
       return res.status(400).json({ message: 'Product ID is required' });
     }
 
-    // Check if product with this ID already exists for this user
-    const existingProduct = await Product.findOne({ 
-      productId: productId, 
-      userId: req.user._id 
+    const existingProduct = await Product.findOne({
+      productId: productId,
+      userId: req.user._id
     });
 
-    res.status(200).json({ 
+    res.status(200).json({
       exists: !!existingProduct,
       productId: productId
     });
@@ -42,7 +41,6 @@ export const addProduct = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required except the image.' });
     }
 
-    // Convert to numbers for proper comparison
     const quantityNum = parseInt(quantity);
     const thresholdNum = parseInt(threshold);
 
@@ -54,15 +52,14 @@ export const addProduct = async (req, res) => {
       return res.status(400).json({ message: 'Threshold must be a positive number' });
     }
 
-    // Check if product ID already exists for this user
-    const existingProduct = await Product.findOne({ 
-      productId: productId, 
-      userId: req.user._id 
+    const existingProduct = await Product.findOne({
+      productId: productId,
+      userId: req.user._id
     });
 
     if (existingProduct) {
-      return res.status(409).json({ 
-        message: `Product ID "${productId}" already exists. Please use a different ID.` 
+      return res.status(409).json({
+        message: `Product ID "${productId}" already exists. Please use a different ID.`
       });
     }
 
@@ -75,10 +72,8 @@ export const addProduct = async (req, res) => {
       status = "Low stock";
     }
 
-    // Keep expiry as Date object for proper storage
     const expiryDate = new Date(expiry);
 
-    // Handle image upload - convert to base64 if present
     let imageData = null;
     if (req.file) {
       imageData = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
@@ -97,7 +92,7 @@ export const addProduct = async (req, res) => {
       image: imageData,
       userId: req.user._id, // Add userId to associate product with current user
     });
-    
+
     await newProduct.save();
 
     const counter = await TotalCounter.getCounter();
@@ -115,14 +110,14 @@ export const updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
-      req.body, 
+      req.body,
       { new: true }
     );
-    
+
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Product not found or not authorized' });
     }
-    
+
     res.status(200).json(updatedProduct);
   } catch (error) {
     res.status(400).json({ message: 'Error updating product', error });
@@ -135,11 +130,11 @@ export const deleteProduct = async (req, res) => {
       _id: req.params.id,
       userId: req.user._id
     });
-    
+
     if (!deletedProduct) {
       return res.status(404).json({ message: 'Product not found or not authorized' });
     }
-    
+
     res.status(200).json({ message: 'Product deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting product', error });
@@ -153,7 +148,6 @@ export const getPaginatedProducts = async (req, res) => {
     const skip = (page - 1) * limit;
     const search = req.query.search || '';
 
-    // Build search query
     let searchQuery = {};
     if (search) {
       searchQuery = {
@@ -163,22 +157,22 @@ export const getPaginatedProducts = async (req, res) => {
           { category: { $regex: search, $options: 'i' } },
           { status: { $regex: search, $options: 'i' } },
           { unit: { $regex: search, $options: 'i' } },
-          // Convert numeric fields to strings for partial matching
+
           { $expr: { $regexMatch: { input: { $toString: "$price" }, regex: search, options: "i" } } },
           { $expr: { $regexMatch: { input: { $toString: "$quantity" }, regex: search, options: "i" } } },
           { $expr: { $regexMatch: { input: { $toString: "$threshold" }, regex: search, options: "i" } } },
-          // Add date search - format expiry date as DD/MM/YYYY for searching
-          { $expr: { 
-            $regexMatch: { 
-              input: { 
-                $dateToString: { 
-                  format: "%d/%m/%Y", 
-                  date: "$expiry" 
-                } 
-              }, 
-              regex: search, 
-              options: "i" 
-            } 
+
+          { $expr: {
+            $regexMatch: {
+              input: {
+                $dateToString: {
+                  format: "%d/%m/%Y",
+                  date: "$expiry"
+                }
+              },
+              regex: search,
+              options: "i"
+            }
           } }
         ]
       };
@@ -215,11 +209,10 @@ export const addBulkProducts = async (req, res) => {
 
     for (let i = 0; i < products.length; i++) {
       const productData = products[i];
-      
+
       try {
         const { name, productId, category, price, quantity, unit, expiry, threshold } = productData;
 
-        // Validate required fields
         if (!name || !productId || !category || !price || !quantity || !unit || !expiry || !threshold) {
           results.failed.push({
             row: i + 1,
@@ -229,7 +222,6 @@ export const addBulkProducts = async (req, res) => {
           continue;
         }
 
-        // Convert to numbers for proper validation
         const quantityNum = parseInt(quantity);
         const thresholdNum = parseInt(threshold);
         const priceNum = parseFloat(price);
@@ -261,10 +253,9 @@ export const addBulkProducts = async (req, res) => {
           continue;
         }
 
-        // Check if product ID already exists for this user
-        const existingProduct = await Product.findOne({ 
-          productId, 
-          userId: req.user._id 
+        const existingProduct = await Product.findOne({
+          productId,
+          userId: req.user._id
         });
         if (existingProduct) {
           results.failed.push({
@@ -275,7 +266,6 @@ export const addBulkProducts = async (req, res) => {
           continue;
         }
 
-        // Determine status based on quantity and threshold
         let status;
         if (quantityNum > thresholdNum) {
           status = "In-stock";
@@ -285,7 +275,6 @@ export const addBulkProducts = async (req, res) => {
           status = "Low stock";
         }
 
-        // Parse expiry date
         const expiryDate = new Date(expiry);
         if (isNaN(expiryDate.getTime())) {
           results.failed.push({
@@ -296,7 +285,6 @@ export const addBulkProducts = async (req, res) => {
           continue;
         }
 
-        // Create new product
         const newProduct = new Product({
           name,
           productId,
@@ -310,7 +298,7 @@ export const addBulkProducts = async (req, res) => {
           image: null, // CSV uploads don't include images
           userId: req.user._id // Add userId for bulk uploads
         });
-        
+
         await newProduct.save();
         totalQuantityAdded += quantityNum;
 
@@ -328,7 +316,6 @@ export const addBulkProducts = async (req, res) => {
       }
     }
 
-    // Update the totalProducts counter
     if (totalQuantityAdded > 0) {
       const counter = await TotalCounter.getCounter();
       counter.totalProducts += totalQuantityAdded;
@@ -351,7 +338,6 @@ export const checkExpiredProducts = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Set to start of day
 
-    // Find products that have expired for current user
     const expiredProducts = await Product.find({
       userId: req.user._id,
       expiry: { $lt: today },

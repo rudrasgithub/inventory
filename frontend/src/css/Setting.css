@@ -51,7 +51,6 @@
   border-radius: 3px;
 }
 
-/* Mobile Header Styles for Settings */
 .mobile-header {
   display: none;
   background: #424457;
@@ -71,9 +70,8 @@
   filter: brightness(0) invert(1);
 }
 
-/* Mobile Close Button Styles */
 .mobile-close-container {
-  display: none; /* Hidden by default for desktop */
+  display: none;
   justify-content: flex-end;
   padding: 16px 24px 8px;
   background: white;
@@ -106,7 +104,6 @@
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .setting-dashboard {
     display: block;
@@ -122,12 +119,11 @@
     bottom: 0;
     overflow-y: auto;
   }
-  
-  .sidebar { 
-    display: none !important; 
+
+  .sidebar {
+    display: none !important;
   }
-  
-  /* Show shared mobile header on settings */
+
   .mobile-header {
     display: block !important;
     position: relative;
@@ -137,7 +133,7 @@
     height: 30px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .mobile-close-container {
     display: flex !important;
     position: sticky;
@@ -145,21 +141,21 @@
     z-index: 10;
     background: white;
   }
-  
+
   .header-setting {
     display: none !important;
   }
-  
+
   .main-setting {
-    padding: 0; 
-    width: 100% !important; 
+    padding: 0;
+    width: 100% !important;
     margin: 0;
     min-height: 100vh;
     background: white;
     display: flex;
     flex-direction: column;
   }
-  
+
   .content-setting {
     background-color: white;
     color: white;
@@ -168,25 +164,24 @@
     border-radius: 0;
     flex: 1;
     min-height: calc(100vh - 60px);
-    padding-top: 0; /* Remove extra padding since close button is separate */
+    padding-top: 0;
   }
-  
+
   .tabs-setting {
     padding: 12px 24px 0;
     border-bottom: 2px solid rgba(159, 159, 159, 0.2);
   }
-  
-  /* Mobile specific overrides for form components */
+
   .profile-container {
     height: auto !important;
     min-height: calc(100vh - 120px);
   }
-  
+
   .profile-form {
     margin: 20px 24px !important;
     max-width: none !important;
   }
-  
+
   .form-actions {
     position: relative !important;
     right: auto !important;
@@ -195,7 +190,7 @@
     display: flex;
     justify-content: center;
   }
-  
+
   .main {
     height: auto !important;
   }

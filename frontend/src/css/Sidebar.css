@@ -1,4 +1,4 @@
-/* src/components/Sidebar.css */
+
 :root {
   --sidebar-bg: #242531;
   --sidebar-accent: linear-gradient(135deg, #60cdac, #448df2);
@@ -45,7 +45,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  width: 100%; /* Ensure full width */
+  width: 100%;
   background: transparent;
   border: none;
   color: var(--muted);
@@ -55,7 +55,7 @@
   font-size: 14px;
   padding: 10px 12px;
   text-decoration: none;
-  box-sizing: border-box; /* Include padding in width calculation */
+  box-sizing: border-box;
 }
 
 .nav-item .nav-icon {

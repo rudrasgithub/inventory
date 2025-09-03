@@ -37,25 +37,23 @@ export default function Invoice() {
   const [deleteDialogInvoiceId, setDeleteDialogInvoiceId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Fetch invoices
   const fetchInvoices = useCallback(async (page = 1) => {
     if (!token) {
       console.log('No token available, skipping invoice fetch');
       return;
     }
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/invoices?page=${page}`, {
         headers: {
@@ -78,13 +76,12 @@ export default function Invoice() {
     }
   }, [token]);
 
-  // Fetch overall statistics
   const fetchOverallStats = useCallback(async () => {
     if (!token) {
       console.log('No token available, skipping stats fetch');
       return;
     }
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/invoices/stats`, {
         headers: {
@@ -101,7 +98,6 @@ export default function Invoice() {
     }
   }, [token]);
 
-  // Refresh data when mobile state changes to ensure proper data loading
   useEffect(() => {
     if (token && isInitialized) {
       fetchInvoices();
@@ -109,20 +105,18 @@ export default function Invoice() {
     }
   }, [isMobile, token, isInitialized, fetchInvoices, fetchOverallStats]);
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (isInitialized && !token) {
       navigate('/login');
     }
   }, [token, isInitialized, navigate]);
 
-  // Filter invoices based on search
   useEffect(() => {
     const filtered = invoices.filter((invoice) => {
       if (!search.trim()) return true;
-      
+
       const searchLower = search.toLowerCase();
-      
+
       return (
         invoice.invoiceId.toLowerCase().includes(searchLower) ||
         invoice.referenceNumber.toLowerCase().includes(searchLower) ||
@@ -131,11 +125,10 @@ export default function Invoice() {
         new Date(invoice.dueDate).toLocaleDateString('en-GB').includes(searchLower)
       );
     });
-    
+
     setFilteredInvoices(filtered);
   }, [search, invoices]);
 
-  // Handle pagination
   const handlePageChange = async (newPage) => {
     if (newPage >= 1 && newPage <= pagination.totalPages) {
       setLoading(true);
@@ -144,7 +137,6 @@ export default function Invoice() {
     }
   };
 
-  // Handle Pay button click
   const handlePayInvoice = async (invoiceId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/invoices/${invoiceId}/pay`, {
@@ -169,37 +161,33 @@ export default function Invoice() {
     }
   };
 
-  // Handle View Invoice click
   const handleViewInvoice = async (invoice) => {
     try {
-      // Track the view click for statistics
+
       await fetch(`${API_BASE_URL}/api/invoices/${invoice._id}/track-view`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
-      // Increment view count
+
       await fetch(`${API_BASE_URL}/api/invoices/${invoice._id}/view`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       setSelectedInvoice(invoice);
       setIsModalOpen(true);
       setShowOptions(null);
-      
-      // Refresh stats to update processed count
+
       await fetchOverallStats();
     } catch (error) {
       console.error('Error viewing invoice:', error);
     }
   };
 
-  // Handle delete
   const handleDeleteInvoice = async (invoiceId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/invoices/${invoiceId}`, {
@@ -261,12 +249,10 @@ export default function Invoice() {
     }
   };
 
-  // Format currency
   const formatCurrency = (amount) => {
     return `₹${amount.toLocaleString()}`;
   };
 
-  // Format date
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-GB');
   };
@@ -306,7 +292,6 @@ export default function Invoice() {
     };
   }, [isDeleteDialogOpen]);
 
-  // If not initialized or no token, don't render anything (will redirect)
   if (!isInitialized || !token) {
     return null;
   }
@@ -316,16 +301,16 @@ export default function Invoice() {
       {!isMobile && <Sidebar />}
 
       <div className={`main-invoice ${isModalOpen || (isMobile && isDeleteDialogOpen) ? "blurred" : ""}`}>
-        {/* Desktop header */}
+        {}
         {!isMobile && (
           <header className="invoice-header">
             <h1>Invoice</h1>
             <div className="search-box-invoice">
               <img src="/search-icon.svg" className="search-icon-invoice" />
-              <input 
-                className="search-box-input-invoice" 
-                type="text" 
-                placeholder="Search invoices..." 
+              <input
+                className="search-box-input-invoice"
+                type="text"
+                placeholder="Search invoices..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 title="Search across all fields: ID, reference, amount, status, date"
@@ -333,12 +318,12 @@ export default function Invoice() {
             </div>
           </header>
         )}
-        
+
   {isMobile && <MobileHeader />}
 
         <main className="invoice-content">
           {isMobile ? (
-            // Mobile layout matching the screenshot design
+
             <section className="mobile-invoice-overview">
               <h2>Overall Invoice</h2>
               <div className="mobile-invoice-overview-grid">
@@ -395,7 +380,7 @@ export default function Invoice() {
               </div>
             </section>
           ) : (
-            // Desktop layout (existing)
+
             <section className="invoice-card-summary">
               <h2>Overall Invoice</h2>
               <div className="invoice-grid">
@@ -450,7 +435,7 @@ export default function Invoice() {
             ) : (
               <>
                 {isMobile ? (
-                  // Mobile layout: Table-like format
+
                   <div className="mobile-invoice-table">
                     <div className="mobile-table-header">
                       <div className="mobile-header-cell">Invoice ID</div>
@@ -468,15 +453,15 @@ export default function Invoice() {
                           color: '#6B7280',
                           minHeight: '200px'
                         }}>
-                          <img 
-                            src="/invoice.svg" 
-                            alt="No Invoices" 
-                            style={{ 
-                              width: '64px', 
-                              height: '64px', 
+                          <img
+                            src="/invoice.svg"
+                            alt="No Invoices"
+                            style={{
+                              width: '64px',
+                              height: '64px',
                               marginBottom: '16px',
-                              opacity: 0.5 
-                            }} 
+                              opacity: 0.5
+                            }}
                           />
                           <h3 style={{ margin: '0 0 8px 0', color: '#374151', fontSize: '18px' }}>No invoices available</h3>
                         </div>
@@ -484,7 +469,7 @@ export default function Invoice() {
                         filteredInvoices.map((invoice) => (
                           <div key={invoice._id} className="mobile-table-row">
                             <div className="mobile-invoice-id-cell">
-                              {invoice.invoiceId} 
+                              {invoice.invoiceId}
                             </div>
                             <div className="mobile-invoice-actions">
                               <button
@@ -511,7 +496,7 @@ export default function Invoice() {
                     </div>
                   </div>
                 ) : (
-                  // Desktop layout: Full table
+
                   <>
                     <table className="invoice-table">
                       <thead>
@@ -592,7 +577,7 @@ export default function Invoice() {
                             </div>
                           )}
                           {isDeleteDialogOpen && deleteDialogInvoiceId === invoice._id && (
-                            <div style={{ position: 'absolute', width: '400px', 
+                            <div style={{ position: 'absolute', width: '400px',
                               top: index >= filteredInvoices.length - 4 ? '-300%' : '100%', right: '20px', background: 'white', border: '1px solid rgb(0,0,0,0.2)', borderRadius: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', padding: '15px 20px', zIndex: 10 }}>
                               <p style={{ display: 'flex'}}>This invoice will be deleted.</p>
                               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10%', marginTop: '40px' }}>
@@ -613,11 +598,11 @@ export default function Invoice() {
 
             {!isMobile && (
               <div className="pagination-invoice">
-                      <button 
-                        className="invoice-btn-outline" 
+                      <button
+                        className="invoice-btn-outline"
                         disabled={!pagination.hasPrev}
                         onClick={() => handlePageChange(pagination.page - 1)}
-                        style={{ 
+                        style={{
                           cursor: pagination.hasPrev ? 'pointer' : 'not-allowed',
                           backgroundColor: pagination.hasPrev ? 'transparent' : '#f5f5f5',
                           opacity: pagination.hasPrev ? 1 : 0.6
@@ -626,11 +611,11 @@ export default function Invoice() {
                         Previous
                       </button>
                       <span>Page {pagination.page} of {pagination.totalPages}</span>
-                      <button 
+                      <button
                         className="invoice-btn-outline"
                         disabled={!pagination.hasNext}
                         onClick={() => handlePageChange(pagination.page + 1)}
-                        style={{ 
+                        style={{
                           cursor: pagination.hasNext ? 'pointer' : 'not-allowed',
                           backgroundColor: pagination.hasNext ? 'transparent' : '#f5f5f5',
                           opacity: pagination.hasNext ? 1 : 0.6
@@ -643,10 +628,10 @@ export default function Invoice() {
           </section>
         </main>
       </div>
-      
+
       <InvoiceTemplate isOpen={isModalOpen} onClose={closeModal} invoice={selectedInvoice} />
-      
-      {/* Mobile Delete Dialog - Rendered at root level */}
+
+      {}
       {isMobile && isDeleteDialogOpen && (
         <div className="mobile-delete-overlay" onClick={closeDeleteDialog}>
           <div className="mobile-delete-dialog" onClick={(e) => e.stopPropagation()}>
@@ -662,8 +647,8 @@ export default function Invoice() {
           </div>
         </div>
       )}
-      
-      {/* Mobile Bottom Navigation - only show on mobile */}
+
+      {}
       {isMobile && <BottomNav />}
     </div>
   )

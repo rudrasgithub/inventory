@@ -29,8 +29,8 @@ function App() {
         <Route path='/statistics' element={<Statistics />} />
         <Route path='/setting' element={<Setting />} />
       </Routes>
-      
-      <Toaster 
+
+      <Toaster
         position="top-right"
         toastOptions={{
           duration: 3000,

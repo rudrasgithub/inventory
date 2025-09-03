@@ -5,15 +5,14 @@ import BottomNav from "./BottomNav";
 export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 414);
 
-  // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 414);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
   const defaultInvoiceData = {
@@ -48,7 +47,6 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
     total: 5600,
   };
 
-  // Use the provided invoice data or fallback to default
   const invoiceData = invoice ? {
     invoiceNumber: invoice.invoiceId,
     invoiceDate: new Date(invoice.createdAt).toLocaleDateString('en-GB'),
@@ -136,13 +134,13 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
                   <div className="footer-row">
                     <span>Tax (10%)</span>
                     <span>₹{invoiceData.tax}</span>
-                  </div>  
+                  </div>
                 </div>
                   <div className="footer-row total">
                     <span>Total due</span>
                     <span className="highlight">₹{invoiceData.total.toLocaleString()}</span>
                   </div>
-                  
+
                   <div className="payment-notice">
                     <p>📋 Please pay within 15 days of receiving this invoice.</p>
                   </div>
@@ -156,8 +154,8 @@ export default function InvoiceTemplate({ isOpen, onClose, invoice }) {
             </div>
           </div>
         </div>
-        
-        {/* Add Bottom Navigation for mobile */}
+
+        {}
         {isMobile && <BottomNav />}
       </div>
     </div>

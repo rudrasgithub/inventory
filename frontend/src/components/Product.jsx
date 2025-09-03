@@ -36,8 +36,7 @@ export default function Product() {
   const [productToBuy, setProductToBuy] = useState(null);
   const [isProductInfoModalOpen, setIsProductInfoModalOpen] = useState(false);
   const [selectedProductInfo, setSelectedProductInfo] = useState(null);
-  
-  // Invoice overview state for mobile
+
   const [invoiceStats, setInvoiceStats] = useState({
     totalInvoices: 0,
     totalAmount: 0,
@@ -48,13 +47,11 @@ export default function Product() {
 
   const backendUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
-  // Helper function to safely format currency
   const formatCurrency = (value) => {
     if (value == null || isNaN(value)) return '0';
     return Number(value).toLocaleString();
   };
 
-  // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
       if (typeof window !== 'undefined') {
@@ -69,7 +66,6 @@ export default function Product() {
     }
   }, []);
 
-  // Debounce search query to avoid too many API calls
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery);
@@ -112,7 +108,6 @@ export default function Product() {
     }
   };
 
-  // Fetch invoice stats for mobile overview
   const fetchInvoiceStats = async () => {
     if (!token) {
       console.log('No token available, skipping invoice stats fetch');
@@ -129,26 +124,26 @@ export default function Product() {
       if (response.ok) {
         const data = await response.json();
         console.log('Invoice stats API response:', data);
-        
+
         const totalPaidAmount = Number(data.paidAmount?.last7Days) || 0;
         const totalUnpaidAmount = Number(data.unpaidAmount?.ordered) || 0;
-        
+
         const stats = {
           totalInvoices: Number(data.totalInvoices?.processed) || 0,
           totalAmount: totalPaidAmount + totalUnpaidAmount,
           paidAmount: totalPaidAmount,
           dueAmount: totalUnpaidAmount
         };
-        
+
         console.log('Setting invoice stats:', stats);
         setInvoiceStats(stats);
       } else {
         console.log('Invoice stats API returned non-OK response:', response.status);
-        // Keep default values if API fails
+
       }
     } catch (error) {
       console.error('Error fetching invoice stats:', error);
-      // Keep default values if fetch fails
+
     }
   };
 
@@ -188,7 +183,6 @@ export default function Product() {
     }
   }, [token, isInitialized, currentPage, backendUrl, debouncedSearchQuery, itemsPerPage]);
 
-  // Periodic refresh to catch status changes from cron jobs (every 5 minutes)
   useEffect(() => {
     if (!token || !isInitialized) return;
 
@@ -258,7 +252,7 @@ export default function Product() {
   };
 
   const getStatusClass = (quantity, threshold, status) => {
-    // Prioritize backend status over calculated status
+
     if (status === "Expired") {
       return "status expired";
     } else if (status === "Out of stock" || quantity === 0) {
@@ -271,7 +265,7 @@ export default function Product() {
   };
 
   const getStatusText = (quantity, threshold, status) => {
-    // Prioritize backend status over calculated status
+
     if (status === "Expired") {
       return "Expired";
     } else if (status === "Out of stock" || quantity === 0) {
@@ -288,7 +282,7 @@ export default function Product() {
   };
 
   const handleRowClick = (product) => {
-    // Prevent purchasing expired or out-of-stock products
+
     if (product.status === 'Expired' || product.quantity === 0) {
       toast.error(`Cannot purchase ${product.status === 'Expired' ? 'expired' : 'out-of-stock'} product`);
       return;
@@ -312,10 +306,9 @@ export default function Product() {
       if (!response.ok) {
         const errorData = await response.json();
 
-        // Handle token expiration or invalid token
         if (response.status === 401 && (errorData.message.includes('Token is not valid') || errorData.message.includes('authorization denied'))) {
           toast.error('Session expired. Please login again.');
-          // Clear invalid token and redirect to login
+
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           window.location.href = '/';
@@ -335,12 +328,11 @@ export default function Product() {
         prevProducts.map((product) => {
           if (product._id === productId) {
             const updatedQuantity = product.quantity - quantity;
-            // Let the backend determine the status based on expiry and quantity
-            // We'll just update the quantity and the next refresh will get the correct status
+
             return {
               ...product,
               quantity: updatedQuantity,
-              // Don't override the status here - let the backend manage it
+
             };
           }
           return product;
@@ -368,7 +360,6 @@ export default function Product() {
     setSelectedProductInfo(null);
   };
 
-  // Authentication protection - redirect to login if not authenticated
   useEffect(() => {
     if (isInitialized && !token) {
       navigate('/login');
@@ -380,7 +371,7 @@ export default function Product() {
       {!isMobile && <Sidebar />}
 
       <div className={`main-product ${(isAddProductModalOpen || renderComponent === "MultipleProduct" || (isMobile && isProductInfoModalOpen)) ? "blur" : ""}`}>
-        {/* Desktop header */}
+        {}
         {!isMobile && (
           <header className="product-header">
             <h1>Product</h1>
@@ -403,14 +394,13 @@ export default function Product() {
 
   {isMobile && <MobileHeader />}
 
-
         {renderComponent === "IndividualProduct" && <IndividualProduct setRenderComponent={setRenderComponent} refreshProducts={refreshProducts} />}
         {selectedProduct && <NewProduct product={selectedProduct} />}
 
         {renderComponent !== "IndividualProduct" && (
           <main className="product-content">
             {isMobile ? (
-              // Mobile layout
+
               <>
                 <section className="mobile-product-overview">
                   <h2>Overall Inventory</h2>
@@ -481,15 +471,15 @@ export default function Product() {
                           color: '#6B7280',
                           minHeight: '200px'
                         }}>
-                          <img 
-                            src="/product-logo.svg" 
-                            alt="No Products" 
-                            style={{ 
-                              width: '64px', 
-                              height: '64px', 
+                          <img
+                            src="/product-logo.svg"
+                            alt="No Products"
+                            style={{
+                              width: '64px',
+                              height: '64px',
                               marginBottom: '16px',
-                              opacity: 0.5 
-                            }} 
+                              opacity: 0.5
+                            }}
                           />
                           <h3 style={{ margin: '0 0 8px 0', color: '#374151', fontSize: '18px' }}>No Products Found</h3>
                         </div>
@@ -508,8 +498,8 @@ export default function Product() {
                                   product.status === "Out of stock" || product.quantity === 0 ? 'Out of stock' :
                                     product.quantity > product.threshold ? 'In-stock' : 'Low stock'}
                               </span>
-                              <img 
-                                src="/Info.svg" 
+                              <img
+                                src="/Info.svg"
                                 className="mobile-info-icon"
                                 onClick={(e) => handleInfoClick(e, product)}
                                 alt="Product Info"
@@ -563,8 +553,8 @@ export default function Product() {
                     <div className="product-card">
                       <p>Low Stocks</p>
                       <div className="product-card-values">
-                        <p>{summary.ordered}</p> {/* Count of bought product items */}
-                        <p>{summary.notInStock}</p> {/* Out of stock items (current) */}
+                        <p>{summary.ordered}</p> {}
+                        <p>{summary.notInStock}</p> {}
                       </div>
                       <div className="product-card-meta">
                         <span>Ordered</span>
@@ -588,12 +578,12 @@ export default function Product() {
                         Loading products...
                       </div>
                     ) : products.length === 0 ? (
-                      <div style={{ 
-                        display: 'flex', 
+                      <div style={{
+                        display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center', 
+                        justifyContent: 'center',
                         alignItems: 'center',
-                        padding: '60px 20px', 
+                        padding: '60px 20px',
                         textAlign: 'center',
                         color: '#6b7280',
                         fontSize: '16px'
@@ -693,8 +683,8 @@ export default function Product() {
           onBuy={handleBuy}
         />
       )}
-      
-      {/* Mobile Product Info Modal */}
+
+      {}
       {isMobile && isProductInfoModalOpen && selectedProductInfo && (
         <div className="mobile-product-info-overlay" onClick={closeProductInfoModal}>
           <div className="mobile-product-info-modal" onClick={(e) => e.stopPropagation()}>
@@ -735,7 +725,7 @@ export default function Product() {
         </div>
       )}
 
-      {/* Mobile Bottom Navigation - only show on mobile */}
+      {}
       {isMobile && <BottomNav />}
     </div>
   );

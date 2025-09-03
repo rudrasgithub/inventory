@@ -30,20 +30,17 @@ export const useDraggableRows = (initialLayout, onLayoutSave) => {
       const containerRect = initialPositions.get(container);
       const containerPadding = 16;
 
-      // Constrain dragging within container bounds more strictly
       const futureLeft = draggedItemInitialRect.left + deltaX;
       const futureRight = draggedItemInitialRect.right + deltaX;
-      
-      // Prevent crossing left boundary
+
       if (futureLeft < containerRect.left + containerPadding) {
         deltaX = (containerRect.left + containerPadding) - draggedItemInitialRect.left;
       }
-      // Prevent crossing right boundary  
+
       if (futureRight > containerRect.right - containerPadding) {
         deltaX = (containerRect.right - containerPadding) - draggedItemInitialRect.right;
       }
-      
-      // Additional constraint: don't allow dragging beyond the container width
+
       const maxDeltaX = containerRect.width - draggedItemInitialRect.width - (containerPadding * 2);
       const minDeltaX = -(draggedItemInitialRect.left - containerRect.left - containerPadding);
       deltaX = Math.max(minDeltaX, Math.min(maxDeltaX, deltaX));
@@ -57,7 +54,6 @@ export const useDraggableRows = (initialLayout, onLayoutSave) => {
       const draggedItemWidth = draggedItemInitialRect.width;
       const gap = 16;
 
-      // Proportional override for siblings
       siblings.forEach(sibling => {
         if (sibling === draggedElement) return;
         const siblingInitialRect = initialPositions.get(sibling);
@@ -89,10 +85,8 @@ export const useDraggableRows = (initialLayout, onLayoutSave) => {
       const container = draggedElement.parentElement;
       if (!container) return;
 
-      // All siblings in the container
       const allElements = Array.from(container.children);
 
-      // Reset transforms from dragging and apply a transition
       allElements.forEach(child => {
         child.style.transition = 'transform 0.2s ease-in-out, left 0.2s ease-in-out';
         child.style.transform = '';
@@ -113,22 +107,20 @@ export const useDraggableRows = (initialLayout, onLayoutSave) => {
       const dropTarget = getDragAfterElement(container, upEvent.clientX);
       const currentOrder = layout[rowType];
       const draggedId = parseInt(draggedElement.dataset.cardId, 10);
-      
+
       const otherItems = currentOrder.filter(id => id !== draggedId);
-      
+
       const dropTargetId = dropTarget ? parseInt(dropTarget.dataset.cardId, 10) : null;
       const dropIndex = dropTargetId !== null ? otherItems.indexOf(dropTargetId) : otherItems.length;
-      
+
       const newOrder = [...otherItems];
       newOrder.splice(dropIndex, 0, draggedId);
 
       const newLayout = { ...layout, [rowType]: newOrder };
 
-      // Update the state, letting flexbox and CSS transitions handle the animation
       setLayout(newLayout);
       onLayoutSave(newLayout);
 
-      // Clean up transitions after the animation
       setTimeout(() => {
         allElements.forEach(child => {
           if (child) {

@@ -33,28 +33,26 @@ export default function CSVModal({ onClose, refreshProducts }) {
   const handleFileSelect = (files) => {
     if (files) {
       const fileArray = Array.from(files)
-      
-      // Validate file types
+
       const invalidFiles = fileArray.filter(
         (file) => file.type !== "text/csv" && !file.name.endsWith(".csv")
       )
-      
+
       if (invalidFiles.length > 0) {
         toast.error(`Only CSV files are allowed! ${invalidFiles.length} invalid file(s) rejected.`)
         return
       }
-      
-      // Check file size (10MB limit)
+
       const oversizedFiles = fileArray.filter(file => file.size > 10 * 1024 * 1024)
       if (oversizedFiles.length > 0) {
         toast.error(`File(s) too large! Maximum size is 10MB.`)
         return
       }
-      
+
       const validFiles = fileArray.filter(
         (file) => (file.type === "text/csv" || file.name.endsWith(".csv")) && file.size <= 10 * 1024 * 1024
       )
-      
+
       if (validFiles.length > 0) {
         setUploadedFiles((prev) => [...prev, ...validFiles])
         toast.success(`${validFiles.length} CSV file(s) selected successfully!`)
@@ -80,27 +78,24 @@ export default function CSVModal({ onClose, refreshProducts }) {
     if (lines.length < 2) {
       throw new Error('CSV must contain at least a header row and one data row')
     }
-    
-    // Parse header
+
     const headers = lines[0].split(',').map(header => header.trim().toLowerCase())
-    
-    // Required columns
+
     const requiredColumns = ['product name', 'product id', 'category', 'price', 'quantity', 'unit', 'expiry date', 'threshold value']
     const missingColumns = requiredColumns.filter(col => !headers.includes(col))
-    
+
     if (missingColumns.length > 0) {
       throw new Error(`Missing required columns: ${missingColumns.join(', ')}`)
     }
-    
-    // Parse data rows
+
     const products = []
     for (let i = 1; i < lines.length; i++) {
       const values = lines[i].split(',').map(val => val.trim())
-      
+
       if (values.length !== headers.length) {
         throw new Error(`Row ${i + 1}: Column count mismatch. Expected ${headers.length}, got ${values.length}`)
       }
-      
+
       const product = {}
       headers.forEach((header, index) => {
         switch (header) {
@@ -123,24 +118,24 @@ export default function CSVModal({ onClose, refreshProducts }) {
             product.unit = values[index]
             break
           case 'expiry date':
-            // Handle different date formats but prioritize DD-MM-YYYY format
+
             let dateValue = values[index].trim();
             if (!dateValue) {
               throw new Error(`Row ${i + 1}: Expiry date is required`)
             }
-            
+
             if (dateValue.includes('-')) {
-              // Handle DD-MM-YYYY or YYYY-MM-DD
+
               const parts = dateValue.split('-');
               if (parts.length !== 3) {
                 throw new Error(`Row ${i + 1}: Invalid date format. Use DD-MM-YYYY format`)
               }
-              
+
               if (parts[0].length === 4) {
-                // Format: YYYY-MM-DD (convert to YYYY-MM-DD for backend)
+
                 dateValue = dateValue;
               } else {
-                // Format: DD-MM-YYYY (preferred), convert to YYYY-MM-DD
+
                 if (parts[0].length === 2 && parts[1].length === 2 && parts[2].length === 4) {
                   dateValue = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
                 } else {
@@ -148,7 +143,7 @@ export default function CSVModal({ onClose, refreshProducts }) {
                 }
               }
             } else if (dateValue.includes('/')) {
-              // Handle DD/MM/YYYY (also supported but not preferred)
+
               const parts = dateValue.split('/');
               if (parts.length !== 3 || parts[0].length !== 2 || parts[1].length !== 2 || parts[2].length !== 4) {
                 throw new Error(`Row ${i + 1}: Invalid date format. Use DD-MM-YYYY format`)
@@ -164,23 +159,21 @@ export default function CSVModal({ onClose, refreshProducts }) {
             break
         }
       })
-      
-      // Basic validation
+
       if (!product.name || !product.productId || !product.category) {
         throw new Error(`Row ${i + 1}: Missing required fields (name, productId, or category)`)
       }
-      
-      // Validate date format
+
       if (product.expiry) {
         const testDate = new Date(product.expiry);
         if (isNaN(testDate.getTime())) {
           throw new Error(`Row ${i + 1}: Invalid date format for expiry date. Use DD-MM-YYYY format`)
         }
       }
-      
+
       products.push(product)
     }
-    
+
     return products
   }
 
@@ -189,22 +182,21 @@ export default function CSVModal({ onClose, refreshProducts }) {
       toast.error('Please select at least one CSV file to upload')
       return
     }
-    
+
     setIsUploading(true)
-    
+
     try {
       for (const file of uploadedFiles) {
         const fileContent = await file.text()
-        
+
         try {
           const products = parseCSV(fileContent)
-          
+
           if (products.length === 0) {
             toast.error(`${file.name}: No valid products found`)
             continue
           }
-          
-          // Upload products to backend
+
           const response = await fetch(`${backendUrl}/api/products/bulk`, {
             method: 'POST',
             headers: {
@@ -213,20 +205,19 @@ export default function CSVModal({ onClose, refreshProducts }) {
             },
             body: JSON.stringify({ products }),
           })
-          
+
           const data = await response.json()
-          
+
           if (!response.ok) {
             throw new Error(data.message || 'Failed to upload products')
           }
-          
-          // Show success/failure summary
+
           const { successful, failed } = data.results
-          
+
           if (successful.length > 0) {
             toast.success(`${file.name}: ${successful.length} products uploaded successfully!`)
           }
-          
+
           if (failed.length > 0) {
             toast.error(`${file.name}: ${failed.length} products failed to upload. See details below.`);
             console.group(`❌ Failed products from ${file.name}:`);
@@ -235,8 +226,7 @@ export default function CSVModal({ onClose, refreshProducts }) {
               console.log('Data:', failure.productData);
             });
             console.groupEnd();
-            
-            // Show a summary of common errors
+
             const errorTypes = failed.reduce((acc, failure) => {
               const errorType = failure.error.includes('date') ? 'Date Format' :
                              failure.error.includes('exists') ? 'Duplicate ID' :
@@ -244,31 +234,30 @@ export default function CSVModal({ onClose, refreshProducts }) {
               acc[errorType] = (acc[errorType] || 0) + 1;
               return acc;
             }, {});
-            
+
             const errorSummary = Object.entries(errorTypes)
               .map(([type, count]) => `${type}: ${count}`)
               .join(', ');
-            
+
             toast.error(`Common issues: ${errorSummary}`, { duration: 6000 });
           }
-          
+
         } catch (parseError) {
           console.error(`Error parsing ${file.name}:`, parseError)
           toast.error(`${file.name}: ${parseError.message}`)
         }
       }
-      
-      // Refresh the products list and close modal
+
       if (typeof refreshProducts === 'function') {
         await refreshProducts(true)
       }
-      
+
       toast.success('CSV upload process completed!')
-      
+
       setTimeout(() => {
         handleCloseModal();
       }, 2000)
-      
+
     } catch (error) {
       console.error('Upload error:', error)
       toast.error('Upload failed: ' + error.message)
@@ -351,8 +340,8 @@ export default function CSVModal({ onClose, refreshProducts }) {
         )}
 
         <div className="actions">
-          <button 
-            onClick={handleCloseModal} 
+          <button
+            onClick={handleCloseModal}
             className="cancel-btn"
             disabled={isUploading}
             style={{
@@ -362,7 +351,7 @@ export default function CSVModal({ onClose, refreshProducts }) {
           >
             Cancel
           </button>
-          <button 
+          <button
             className="upload-btn"
             onClick={uploadedFiles.length > 0 ? handleUpload : undefined}
             disabled={isUploading || uploadedFiles.length === 0}

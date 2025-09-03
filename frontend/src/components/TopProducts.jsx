@@ -1,7 +1,6 @@
 import React from 'react';
 import "../css/TopProducts.css";
 
-// Add keyframes for loading spinner
 const spinKeyframes = `
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -9,28 +8,25 @@ const spinKeyframes = `
 }
 `;
 
-// Inject the keyframes into the document head
 if (typeof document !== 'undefined') {
   const style = document.createElement('style');
   style.textContent = spinKeyframes;
   document.head.appendChild(style);
 }
 
-const TopProducts = ({ 
-  topProducts = [], 
-  className = "", 
-  showTitle = true, 
+const TopProducts = ({
+  topProducts = [],
+  className = "",
+  showTitle = true,
   titleText = "Top Products",
   containerStyle = {},
   isLoading = false,
 }) => {
-  
-  // Limit to top 5 products only and sort by totalSold
+
   const limitedProducts = topProducts
     .sort((a, b) => b.totalSold - a.totalSold)
     .slice(0, 5);
-  
-  // Rating is based on rank (index)
+
   const renderStars = (index) => {
     const rating = 5 - index;
     return Array.from({ length: 5 }, (_, i) => (
@@ -76,10 +72,10 @@ const TopProducts = ({
               <div className="product-details">
                 <span className="product-name">{product.name}</span>
                 {product.image && (
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="product-image-small" 
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="product-image-small"
                     onError={(e) => e.target.style.display = 'none'}
                   />
                 )}

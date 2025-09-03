@@ -1,4 +1,4 @@
-// API utility functions for better error handling and token management
+
 
 export const makeAuthenticatedRequest = async (url, options = {}, token) => {
   if (!token) {
@@ -16,7 +16,7 @@ export const makeAuthenticatedRequest = async (url, options = {}, token) => {
 
   try {
     const response = await fetch(url, defaultOptions);
-    
+
     if (!response.ok) {
       if (response.status === 401) {
         const errorData = await response.json().catch(() => ({}));
@@ -24,7 +24,7 @@ export const makeAuthenticatedRequest = async (url, options = {}, token) => {
       }
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
+
     return response;
   } catch (error) {
     console.error(`API request failed for ${url}:`, error);
@@ -36,11 +36,11 @@ export const handleApiError = (error, fallbackMessage = 'An error occurred') => 
   if (error.message.includes('Authentication failed') || error.message.includes('Token invalid')) {
     return 'Session expired. Please login again.';
   }
-  
+
   if (error.message.includes('Failed to fetch')) {
     return 'Network error. Please check your connection.';
   }
-  
+
   return error.message || fallbackMessage;
 };
 
@@ -52,8 +52,7 @@ export const retryWithBackoff = async (fn, maxRetries = 2, delay = 1000) => {
       if (i === maxRetries || error.message.includes('Authentication failed')) {
         throw error;
       }
-      
-      // Wait before retrying
+
       await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
     }
   }

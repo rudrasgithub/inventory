@@ -14,32 +14,32 @@ const AccountManagement = () => {
 
   const handleResetLayout = async () => {
     setIsResettingLayout(true);
-    
+
     const defaultHomeLayout = {
       leftColumn: [0, 1, 2],
       rightColumn: [0, 1, 2]
     };
-    
+
     const defaultStatisticsLayout = {
       firstRow: [0, 1, 2],
       secondRow: [3, 4]
     };
-    
+
     if (!token) {
       toast.success('All layouts reset to default!');
       setIsResettingLayout(false);
       return;
     }
-    
+
     try {
-      // Reset both layouts in database
+
       const homeResponse = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           homeLayout: defaultHomeLayout,
           statisticsLayout: defaultStatisticsLayout
         })
@@ -54,7 +54,7 @@ const AccountManagement = () => {
     } catch (error) {
       console.error('Error resetting layouts:', error);
       toast.error('Failed to reset layouts.');
-      // Clear localStorage as fallback
+
       try {
         localStorage.removeItem('gridLayout');
         console.log('Layouts cleared from localStorage as fallback');
@@ -62,15 +62,15 @@ const AccountManagement = () => {
         console.log('Could not clear layouts from localStorage');
       }
     }
-    
+
     setIsResettingLayout(false);
   };
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
-    
+
     try {
-      // Call backend logout API for validation and tracking
+
       const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
         headers: {
@@ -83,16 +83,15 @@ const AccountManagement = () => {
         const data = await response.json();
         toast.success(data.message || 'Logged out successfully!');
       } else {
-        // Even if backend fails, still logout locally
+
         toast.success('Logged out successfully!');
       }
     } catch (error) {
       console.error('Error during logout:', error);
-      // If network error, still logout locally
+
       toast.success('Logged out successfully!');
     }
 
-    // Always perform local logout regardless of backend response
     setTimeout(() => {
       setUser(null); // Clear user data from context
       setToken(null); // Clear token from context
@@ -105,8 +104,8 @@ const AccountManagement = () => {
   return (
     <div className="account-management">
       <div className='account-management-container'>
-        <button 
-          className='reset-layout-btn-account-management' 
+        <button
+          className='reset-layout-btn-account-management'
           onClick={handleResetLayout}
           disabled={isResettingLayout}
           style={{
@@ -117,9 +116,9 @@ const AccountManagement = () => {
         >
           {isResettingLayout ? 'Resetting...' : 'Reset Layout'}
         </button>
-        
-        <button 
-          className='logout-btn-account-management' 
+
+        <button
+          className='logout-btn-account-management'
           onClick={handleLogout}
           disabled={isLoggingOut}
           style={{

@@ -23,7 +23,6 @@
   box-sizing: border-box;
 }
 
-/* Mobile responsive styles for InputField */
 @media (max-width: 768px) {
   .input-field-label {
     font-weight: 500;
@@ -33,24 +32,24 @@
   }
 
   .input-field {
-    width: 100% !important; /* Full width on mobile */
+    width: 100% !important;
     box-sizing: border-box;
     padding: 16px;
-    padding-right: 50px !important; /* Reserve space for eye icon */
-    font-size: 16px; /* Prevent zoom */
+    padding-right: 50px !important;
+    font-size: 16px;
     border-radius: 12px;
   }
-  
+
   .input-field-wrapper {
     width: 100%;
   }
-  
+
   .input-field-group {
     width: 100%;
   }
-  
+
   .toggle-password-btn {
-    right: 12px !important; /* Ensure icon stays on the right */
+    right: 12px !important;
     top: 50%;
     transform: translateY(-70%);
   }

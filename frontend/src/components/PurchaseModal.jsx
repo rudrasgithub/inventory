@@ -42,25 +42,25 @@ const PurchaseModal = ({ product, onClose, onBuy }) => {
     <div className="modal-overlay-buy-products" onClick={onClose}>
       <div className="modal-content-buy-products" onClick={(e) => e.stopPropagation()}>
         <h2>Buy Product</h2>
-        
-        {/* Product Image */}
+
+        {}
         {product.image && (
           <div className="product-image-container">
-            <img 
-              src={product.image} 
-              alt={product.name} 
+            <img
+              src={product.image}
+              alt={product.name}
               className="product-image"
-              style={{ 
-                maxWidth: '200px', 
-                maxHeight: '150px', 
+              style={{
+                maxWidth: '200px',
+                maxHeight: '150px',
                 objectFit: 'cover',
                 borderRadius: '8px',
                 marginBottom: '15px'
-              }} 
+              }}
             />
           </div>
         )}
-        
+
         <p><strong>Product Name:</strong> {product.name}</p>
         <p><strong>Price:</strong> ₹{product.price}</p>
                   <div className="quantity-controls">
@@ -73,9 +73,9 @@ const PurchaseModal = ({ product, onClose, onBuy }) => {
           </div>
         <p><strong>Available:</strong> {product.quantity}</p>
         <div className="modal-actions">
-          <button 
-            onClick={handleBuy} 
-            className="buy-button" 
+          <button
+            onClick={handleBuy}
+            className="buy-button"
             disabled={isLoading || quantityToBuy > product.quantity}
           >
             {isLoading ? 'Processing...' : 'Buy'}

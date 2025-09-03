@@ -78,7 +78,7 @@ export default function ForgotPassword() {
                     : "pointer",
               }}
             >
-              {isLoading ? "Sending..." : "Send Mail"} {/* Show loading text */}
+              {isLoading ? "Sending..." : "Send Mail"} {}
             </button>
           </form>
         </div>

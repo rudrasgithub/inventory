@@ -17,9 +17,8 @@ dotenv.config();
 
 const app = express();
 
-// Configure multer for memory storage (to handle image uploads)
 const storage = multer.memoryStorage();
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
@@ -48,15 +47,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-// Buy routes (before product routes to avoid middleware conflicts)
+
 app.use('/api/products', buyRoutes);
-// Product routes with image upload middleware
+
 app.use('/api/products', upload.single('image'), productRoutes);
-// Profile routes
+
 app.use('/api', profileRoutes);
-// Statistics routes
+
 app.use('/api', statisticsRoutes);
-// Invoice routes
+
 app.use('/api/invoices', invoiceRoutes);
 
 app.get('/', (req, res) => {
@@ -72,23 +71,21 @@ mongoose.connect(process.env.MONGODB_URI, {
   .then(() => {
     console.log('✅ Connected to MongoDB successfully');
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    
-    // Set up cron job to check for expired products daily at midnight
+
     cron.schedule('0 0 * * *', async () => {
       try {
         console.log('Running daily expired products check...');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Find and update expired products
         const result = await Product.updateMany(
-          { 
-            expiry: { $lt: today }, 
-            status: { $ne: 'Expired' } 
+          {
+            expiry: { $lt: today },
+            status: { $ne: 'Expired' }
           },
-          { 
-            status: 'Expired', 
-            quantity: 0 
+          {
+            status: 'Expired',
+            quantity: 0
           }
         );
 
@@ -101,7 +98,7 @@ mongoose.connect(process.env.MONGODB_URI, {
         console.error('Error in expired products cron job:', error);
       }
     });
-    
+
     console.log('Daily expired products check scheduled');
   })
   .catch((err) => {

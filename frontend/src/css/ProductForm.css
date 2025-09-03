@@ -66,14 +66,14 @@
 .field {
   display: flex;
   align-items: center;
-  gap: 20px; /* Adjust gap between label and input */
+  gap: 20px;
 }
 
 .label {
-  font-size: 14px; /* Slightly larger font for better readability */
+  font-size: 14px;
   color: var(--accent-dark);
   font-weight: 500;
-  width: 150px; /* Fixed width for consistent alignment */
+  width: 150px;
 }
 
 .input-field-product-form {
@@ -122,7 +122,6 @@
   border-radius: 8px;
 }
 
-/* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .product-form {
     position: fixed;

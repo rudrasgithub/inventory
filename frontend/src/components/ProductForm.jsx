@@ -55,7 +55,6 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
 
   const backendUrl = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
-  // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
       if (typeof window !== 'undefined') {
@@ -87,15 +86,15 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
 
   async function onSubmit(e) {
     e.preventDefault();
-    
+
     if (isSubmitting) {
       return; // Prevent multiple submissions
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
-      // First, check if product ID already exists
+
       const checkResponse = await fetch(`${backendUrl}/api/products/check-id/${encodeURIComponent(form.productId)}`, {
         method: "GET",
         headers: {
@@ -136,7 +135,7 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
       if (!response.ok) {
         const errorData = await response.json();
         if (response.status === 409) {
-          // Handle duplicate product ID error from backend
+
           toast.error(errorData.message || "Product ID already exists!");
         } else {
           throw new Error(errorData.message || "Failed to add product");
@@ -187,16 +186,16 @@ export default function ProductForm({ setRenderComponent, refreshProducts }) {
       {isMobile && (
         <div className="mobile-form-header">
           <h3 className="mobile-form-title">New Product</h3>
-          <button 
-            type="button" 
-            className="mobile-close-btn" 
+          <button
+            type="button"
+            className="mobile-close-btn"
             onClick={() => setRenderComponent(null)}
           >
             <img src="/template_close.svg" alt="Close" width={20} height={20} />
           </button>
         </div>
       )}
-      
+
       {!isMobile && <h3 className="pf-title">New Product</h3>}
 
       <div className="pf-row upload-row">

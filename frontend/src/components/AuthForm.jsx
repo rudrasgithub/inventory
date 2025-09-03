@@ -44,7 +44,7 @@ export default function AuthForm({ mode = "login" }) {
         if (mode === "login") {
           console.log("Login successful - showing toast"); // Debug log
           toast.success("Logged in successfully!");
-          // Store token and user data
+
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
           setUser({ ...data.user, token: data.token });
@@ -55,7 +55,7 @@ export default function AuthForm({ mode = "login" }) {
           navigate("/login");
         }
       } else {
-        // Show toast for any non-200 response
+
         const errorMessage = data.message || (mode === "login" ? "Login failed" : "Registration failed");
         console.log("Login error - showing error toast:", errorMessage); // Debug log
         toast.error(errorMessage);

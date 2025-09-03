@@ -9,8 +9,8 @@ function FormField({ label, type = "text", name, value, onChange, placeholder })
   return (
     <div className="form-group-profile">
       <label htmlFor={name}>{label}</label>
-      <input 
-        type={type} 
+      <input
+        type={type}
         id={name}
         name={name}
         value={value}
@@ -39,7 +39,6 @@ export default function EditProfile() {
     confirmPassword: ''
   });
 
-  // Initialize form data from context user data
   useEffect(() => {
     if (user) {
       const userData = {
@@ -61,7 +60,6 @@ export default function EditProfile() {
     });
   };
 
-  // Check if form data has changed from initial data
   const hasChanges = () => {
     return (
       formData.firstName !== initialData.firstName ||
@@ -76,10 +74,10 @@ export default function EditProfile() {
     setLoading(true);
 
     try {
-    // Enhanced password validation
+
     const isPasswordChanged = formData.password !== '••••••••' && formData.password !== '' && formData.password.trim() !== '';
     const isConfirmPasswordChanged = formData.confirmPassword !== '••••••••' && formData.confirmPassword !== '' && formData.confirmPassword.trim() !== '';
-    
+
     if (isPasswordChanged || isConfirmPasswordChanged) {
       if (!isPasswordChanged || formData.password.trim() === '') {
         toast.error('Please enter your new password');
@@ -101,14 +99,14 @@ export default function EditProfile() {
         setLoading(false);
         return;
       }
-      // Additional validation: check if password is still placeholder
+
       if (formData.password === '••••••••') {
         toast.error('Please enter a new password, not the placeholder');
         setLoading(false);
         return;
       }
     }      const updateData = {};
-      
+
       if (formData.firstName !== initialData.firstName) {
         updateData.firstName = formData.firstName.trim();
       }
@@ -118,9 +116,9 @@ export default function EditProfile() {
     if (formData.email !== initialData.email) {
       updateData.email = formData.email.trim();
     }
-    // Only send password if it's actually changed and not a placeholder
+
     if (formData.password !== '••••••••' && formData.password !== '' && formData.password.trim() !== '') {
-      // Double check that we're not sending placeholder data
+
       if (formData.password === '••••••••' || formData.confirmPassword === '••••••••') {
         toast.error('Invalid password data detected. Please try again.');
         setLoading(false);
@@ -142,13 +140,13 @@ export default function EditProfile() {
       });
 
       const data = await response.json();
-      
+
       console.log('Backend response:', { status: response.status, data }); // Debug log
 
       if (response.ok) {
         const emailChanged = updateData.email && updateData.email !== user.email;
         const passwordChanged = updateData.password;
-        
+
         if (emailChanged) {
           toast.success('Email updated successfully! Please login again with your new email.');
           setTimeout(() => {
@@ -167,13 +165,13 @@ export default function EditProfile() {
           }, 2000);
         } else {
           toast.success('Profile updated successfully!');
-          
+
           const updatedUser = {
             ...user,
             ...data.user
           };
           setUser(updatedUser);
-          
+
           const newInitialData = {
             firstName: data.user.firstName || '',
             lastName: data.user.lastName || '',
@@ -184,18 +182,18 @@ export default function EditProfile() {
           setInitialData(newInitialData);
           setFormData(newInitialData);
         }
-        
+
       } else {
-        // Handle token expiration or invalid token
+
         if (response.status === 401 && (data.message.includes('Token is not valid') || data.message.includes('authorization denied'))) {
           toast.error('Session expired. Please login again.');
-          // Clear invalid token and redirect to login
+
           setUser(null);
           setToken(null);
           window.location.href = '/login';
           return;
         }
-        
+
         toast.error(data.message || 'Failed to update profile');
       }
     } catch (error) {
@@ -233,7 +231,7 @@ export default function EditProfile() {
               onChange={handleInputChange}
               placeholder="Enter your email"
             />
-            
+
             <FormField
               label="Password"
               type="password"
@@ -252,9 +250,9 @@ export default function EditProfile() {
             />
 
             <div className="form-actions">
-              <button 
-                type="button" 
-                className="save-btn" 
+              <button
+                type="button"
+                className="save-btn"
                 onClick={handleSave}
                 disabled={loading || !hasChanges()}
                 style={{

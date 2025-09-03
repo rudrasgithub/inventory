@@ -17,21 +17,18 @@ export default function Home() {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [summaryData, setSummaryData] = useState({
-    // Inventory Summary
+
     quantityInHand: 0, // Total available product items (sum of current quantities)
     toBeReceived: 200, // Static as requested
 
-    // Product Summary
     numberOfSuppliers: 31, // Static as requested
     numberOfCategories: 0, // Dynamic - distinct count of categories
 
-    // Purchase Overview
     totalPurchases: 0, // Total product items purchased by user
     purchaseCost: 0,   // Total cost of purchases
     cancelCount: 5,    // Static as requested
     returnValue: 17432, // Static as requested
 
-    // Sales Overview
     totalSales: 0,
     totalRevenue: 0,
     totalProfit: 0,
@@ -42,13 +39,11 @@ export default function Home() {
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Grid layout state
   const [leftColumnOrder, setLeftColumnOrder] = useState([0, 1, 2]);
   const [rightColumnOrder, setRightColumnOrder] = useState([0, 1, 2]);
   const [draggedGrid, setDraggedGrid] = useState(null);
   const saveTimeoutRef = useRef(null);
 
-  // Grid management functions
   const moveGridToPosition = (column, fromIndex, toIndex) => {
     if (fromIndex === toIndex) return;
     const setOrder = column === 'left' ? setLeftColumnOrder : setRightColumnOrder;
@@ -65,16 +60,14 @@ export default function Home() {
 
   const saveGridLayout = async (layout) => {
     if (!token) return;
-    
-    // Clear any existing timeout to prevent multiple rapid calls
+
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
-    
-    // Debounce the save operation
+
     saveTimeoutRef.current = setTimeout(async () => {
       try {
-        // Save to database
+
         const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
           method: 'PUT',
           headers: {
@@ -93,7 +86,7 @@ export default function Home() {
       } catch (error) {
         console.error('Error saving home layout to database:', error);
         toast.error('Failed to save layout.');
-        // Fallback to localStorage
+
         try {
           localStorage.setItem('gridLayout', JSON.stringify(layout));
           console.log('Grid layout saved to localStorage as fallback');
@@ -106,13 +99,13 @@ export default function Home() {
 
   const loadGridLayout = async () => {
     if (!token) return;
-    
+
     try {
-      // Load from database first
+
       const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.homeLayout) {
@@ -127,7 +120,6 @@ export default function Home() {
       console.error('Error loading home layout from database:', error);
     }
 
-    // Fallback to localStorage if database fails
     try {
       const savedLayout = localStorage.getItem('gridLayout');
       if (savedLayout) {
@@ -146,17 +138,17 @@ export default function Home() {
       leftColumn: [0, 1, 2],
       rightColumn: [0, 1, 2]
     };
-    
+
     setLeftColumnOrder(defaultLayout.leftColumn);
     setRightColumnOrder(defaultLayout.rightColumn);
-    
+
     if (!token) {
       toast.success('Layout reset to default!');
       return;
     }
-    
+
     try {
-      // Reset in database
+
       const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
         method: 'PUT',
         headers: {
@@ -175,7 +167,7 @@ export default function Home() {
     } catch (error) {
       console.error('Error resetting home layout in database:', error);
       toast.error('Failed to reset layout in database.');
-      // Clear localStorage as fallback
+
       try {
         localStorage.removeItem('gridLayout');
         console.log('Grid layout cleared from localStorage as fallback');
@@ -193,7 +185,7 @@ export default function Home() {
     }
 
     try {
-      // Fetch products summary for inventory and categories
+
       const productsResponse = await fetch(`${API_BASE_URL}/api/products/summary`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -212,7 +204,6 @@ export default function Home() {
         }));
       }
 
-      // Fetch statistics for top products, chart data, and sales overview
       const statisticsResponse = await fetch(`${API_BASE_URL}/api/statistics`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -223,8 +214,7 @@ export default function Home() {
         const statsData = await statisticsResponse.json();
         setTopProducts(statsData.topProducts || []);
         setChartData(statsData.chartData || []);
-        
-        // Update sales overview with data from statistics
+
         setSummaryData(prev => ({
           ...prev,
           totalSales: statsData.productsSold?.value || 0,
@@ -240,7 +230,6 @@ export default function Home() {
     }
   };
 
-  // Check if mobile screen
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -252,16 +241,14 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (isInitialized && !token) {
       navigate('/login');
     }
   }, [token, isInitialized, navigate]);
 
-  // Advanced mouse-based drag and drop logic - Based on working HTML reference
   useEffect(() => {
-    // Disable drag and drop on mobile screens or during loading
+
     if (isMobile || isLoading) {
       console.log('Home.jsx: Drag and drop disabled - mobile:', isMobile, 'loading:', isLoading);
       return;
@@ -269,7 +256,6 @@ export default function Home() {
 
     console.log('Home.jsx: useEffect for drag-drop is running');
 
-    // Longer delay to ensure DOM is fully rendered after loading
     const timeoutId = setTimeout(() => {
       const gridItems = document.querySelectorAll('.grid-item:not(.mobile)');
       console.log('Home.jsx: Found grid items:', gridItems.length);
@@ -288,7 +274,7 @@ export default function Home() {
       let initialPositions = new Map();
 
       const onMouseDown = function (e) {
-        // Prevent drag from starting on interactive elements
+
         if (e.target.closest('select, button, a')) {
           return;
         }
@@ -322,7 +308,6 @@ export default function Home() {
 
         let deltaY = e.clientY - initialMouseY;
 
-        // --- Constrain dragging within the container ---
         const futureTop = draggedItemInitialRect.top + deltaY;
         const futureBottom = draggedItemInitialRect.bottom + deltaY;
         const containerPadding = 24;
@@ -334,7 +319,6 @@ export default function Home() {
           deltaY = (containerRect.bottom - containerPadding) - draggedItemInitialRect.bottom;
         }
 
-        // Move the dragged item
         draggedItem.style.transform = `translateY(${deltaY}px)`;
 
         const draggedCurrentRect = {
@@ -345,7 +329,6 @@ export default function Home() {
         const draggedItemHeight = draggedItemInitialRect.height;
         const gap = 16;
 
-        // --- Scaled Proportional Override Logic ---
         for (const sibling of container.children) {
           if (sibling === draggedItem) continue;
 
@@ -353,19 +336,16 @@ export default function Home() {
           const siblingHeight = siblingInitialRect.height;
           let translation = 0;
 
-          // If dragged item and sibling overlap vertically
           if (draggedCurrentRect.bottom > siblingInitialRect.top && draggedCurrentRect.top < siblingInitialRect.bottom) {
             const requiredDisplacement = draggedItemHeight + gap;
 
-            // Case 1: Dragging DOWN over a sibling that was initially below
             if (deltaY > 0 && siblingInitialRect.top > draggedItemInitialRect.top) {
               const overlap = draggedCurrentRect.bottom - siblingInitialRect.top;
-              // Scale the movement: as overlap approaches siblingHeight, translation approaches requiredDisplacement
+
               const overlapRatio = Math.min(overlap / siblingHeight, 1);
               translation = -overlapRatio * requiredDisplacement;
             }
 
-            // Case 2: Dragging UP over a sibling that was initially above
             else if (deltaY < 0 && siblingInitialRect.top < draggedItemInitialRect.top) {
               const overlap = siblingInitialRect.bottom - draggedCurrentRect.top;
               const overlapRatio = Math.min(overlap / siblingHeight, 1);
@@ -385,14 +365,12 @@ export default function Home() {
 
         const container = draggedItem.parentElement;
 
-        // Determine final order based on the mouse position at drop
         const dropTarget = getDragAfterElement(container, e.clientY);
         const siblings = [...container.children];
         const finalOrder = siblings.filter(child => child !== draggedItem);
         const dropIndex = dropTarget ? finalOrder.indexOf(dropTarget) : finalOrder.length;
         finalOrder.splice(dropIndex, 0, draggedItem);
 
-        // Animate every item to its correct final resting place
         siblings.forEach(child => {
           const initialPos = initialPositions.get(child);
           const newIndex = finalOrder.indexOf(child);
@@ -412,7 +390,6 @@ export default function Home() {
           child.style.transform = `translateY(${deltaY}px)`;
         });
 
-        // After the animation, clean up and reorder the DOM
         setTimeout(() => {
           finalOrder.forEach(item => container.appendChild(item));
 
@@ -422,7 +399,6 @@ export default function Home() {
             child.classList.remove('is-dragging');
           }
 
-          // Save the new order to state and backend
           const isLeftColumn = container.classList.contains('left-column');
           const newOrder = Array.from(container.children).map(child => parseInt(child.dataset.id));
 
@@ -460,7 +436,6 @@ export default function Home() {
         }, { offset: Number.NEGATIVE_INFINITY }).element;
       };
 
-      // Attach event listeners
       gridItems.forEach((item, index) => {
         console.log(`Home.jsx: Attaching mousedown listener to item ${index}:`, item);
         item.addEventListener('mousedown', onMouseDown);
@@ -468,7 +443,6 @@ export default function Home() {
 
       console.log('Home.jsx: All event listeners attached');
 
-      // Cleanup function
       return () => {
         console.log('Home.jsx: Cleaning up event listeners');
         gridItems.forEach(item => {
@@ -479,7 +453,6 @@ export default function Home() {
       };
     }, 300); // Increased timeout to ensure loading is complete
 
-    // Cleanup function
     return () => {
       clearTimeout(timeoutId);
     };
@@ -492,12 +465,10 @@ export default function Home() {
     }
   }, [token, isInitialized]);
 
-  // If not initialized or no token, don't render anything (will redirect)
   if (!isInitialized || !token) {
     return null;
   }
 
-  // Show loading state while fetching data
   if (isLoading) {
     return (
       <div className="dashboard-home">
@@ -514,7 +485,6 @@ export default function Home() {
     );
   }
 
-  // Grid component definitions
   const renderSalesOverview = () => (
     <div className="home-card home-card-large home-card-white">
       <h2 className="home-card-title">Sales Overview</h2>
@@ -645,7 +615,6 @@ export default function Home() {
     </div>
   );
 
-  // Grid component arrays
   const leftGridComponents = [renderSalesOverview, renderPurchaseOverview, renderChart];
   const rightGridComponents = [renderInventorySummary, renderProductSummary, renderTopProducts];
 
@@ -689,7 +658,7 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Right Grid Container */}
+              {}
               <div className="grid-column right-column">
                 {rightColumnOrder.map(id => (
                   <div key={id} data-id={id} className="grid-item right">
@@ -702,7 +671,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Mobile Bottom Navigation - only show on mobile */}
+      {}
       {isMobile && <BottomNav />}
     </div>
   );

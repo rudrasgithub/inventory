@@ -50,13 +50,12 @@ const productSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 productSchema.pre("save", function (next) {
-  // Don't update status if it's already expired
+
   if (this.status === "Expired") {
     next();
     return;
   }
-  
-  // Check if product has expired
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   if (this.expiry < today) {
