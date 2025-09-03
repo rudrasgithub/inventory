@@ -15,43 +15,51 @@ const AccountManagement = () => {
   const handleResetLayout = async () => {
     setIsResettingLayout(true);
     
-    const defaultLayout = {
+    const defaultHomeLayout = {
       leftColumn: [0, 1, 2],
       rightColumn: [0, 1, 2]
     };
     
+    const defaultStatisticsLayout = {
+      firstRow: [0, 1, 2],
+      secondRow: [3, 4]
+    };
+    
     if (!token) {
-      toast.success('Layout reset to default!');
+      toast.success('All layouts reset to default!');
       setIsResettingLayout(false);
       return;
     }
     
     try {
-      // Reset in database
-      const response = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
+      // Reset both layouts in database
+      const homeResponse = await fetch(`${API_BASE_URL}/api/statistics/user/layout`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ homeLayout: defaultLayout })
+        body: JSON.stringify({ 
+          homeLayout: defaultHomeLayout,
+          statisticsLayout: defaultStatisticsLayout
+        })
       });
 
-      if (response.ok) {
-        toast.success('Dashboard layout reset to default!');
-        console.log('Dashboard layout reset in database');
+      if (homeResponse.ok) {
+        toast.success('All dashboard layouts reset to default!');
+        console.log('Home and Statistics layouts reset in database');
       } else {
-        toast.error('Failed to reset dashboard layout.');
+        toast.error('Failed to reset layouts.');
       }
     } catch (error) {
-      console.error('Error resetting dashboard layout:', error);
-      toast.error('Failed to reset dashboard layout.');
+      console.error('Error resetting layouts:', error);
+      toast.error('Failed to reset layouts.');
       // Clear localStorage as fallback
       try {
         localStorage.removeItem('gridLayout');
-        console.log('Dashboard layout cleared from localStorage as fallback');
+        console.log('Layouts cleared from localStorage as fallback');
       } catch (localError) {
-        console.log('Could not clear dashboard layout from localStorage');
+        console.log('Could not clear layouts from localStorage');
       }
     }
     

@@ -68,6 +68,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin: 10px 24px;
+  overflow: hidden; /* Prevent elements from going outside container */
+  position: relative; /* Establish containing block */
 }
 .card-statistics {
   padding: 9px 15px;
@@ -91,6 +93,8 @@
   margin: 0 24px 24px;
   opacity: 1;
   visibility: visible;
+  overflow: hidden; /* Prevent elements from going outside container */
+  position: relative; /* Establish containing block */
 }
 
 /* Force visibility on all screen sizes except mobile */
@@ -98,6 +102,8 @@
   display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
+  overflow: hidden !important;
+  position: relative !important;
 }
 .chart-card {
   background: white;
@@ -113,6 +119,18 @@
   background: white;
   border-radius: 12px;
   padding: 16px;
+  width: 307px;
+  min-width: 307px;
+  max-width: 307px;
+}
+
+.top-products-card-wrapper {
+  background: white !important;
+  border-radius: 12px;
+  padding: 16px;
+  width: 307px;
+  min-width: 307px;
+  max-width: 307px;
 }
 
 .top-products-card h3 {
@@ -259,6 +277,10 @@
     padding: 0;
     margin: 0;
     width: 100%;
+    position: relative;
+    min-height: 100vh;
+    background: #424457;
+    overflow-x: hidden;
   }
   
   .sidebar { 
@@ -266,13 +288,13 @@
   }
   
   .mobile-header {
-    display: block !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
+  display: block !important;
+  position: relative;
+  background: #424457;
+  color: white;
+  padding: 16px 16px 10px;
+  height: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .statistics-header {
@@ -281,11 +303,12 @@
   
   .statistics-main {
     padding: 0; 
-    padding-top: 60px; /* Reserve space for fixed header */
     width: 100% !important; 
     margin: 0;
     padding-bottom: 90px;
-  }  /* Mobile-specific layout */
+  }
+  
+  /* Mobile-specific layout */
   .mobile-chart-section {
     padding: 16px;
     padding-bottom: 0;
@@ -364,12 +387,14 @@
 /* Horizontal Drag and Drop Styles */
 .draggable-row {
   position: relative;
+  overflow: hidden; /* Prevent dragged elements from escaping */
 }
 
 .draggable-card {
   transition: transform 0.2s ease-in-out;
   user-select: none;
   position: relative;
+  flex-shrink: 0; /* Prevent shrinking during drag */
 }
 
 .draggable-card:hover {
@@ -384,6 +409,9 @@
   z-index: 10;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   transition: none !important;
+  /* Keep dragged element within bounds */
+  max-width: 100%;
+  overflow: hidden;
 }
 
 /* Disable drag on mobile */
@@ -399,6 +427,13 @@
   .draggable-card:active {
     cursor: default !important;
   }
+}
+
+.content-statistics {
+  overflow: hidden; /* Prevent elements from escaping container */
+  position: relative; /* Establish containing block */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* FINAL OVERRIDE - This must be visible on desktop */

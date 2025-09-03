@@ -30,15 +30,23 @@ export const useDraggableRows = (initialLayout, onLayoutSave) => {
       const containerRect = initialPositions.get(container);
       const containerPadding = 16;
 
-      // Constrain dragging
+      // Constrain dragging within container bounds more strictly
       const futureLeft = draggedItemInitialRect.left + deltaX;
       const futureRight = draggedItemInitialRect.right + deltaX;
+      
+      // Prevent crossing left boundary
       if (futureLeft < containerRect.left + containerPadding) {
         deltaX = (containerRect.left + containerPadding) - draggedItemInitialRect.left;
       }
+      // Prevent crossing right boundary  
       if (futureRight > containerRect.right - containerPadding) {
         deltaX = (containerRect.right - containerPadding) - draggedItemInitialRect.right;
       }
+      
+      // Additional constraint: don't allow dragging beyond the container width
+      const maxDeltaX = containerRect.width - draggedItemInitialRect.width - (containerPadding * 2);
+      const minDeltaX = -(draggedItemInitialRect.left - containerRect.left - containerPadding);
+      deltaX = Math.max(minDeltaX, Math.min(maxDeltaX, deltaX));
 
       draggedElement.style.transform = `translateX(${deltaX}px)`;
 

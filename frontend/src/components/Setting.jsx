@@ -42,11 +42,26 @@ const Setting = () => {
             {!isMobile && <Sidebar />}
             
             <div className="main-setting">
+                
                 {!isMobile && (
                   <header className="header-setting">
                       <h1>Setting</h1>
                   </header>
                 )}
+                
+                {/* Mobile Close Button - only show on mobile */}
+                {isMobile && (
+                    <div className="mobile-close-container">
+                        <button 
+                            className="mobile-close-btn" 
+                            onClick={handleMobileClose}
+                            aria-label="Close Settings"
+                        >
+                          <img src="/close.svg" />
+                        </button>
+                    </div>
+                )}
+                
                 <div className="content-setting">
                     <div className="tabs-setting">
                         <button

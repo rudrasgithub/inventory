@@ -40,6 +40,7 @@ export default function Home() {
 
   const [topProducts, setTopProducts] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Grid layout state
   const [leftColumnOrder, setLeftColumnOrder] = useState([0, 1, 2]);
@@ -187,6 +188,7 @@ export default function Home() {
   const fetchDashboardData = async () => {
     if (!token) {
       console.log('No token available, skipping dashboard data fetch');
+      setIsLoading(false);
       return;
     }
 
@@ -233,6 +235,8 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -257,19 +261,17 @@ export default function Home() {
 
   // Advanced mouse-based drag and drop logic - Based on working HTML reference
   useEffect(() => {
-    // Disable drag and drop on mobile screens
-    if (isMobile) {
-      console.log('Home.jsx: Drag and drop disabled on mobile');
+    // Disable drag and drop on mobile screens or during loading
+    if (isMobile || isLoading) {
+      console.log('Home.jsx: Drag and drop disabled - mobile:', isMobile, 'loading:', isLoading);
       return;
     }
 
     console.log('Home.jsx: useEffect for drag-drop is running');
-    console.log('Home.jsx: leftColumnOrder:', leftColumnOrder);
-    console.log('Home.jsx: rightColumnOrder:', rightColumnOrder);
 
-    // Small delay to ensure DOM is fully rendered
+    // Longer delay to ensure DOM is fully rendered after loading
     const timeoutId = setTimeout(() => {
-      const gridItems = document.querySelectorAll('.grid-item');
+      const gridItems = document.querySelectorAll('.grid-item:not(.mobile)');
       console.log('Home.jsx: Found grid items:', gridItems.length);
 
       if (gridItems.length === 0) {
@@ -475,13 +477,13 @@ export default function Home() {
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
       };
-    }, 100);
+    }, 300); // Increased timeout to ensure loading is complete
 
     // Cleanup function
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [leftColumnOrder, rightColumnOrder, isMobile]); // Added isMobile dependency
+  }, [isMobile, isLoading]); // Remove leftColumnOrder and rightColumnOrder dependencies, add isLoading
 
   useEffect(() => {
     if (token && isInitialized) {
@@ -493,6 +495,23 @@ export default function Home() {
   // If not initialized or no token, don't render anything (will redirect)
   if (!isInitialized || !token) {
     return null;
+  }
+
+  // Show loading state while fetching data
+  if (isLoading) {
+    return (
+      <div className="dashboard-home">
+        {!isMobile && <Sidebar />}
+        <main className="main-home">
+          {!isMobile && <header className="header-main"><h1>Home</h1></header>}
+          {isMobile && <MobileHeader />}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'white', fontSize: '18px' }}>
+            Loading dashboard...
+          </div>
+        </main>
+        {isMobile && <BottomNav />}
+      </div>
+    );
   }
 
   // Grid component definitions

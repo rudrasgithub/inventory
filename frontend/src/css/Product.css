@@ -332,6 +332,10 @@ tr > th, tr > td {
     padding: 0;
     margin: 0;
     width: 100%;
+    position: relative;
+    min-height: 100vh;
+    background: #424457;
+    overflow-x: hidden;
   }
   
   .sidebar { 
@@ -340,12 +344,12 @@ tr > th, tr > td {
   
   .mobile-header {
     display: block !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
+    position: relative;
+    margin-bottom: 20px;
+    background: #424457;
+    color: white;
+    padding: 16px 16px 10px;
+    height: 30px;
   }
   
   .product-header {
@@ -354,7 +358,6 @@ tr > th, tr > td {
   
   .main-product {
     padding: 0; 
-    padding-top: 60px; /* Reserve space for fixed header */
     width: 100% !important; 
     margin: 0;
     padding-bottom: 90px;
@@ -645,8 +648,10 @@ tr > th, tr > td {
   .mobile-table-header {
     background: #B6B9CF;
     padding: 12px 0;
-    display: flex;
+    display: flex !important;
+    flex-direction: column !important;
     border-bottom: 1px solid #D1D5DB;
+    border-right: 1px solid rgb(0,0,0,0.2);
   }
   
   .mobile-header-cell {
@@ -656,13 +661,10 @@ tr > th, tr > td {
     color: #424457;
     text-align: center;
     padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   
   .mobile-header-cell:first-child {
-    border-right: 1px solid #424457;
+    border-right: 2px solid #424457;
   }
   
   .mobile-table-body {

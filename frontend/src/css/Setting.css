@@ -75,7 +75,7 @@
 .mobile-close-container {
   display: none; /* Hidden by default for desktop */
   justify-content: flex-end;
-  padding: 16px 24px 16px;
+  padding: 16px 24px 8px;
   background: white;
   position: relative;
 }
@@ -84,17 +84,26 @@
   background: none;
   border: none;
   color: #000;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 8px;
+  border-radius: 50%;
   transition: background-color 0.2s ease;
   line-height: 1;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mobile-close-btn:hover {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.mobile-close-btn:active {
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 /* Mobile Responsive Styles */
@@ -121,20 +130,20 @@
   /* Show shared mobile header on settings */
   .mobile-header {
     display: block !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
+    position: relative;
+    background: #424457;
+    color: white;
+    padding: 16px 16px 10px;
+    height: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .mobile-close-container {
     display: flex !important;
-    position: absolute;
+    position: sticky;
     top: 0;
-    right: 0;
     z-index: 10;
+    background: white;
   }
   
   .header-setting {
@@ -143,7 +152,6 @@
   
   .main-setting {
     padding: 0; 
-    padding-top: 60px; /* Reserve space for fixed header */
     width: 100% !important; 
     margin: 0;
     min-height: 100vh;
@@ -160,7 +168,7 @@
     border-radius: 0;
     flex: 1;
     min-height: calc(100vh - 60px);
-    padding-top: 40px; /* Space for close button */
+    padding-top: 0; /* Remove extra padding since close button is separate */
   }
   
   .tabs-setting {

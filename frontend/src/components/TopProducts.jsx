@@ -1,12 +1,28 @@
 import React from 'react';
 import "../css/TopProducts.css";
 
+// Add keyframes for loading spinner
+const spinKeyframes = `
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+`;
+
+// Inject the keyframes into the document head
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = spinKeyframes;
+  document.head.appendChild(style);
+}
+
 const TopProducts = ({ 
   topProducts = [], 
   className = "", 
   showTitle = true, 
   titleText = "Top Products",
   containerStyle = {},
+  isLoading = false,
 }) => {
   
   // Limit to top 5 products only and sort by totalSold
@@ -32,7 +48,29 @@ const TopProducts = ({
         </div>
       )}
       <div className="top-products-content">
-        {limitedProducts.length > 0 ? (
+        {isLoading ? (
+          <div className="loading-state" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '30px 20px',
+            textAlign: 'center',
+            color: '#6B7280',
+            minHeight: '120px'
+          }}>
+            <div style={{
+              width: '24px',
+              height: '24px',
+              border: '2px solid #E5E7EB',
+              borderTop: '2px solid #3B82F6',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              marginBottom: '8px'
+            }}></div>
+            <span style={{ fontSize: '14px', color: '#6B7280' }}>Loading top products...</span>
+          </div>
+        ) : limitedProducts.length > 0 ? (
           limitedProducts.map((product, index) => (
             <div key={product._id || index} className="top-product-item">
               <div className="product-details">

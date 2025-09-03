@@ -440,16 +440,13 @@
 @media (max-width: 768px) {
   .mobile-header {
     display: block !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
-  }
-  
-  .main-home {
-    padding-top: 60px; /* Reserve space for fixed header */
+    position: relative;
+    margin-bottom: 25px;
+    background: #424457;
+    color: white;
+    padding: 16px 16px 10px;
+    height: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -520,6 +517,10 @@
     padding: 0;
     margin: 0;
     width: 100%;
+    position: relative;
+    min-height: 100vh;
+    background: #424457;
+    overflow-x: hidden;
   }
   
   /* Hide header on mobile */

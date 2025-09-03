@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { AuthContext } from '../Context/ContextProvider';
 import { useDraggableRows } from '../hooks/useDraggableRows';
 import "../css/Statistics.css";
@@ -22,6 +23,7 @@ export default function Statistics() {
     topProducts: []
   });
   const [layoutLoading, setLayoutLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   
   const [initialLayout, setInitialLayout] = useState({
     firstRow: [0, 1, 2],
@@ -69,9 +71,11 @@ export default function Statistics() {
         },
         body: JSON.stringify({ statisticsLayout: newLayout })
       });
+      toast.success('Statistics layout saved successfully!');
       console.log('Statistics layout saved to database');
     } catch (error) {
       console.error('Error saving statistics layout to database:', error);
+      toast.error('Failed to save statistics layout');
     }
   };
 
@@ -129,6 +133,7 @@ export default function Statistics() {
           titleText="Top Products"
           showImage={false}
           showSoldCount={false}
+          isLoading={dataLoading}
         />
       ),
       className: "top-products-card-wrapper",
@@ -147,7 +152,13 @@ export default function Statistics() {
   // Fetch statistics data
   useEffect(() => {
     const fetchStatistics = async () => {
-      if (!token) return;
+      if (!token) {
+        setDataLoading(false);
+        return;
+      }
+      
+      const loadingToast = toast.loading('Loading statistics data...');
+      
       try {
         const response = await fetch(`${API_BASE_URL}/api/statistics`, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -155,11 +166,16 @@ export default function Statistics() {
         if (response.ok) {
           const data = await response.json();
           setStatistics(data);
+          toast.success('Successfully fetched the statistics data!', { id: loadingToast });
         } else {
           console.error('Failed to fetch statistics');
+          toast.error('Failed to fetch statistics data', { id: loadingToast });
         }
       } catch (error) {
         console.error('Error fetching statistics:', error);
+        toast.error('Error fetching statistics data', { id: loadingToast });
+      } finally {
+        setDataLoading(false);
       }
     };
     fetchStatistics();
@@ -229,9 +245,7 @@ export default function Statistics() {
           </header>
         )}
 
-        {/* Mobile header */}
-  {isMobile && <MobileHeader />}
-
+        {isMobile && <MobileHeader />}
         <main className="content-statistics">
           {isMobile ? (
             <>
@@ -258,8 +272,8 @@ export default function Statistics() {
               </div>
             </>
           ) : (
-            // Only render desktop layout when layoutLoading is false
-            !layoutLoading ? (
+            // Only render desktop layout when both layoutLoading and dataLoading are false
+            !layoutLoading && !dataLoading ? (
               <>
                 <div className="cards-statistics draggable-row" data-row-type="firstRow">
                   {layout.firstRow.map(cardId => renderCard(cardId, 'firstRow'))}
@@ -274,7 +288,7 @@ export default function Statistics() {
               </>
             ) : (
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px', color: 'white' }}>
-                Loading layout...
+                {layoutLoading ? 'Loading layout...' : 'Loading statistics...'}
               </div>
             )
           )}

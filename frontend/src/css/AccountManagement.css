@@ -36,7 +36,7 @@
 .account-management-container {
     position: absolute;
     right: 50px;
-    top: 500px;
+    top: 350px; /* Moved up from 500px to 350px */
     display: flex;
     flex-direction: column;
     gap: 1rem;

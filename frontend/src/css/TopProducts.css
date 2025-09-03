@@ -114,19 +114,19 @@
 
 .top-products-component.statistics-style .top-products-title {
   font-size: 16px;
-  color: white;
+  color: #111827; /* Changed to black */
 }
 
 .top-products-component.statistics-style .product-name {
-  color: white;
+  color: #374151; /* Changed to dark gray/black */
 }
 
 .top-products-component.statistics-style .product-sold {
-  color: rgba(255, 255, 255, 0.7);
+  color: #6B7280; /* Changed to gray */
 }
 
 .top-products-component.statistics-style .top-product-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #E5E7EB; /* Changed to light gray border */
 }
 
 /* Mobile responsiveness */
