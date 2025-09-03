@@ -3,6 +3,115 @@ import Product from '../models/Product.js';
 import Purchase from '../models/Purchase.js';
 import User from '../models/User.js';
 
+// Get weekly statistics
+export const getWeeklyStatistics = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const weeklyData = [];
+    
+    // Get current week's Monday
+    const currentDay = currentDate.getDay();
+    const monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+    
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    
+    for (let i = 0; i < 7; i++) {
+      const dayStart = new Date(monday);
+      dayStart.setDate(monday.getDate() + i);
+      dayStart.setHours(0, 0, 0, 0);
+      
+      const dayEnd = new Date(dayStart);
+      dayEnd.setHours(23, 59, 59, 999);
+      
+      // Only get data for past days and today
+      const isPastOrToday = dayStart <= currentDate;
+      let purchase = 0;
+      let sales = 0;
+      
+      if (isPastOrToday) {
+        // Get purchases for this day
+        const dayPurchases = await Purchase.aggregate([
+          {
+            $match: {
+              userId: req.user._id,
+              createdAt: { $gte: dayStart, $lte: dayEnd }
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              purchase: { $sum: '$totalAmount' },
+              sales: { $sum: { $multiply: ['$quantity', '$priceAtPurchase'] } }
+            }
+          }
+        ]);
+        
+        if (dayPurchases.length > 0) {
+          purchase = Math.round(dayPurchases[0].purchase || 0);
+          sales = Math.round(dayPurchases[0].sales || 0);
+        }
+      }
+      
+      weeklyData.push({
+        day: days[i],
+        purchase: purchase,
+        sales: sales
+      });
+    }
+    
+    res.json({ weeklyData });
+  } catch (error) {
+    console.error('Error fetching weekly statistics:', error);
+    res.status(500).json({ message: 'Server error while fetching weekly statistics' });
+  }
+};
+
+// Get yearly statistics
+export const getYearlyStatistics = async (req, res) => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const yearlyData = [];
+    
+    // Get data for last 5 years
+    for (let year = currentYear - 4; year <= currentYear; year++) {
+      const yearStart = new Date(year, 0, 1, 0, 0, 0, 0);
+      const yearEnd = new Date(year, 11, 31, 23, 59, 59, 999);
+      
+      // Get purchases for this year
+      const yearPurchases = await Purchase.aggregate([
+        {
+          $match: {
+            userId: req.user._id,
+            createdAt: { $gte: yearStart, $lte: yearEnd }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            purchase: { $sum: '$totalAmount' },
+            sales: { $sum: { $multiply: ['$quantity', '$priceAtPurchase'] } }
+          }
+        }
+      ]);
+      
+      const purchase = yearPurchases.length > 0 ? Math.round(yearPurchases[0].purchase || 0) : 0;
+      const sales = yearPurchases.length > 0 ? Math.round(yearPurchases[0].sales || 0) : 0;
+      
+      yearlyData.push({
+        year: year.toString(),
+        purchase: purchase,
+        sales: sales
+      });
+    }
+    
+    res.json({ yearlyData });
+  } catch (error) {
+    console.error('Error fetching yearly statistics:', error);
+    res.status(500).json({ message: 'Server error while fetching yearly statistics' });
+  }
+};
+
 // Get comprehensive statistics
 export const getStatistics = async (req, res) => {
   try {
@@ -274,14 +383,7 @@ export const getStatistics = async (req, res) => {
         change: Math.round(stockChange * 10) / 10
       },
       chartData,
-      topProducts: topProducts.length > 0 ? topProducts : [
-        { name: "Redbull", rating: 5, image: null, totalSold: 25 },
-        { name: "Kit kat", rating: 4, image: null, totalSold: 20 },
-        { name: "Coca cola", rating: 3, image: null, totalSold: 18 },
-        { name: "Milo", rating: 4, image: null, totalSold: 15 },
-        { name: "Ariel", rating: 4, image: null, totalSold: 12 },
-        { name: "Bru", rating: 4, image: null, totalSold: 10 }
-      ]
+      topProducts: topProducts
     });
 
   } catch (error) {

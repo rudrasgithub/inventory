@@ -25,6 +25,11 @@ export default function SalesPurchaseChart({ chartData = [] }) {
 
     const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL || "http://localhost:5000";
 
+    // Debug: Log monthly chart data when it changes
+    useEffect(() => {
+        console.log('Monthly chartData prop received:', chartData);
+    }, [chartData]);
+
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
     };
@@ -56,71 +61,66 @@ export default function SalesPurchaseChart({ chartData = [] }) {
         return () => window.removeEventListener('resize', updateChartHeight);
     }, []);
 
-    // Generate current week data (Mon-Sun) based on actual date
-    const generateCurrentWeekData = () => {
-        const today = new Date();
-        const weekData = [];
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        
-        // Get current week's Monday
-        const currentDay = today.getDay();
-        const monday = new Date(today);
-        monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
-        
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(monday);
-            date.setDate(monday.getDate() + i);
-            const isPastOrToday = date <= today;
-            
-            weekData.push({
-                day: days[i],
-                purchase: isPastOrToday ? Math.floor(Math.random() * 2000) + 500 : 0,
-                sales: isPastOrToday ? Math.floor(Math.random() * 1500) + 300 : 0
+    // Fetch weekly data from backend
+    const fetchWeeklyData = async () => {
+        setLoading(true);
+        try {
+            console.log('Fetching weekly data...');
+            const response = await fetch(`${API_BASE_URL}/api/statistics/weekly`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Weekly data received:', data);
+                setWeeklyData(data.weeklyData || []);
+            } else {
+                console.error('Failed to fetch weekly data');
+                setWeeklyData([]);
+            }
+        } catch (error) {
+            console.error('Error fetching weekly data:', error);
+            setWeeklyData([]);
+        } finally {
+            setLoading(false);
         }
-        
-        return weekData;
     };
 
-    // Generate yearly data for 2021-2025 with realistic distribution
-    const generateYearlyDataRange = () => {
-        const currentYear = new Date().getFullYear();
-        const yearData = [];
-        
-        for (let year = 2021; year <= 2025; year++) {
-            if (year < currentYear) {
-                // Past years - no data (empty)
-                yearData.push({
-                    year: year.toString(),
-                    purchase: 0,
-                    sales: 0
-                });
-            } else if (year === currentYear) {
-                // Current year (2025) - has data
-                yearData.push({
-                    year: year.toString(),
-                    purchase: 75000 + Math.floor(Math.random() * 25000),
-                    sales: 65000 + Math.floor(Math.random() * 20000)
-                });
+    // Fetch yearly data from backend
+    const fetchYearlyData = async () => {
+        setLoading(true);
+        try {
+            console.log('Fetching yearly data...');
+            const response = await fetch(`${API_BASE_URL}/api/statistics/yearly`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Yearly data received:', data);
+                setYearlyData(data.yearlyData || []);
             } else {
-                // Future years - no data
-                yearData.push({
-                    year: year.toString(),
-                    purchase: 0,
-                    sales: 0
-                });
+                console.error('Failed to fetch yearly data');
+                setYearlyData([]);
             }
+        } catch (error) {
+            console.error('Error fetching yearly data:', error);
+            setYearlyData([]);
+        } finally {
+            setLoading(false);
         }
-        
-        return yearData;
     };
 
     // Fetch data when filter changes
     useEffect(() => {
-        if (filter === "Weekly") {
-            setWeeklyData(generateCurrentWeekData());
-        } else if (filter === "Yearly") {
-            setYearlyData(generateYearlyDataRange());
+        if (filter === "Weekly" && token) {
+            fetchWeeklyData();
+        } else if (filter === "Yearly" && token) {
+            fetchYearlyData();
         }
     }, [filter, token]);
 
@@ -206,9 +206,17 @@ export default function SalesPurchaseChart({ chartData = [] }) {
     // Smart Y-axis scaling function
     const calculateYAxisMax = (data) => {
         let maxValue = 0;
+        
+        // Handle case where data or datasets might be empty
+        if (!data || !data.datasets || data.datasets.length === 0) {
+            return { stepSize: 10, suggestedMax: 50, maxTicks: 6 };
+        }
+        
         data.datasets.forEach(dataset => {
-            const datasetMax = Math.max(...dataset.data);
-            if (datasetMax > maxValue) maxValue = datasetMax;
+            if (dataset.data && dataset.data.length > 0) {
+                const datasetMax = Math.max(...dataset.data);
+                if (datasetMax > maxValue) maxValue = datasetMax;
+            }
         });
 
         if (maxValue === 0) return { stepSize: 10, suggestedMax: 50, maxTicks: 6 };
@@ -330,8 +338,20 @@ export default function SalesPurchaseChart({ chartData = [] }) {
                     </select>
                 </div>
             </div>
-            <div style={{ height: `${chartHeight}px`, width: '100%' }}>
-                <Bar ref={chartRef} data={getChartData()} options={options} />
+            <div style={{ height: `${chartHeight}px`, width: '100%', position: 'relative' }}>
+                {loading ? (
+                    <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        alignItems: 'center', 
+                        height: '100%',
+                        color: '#666'
+                    }}>
+                        Loading {filter.toLowerCase()} data...
+                    </div>
+                ) : (
+                    <Bar ref={chartRef} data={getChartData()} options={options} />
+                )}
             </div>
         </div>
     );

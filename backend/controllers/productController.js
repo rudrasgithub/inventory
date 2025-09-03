@@ -269,13 +269,16 @@ export const addBulkProducts = async (req, res) => {
           continue;
         }
 
-        // Check if product ID already exists
-        const existingProduct = await Product.findOne({ productId });
+        // Check if product ID already exists for this user
+        const existingProduct = await Product.findOne({ 
+          productId, 
+          userId: req.user._id 
+        });
         if (existingProduct) {
           results.failed.push({
             row: i + 1,
             productData,
-            error: `Product with ID '${productId}' already exists`
+            error: `Product with ID '${productId}' already exists for your account`
           });
           continue;
         }
